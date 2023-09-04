@@ -1,0 +1,195 @@
+/* Sidebar styles */
+/* Customize sidebar styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a {
+    text-decoration: none;
+}
+
+/* Custom CSS to center the modal */
+/* .modal-dialog-centered-custom {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+} */
+
+/* Untuk mengubah warna link */
+a {
+    color: #333; /* Ganti dengan warna yang diinginkan */
+}
+
+/* Untuk mengubah warna link saat di-hover */
+a:hover {
+    color: #555; /* Ganti dengan warna yang diinginkan */
+}
+
+body {
+    overflow: hidden; /* Prevent scrolling */
+}
+
+/* Custom CSS for reducing font size in the modal */
+.modal-content {
+    font-size: 14px; /* Adjust the value as needed */
+}
+
+
+
+
+
+
+/* Style for admin text */
+
+/* #content-side {
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 40px rgba(0, 0, 0, 0.1);
+} */
+
+#bg-body {
+    background-color: #383d3f;
+}
+
+
+
+/* Customize main content area */
+/* Custom CSS for main content area */
+.centered-content {
+    display: flex;
+    /* position: absolute; */
+    flex-direction: column;
+    /* align-items: center; */
+    min-height: 80vh;
+    min-width: 170vh;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: white;
+    margin: 50px;
+}
+/* Custom pagination styling */
+/* Custom pagination styling */
+/* Style for pagination container */
+/* Change the existing .pagination selector to a more specific selector */
+/* Custom pagination styling */
+
+
+.btn-add-data {
+    background-color: #6c7075;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+/* Custom style for the dropdown button */
+.custom-dropdown-button {
+    background-color: #f8f9fa;
+    color: #343a40;
+    border-color: #ced4da;
+}
+
+/* Style for the selected dropdown option */
+.dropdown-item.selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
+
+.btn-add-data:hover {
+    background-color: #797f85;
+}
+
+/* If you want to add some spacing between the button and other elements */
+.btn-add-data + .pb-3 {
+    margin-top: 10px;
+}
+/* Additional responsive adjustments */
+/* @media (max-width: 991px) {
+    .sidebar {
+        padding-top: 0;
+    }
+} */
+
+/* Add this CSS to your stylesheet */
+.form-label {
+    text-align: start; /* Align label text to the start */
+    margin-bottom: 0.5rem; /* Add space below each label */
+}
+
+.form-control {
+    margin-bottom: 1rem; /* Add space below each input field */
+}
+
+.btn-secondary {
+    margin-right: 1rem; /* Add space to the right of the "Kembali" button */
+}
+
+/* Loading overlay styles */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+/* styles.css */
+.custom-form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem; /* Add appropriate margin as needed */
+}
+/* Default style for status buttons */
+.btn-status {
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: default; /* Change the cursor style */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover style for status buttons */
+.btn-status:hover {
+    background-color: red;
+    color: white;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ffffff;
+    animation: spin 1s linear infinite;
+}
+
+/* Custom CSS to center the modal */
+
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+/* @media (max-width: 767px) {
+    .sidebar {
+        min-height: auto;
+    }
+} */

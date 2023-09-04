@@ -1,0 +1,1 @@
+<?php /**PATH C:\kost-skripsi\resources\views/home.blade.php ENDPATH**/ ?>

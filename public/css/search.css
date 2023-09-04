@@ -1,0 +1,45 @@
+/* Style untuk form pencarian */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+#search-form {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Style untuk label */
+.input-group-text {
+    background-color: #f8f9fa;
+    border: none;
+    font-size: 14px; /* Ukuran font label */
+}
+
+/* Style untuk input pencarian */
+.form-control {
+    border-color: #ced4da;
+    font-size: 14px; /* Ukuran font input */
+    padding: 10px; /* Padding di dalam input */
+    border-radius: 5px; /* Membulatkan sudut input */
+}
+
+/* Style untuk tombol Cari */
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
+    height: 43px;
+    font-size: 14px; /* Ukuran font tombol */
+    padding: 10px 20px; /* Padding di dalam tombol (atas bawah kiri kanan) */
+    border-radius: 5px; /* Membulatkan sudut tombol */
+}
+.search-input{
+    height: 43px;
+    color: white;
+    background-color: #777777;
+}
+/* Style untuk tombol Cari saat di-hover */
+.btn-secondary:hover {
+    background-color: #495057;
+    border-color: #495057;
+}

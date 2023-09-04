@@ -1,0 +1,1 @@
+<?php /**PATH C:\KOST\resources\views/lokasi_kos/edit.blade.php ENDPATH**/ ?>
