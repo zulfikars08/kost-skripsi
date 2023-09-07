@@ -93,7 +93,7 @@ class KamarController extends Controller
 
 
     //  \Illuminate\Support\Facades\Cache::forget('kamar.index');
-
+    Kamar::create($data);
     $page = $request->input('page', 1); // Get the current page or default to 1
     return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar');
     }

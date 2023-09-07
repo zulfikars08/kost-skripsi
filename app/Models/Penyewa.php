@@ -14,11 +14,26 @@ class Penyewa extends Model
     public $incrementing = false;
     protected $fillable = [
         'nama',
-        'jenis_kelamin',
-        'no_hp',
-        'pekerjaan',
-        'perusahaan',
+        'tipe_pembayaran',
+        'kamar_id',
+        'penghuni_id',
+        'jumlah_tarif',
+        'tanggal_awal',
+        'tanggal_akhir',
+        'keterangan',
         'tanggal_lahir',
-        'status'
+        'status_pembayaran'
     ];
+
+    public function kamar()
+{
+    return $this->belongsTo(Kamar::class, 'kamar_id');
+}
+
+public function penghuni()
+{
+    return $this->belongsTo(Penghuni::class, 'penghuni_id');
+}
+
+
 }

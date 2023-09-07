@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Penyewa;
 use Illuminate\Http\Request;
 
 class PenyewaController extends Controller
@@ -13,9 +14,9 @@ class PenyewaController extends Controller
      */
     public function index()
     {
-        //
+        $penyewas = Penyewa::all();
+        return view('penyewa.index', compact('penyewas'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
