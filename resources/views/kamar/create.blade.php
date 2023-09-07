@@ -28,7 +28,7 @@
                         </select>
                     </div>
                     <div class="mb-3 custom-form-group">
-                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <label for="keterangan" class="form-label">Tipe Kamar</label>
                         <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ old('keterangan') }}" required>
                     </div>
                     <div class="mb-3 custom-form-group">
