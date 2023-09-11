@@ -8,7 +8,7 @@
             <div class="card bg-primary text-white order-card mb-4">
                 <div class="card-body">
                     <h6 class="m-b-20">Total Kamar</h6>
-                    <h2 class="text-right"><i class="fa fa-bed"></i><span class="ml-2">{{ $totalKamars }}</span></h2>
+                    <h2 class="text-right"><i class="fa fa-bed"></i><span class="ml-2">{{ $totalKamar }}</span></h2>
                     <p class="m-b-0">Kamar Terisi<span class="float-right">{{ $totalKamarSudahTerisi }}</span></p>
                 </div>
             </div>

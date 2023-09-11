@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\LokasiKostController;
 use App\Http\Controllers\PenghuniController;
+use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\TenatsController;
 use App\Models\Kamar;
@@ -22,18 +23,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['guest'])->group(function () {
-    Route::get('/', [SesiController::class, 'index'])->name('login');
-    Route::post('/', [SesiController::class, 'login']);
-});
+Route::get('/', [SesiController::class, 'index'])->name('login');
+Route::post('/', [SesiController::class, 'login']);
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/logout', [SesiController::class, 'logout'])->name('logout');
 });
 
+// Redirect authenticated users to the dashboard
 Route::get('/home', function () {
-    return view('dashboard.dashboard');
+    return redirect()->route('dashboard');
 });
 
 // Your other route definitions for kamar, lokasi_kos, etc.
@@ -52,6 +52,11 @@ Route::delete('/kamar/{id}', [KamarController::class, 'destroy'])->name('kamar.d
 Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penghuni.index');
 Route::get('/penghuni/create', [PenghuniController::class, 'create'])->name('penghuni.create');
 Route::post('/penghuni', [PenghuniController::class, 'store'])->name('penghuni.store');
+
+
+Route::get('/penyewa', [PenyewaController::class, 'index'])->name('penyewa.index');
+Route::get('/penyewa/create', [PenyewaController::class, 'create'])->name('penyewa.create');
+Route::post('/penyewa', [PenyewaController::class, 'store'])->name('penyewa.store');
 
 //lokasi route
 Route::get('/lokasi_kos', [LokasiKostController::class, 'index'])->name('lokasi_kos.index');

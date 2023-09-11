@@ -12,7 +12,7 @@ class DashboardController extends Controller
     public function index()
     {
         sleep(1); // Simulating delay for loading
-        $totalKamars = Kamar::count();
+        $totalKamar = Kamar::count();
         $totalLokasiKos = LokasiKos::count();
     
         $totalKamarSudahTerisi = Kamar::where('status', 'sudah terisi')->count();
@@ -20,6 +20,7 @@ class DashboardController extends Controller
     
         $totalPenghuni = Penghuni::count(); // Menghitung jumlah total penghuni
     
-        return view('dashboard.dashboard', compact('totalKamars', 'totalLokasiKos', 'totalKamarSudahTerisi', 'totalKamarBelumTerisi', 'totalPenghuni'));
+        return view('dashboard.dashboard', compact('totalKamar', 'totalLokasiKos', 'totalKamarSudahTerisi', 'totalKamarBelumTerisi', 'totalPenghuni'));
+
     }
 }
