@@ -10,11 +10,16 @@
                     <!-- Your form for adding data goes here -->
                     <div class="mb-3 custom-form-group">
                         <label for="no_kamar" class="form-label">No Kamar</label>
-                        <input type="text" class="form-control" name="no_kamar" id="no_kamar" value="{{ old('no_kamar') }}" required>
+                        <input type="text" class="form-control @error('no_kamar') is-invalid @enderror" name="no_kamar" id="no_kamar" value="{{ old('no_kamar') }}" required>
+                        @error('no_kamar')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="text" class="form-control" name="harga" id="harga" value="{{ old('harga') }}" required>
+                        <input type="text" class="form-control" name="harga" id="harga" required>
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="fasilitas" class="form-label">Fasilitas</label>
@@ -32,8 +37,8 @@
                         <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ old('keterangan') }}" required>
                     </div>
                     <div class="mb-3 custom-form-group">
-                        <label for="kost_id" class="form-label">Lokasi Kos</label>
-                        <select class="form-control" name="kost_id" id="kost_id" required>
+                        <label for="lokasi_id" class="form-label">Lokasi Kos</label>
+                        <select class="form-control" name="lokasi_id" id="lokasi_id" required>
                             <option value="">Pilih Lokasi Kos</option>
                             @foreach ($lokasiKosOptions as $lokasiKosOption)
                                 <option value="{{ $lokasiKosOption->id }}">{{ $lokasiKosOption->nama_kos }}</option>

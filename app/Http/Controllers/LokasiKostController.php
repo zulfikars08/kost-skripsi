@@ -62,7 +62,7 @@ class LokasiKostController extends Controller
         ]     
     );
         $data = [
-            'kost_id' => $request->kost_id,
+            'lokasi_id' => $request->lokasi_id,
             'nama_kos' => $request->nama_kos,
             'jumlah_kamar' => $request->jumlah_kamar,
             'alamat_kos' => $request->alamat_kos,

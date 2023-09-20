@@ -10,11 +10,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <!-- Bootstrap JS (including Popper.js) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
@@ -23,7 +26,7 @@
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" type="text/css">
     
   
-    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/all.min.css') }}"> --}}
 </head>
 
 <body>
@@ -70,7 +73,7 @@
             </a>
           </li>
           <li class="tooltip-element" data-tooltip="3">
-            <a href="#" data-active="3">
+            <a href="/penyewa" data-active="3">
               <div class="icon">
                 <i class='bi bi-person'></i>
                 <i class='bi bi-person'></i>
@@ -79,6 +82,15 @@
             </a>
           </li>
           <li class="tooltip-element" data-tooltip="4">
+            <a href="/laporan" data-active="4">
+              <div class="icon">
+                <i class='bi bi-file-earmark-text'></i>
+                <i class='bi bi-file-earmark-text'></i>
+              </div>
+              <span class="link hide">Laporan Keuangan</span>
+            </a>
+          </li>
+          {{-- <li class="tooltip-element" data-tooltip="4">
             <a href="/penghuni" data-active="4">
               <div class="icon">
                 <i class='bi bi-person-plus'></i>
@@ -86,7 +98,7 @@
               </div>
               <span class="link hide">Data Penghuni</span>
             </a>
-          </li>
+          </li> --}}
           <li class="tooltip-element" data-tooltip="5">
             <a href="/logout" data-active="5">
               <div class="icon">
@@ -100,8 +112,8 @@
             <span class="show">Dashboard</span>
             <span>Data Kamar</span>
             <span>Data Lokasi</span>
-            <span>Data Penghuni</span>
             <span>Data Penyewa</span>
+            <span>Laporan Keuangan</span>
             <span>Log Out</span>
           </div>
         </ul>
@@ -117,6 +129,7 @@
         @yield('content')
       </div>
 </main>
+
 
 
 </body>

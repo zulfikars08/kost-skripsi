@@ -1,6 +1,7 @@
 @extends('layout.template')
 
 @section('content')
+@include('komponen.pesan')
 <div class="container-fluid">
     <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Kamar</h3>
 
@@ -9,7 +10,7 @@
             <!-- SEARCH FORM -->
             <form class="d-flex" action="{{ route('kamar.index') }}" method="get" id="search-form">
                 <div class="input-group">
-                    <label class="input-group-text search-input" for="search-input">Search</label>
+                    {{-- <label class="input-group-text search-input" for="search-input">Search</label> --}}
                     <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci" aria-label="Search" id="search-input">
                     <button class="btn btn-secondary" type="submit">Cari</button>
                 </div>
@@ -92,7 +93,7 @@
             <tr>
                 <td>{{ ($filteredKamarData->currentPage() - 1) * $filteredKamarData->perPage() + $loop->iteration }}</td>
                 <td>{{ $item->no_kamar }}</td>
-                <td>{{ $item->harga }}</td>
+                <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                 <td>{{ $item->fasilitas }}</td>
                 <td>{{ $item->keterangan }}</td>
                 <td>{{ $item->lokasiKos->nama_kos }}</td>
@@ -104,18 +105,18 @@
                     @endif
                 </td>
                 <td>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editModal{{$item->id}}">
-                            Edit
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{$item->id}}">
+                            <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
                         </button>
                         @include('kamar.edit', ['item' => $item])
                         <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
                             action="{{ route('kamar.destroy', $item->id) }}" method="post">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" name="submit" class="btn btn-danger btn-sm me-2" onclick="showSuccessToast()">Delete</button>
+                            <button type="submit" name="submit" class="btn btn-danger btn-sm"  onclick="showSuccessToast()">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </form>
-                    </div>
                 </td>
             </tr>
             @empty

@@ -15,7 +15,7 @@ class CreateKamarTable extends Migration
     {
         Schema::create('kamar', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kost_id'); // Foreign key to lokasi_kos table
+            $table->unsignedBigInteger('lokasi_id'); // Foreign key to lokasi_kos table
             $table->string('no_kamar');
             $table->integer('harga');
             $table->string('fasilitas');
@@ -23,7 +23,7 @@ class CreateKamarTable extends Migration
             $table->timestamps();
             
             // Define the foreign key constraint
-            $table->foreign('kost_id')->references('id')->on('lokasi_kos')
+            $table->foreign('lokasi_id')->references('id')->on('lokasi_kos')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
     }

@@ -54,7 +54,7 @@
 @endif
 
 
-@if ($errors->any())
+@if (Session::has('error'))
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
     <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -62,7 +62,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body text-white">
-            Nama Kos sudah ada
+            Maaf ada kesalahan
             @foreach ($errors->all() as $error)
                 <div class="text-danger">{{ $error }}</div>
             @endforeach
@@ -74,7 +74,6 @@
     errorToast.show();
 </script>
 @endif
-
 
 </body>
 </html>

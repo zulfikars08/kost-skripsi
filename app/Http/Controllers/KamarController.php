@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kamar;
 use App\Models\LokasiKos;
+use App\Models\Penyewa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -70,7 +71,7 @@ class KamarController extends Controller
             'keterangan' => 'required',
             'fasilitas' => 'required',
             'status' => 'required|in:belum terisi,sudah terisi', // Ensure the selected status is valid
-            'kost_id' => 'required|exists:lokasi_kos,id', // Ensure the selected lokasiKos exists
+            'lokasi_id' => 'required|exists:lokasi_kos,id', // Ensure the selected lokasiKos exists
         ], [
             'no_kamar.required' => 'Nomor kamar wajib di isi',
             'harga.required' => 'Harga wajib di isi',
@@ -78,8 +79,8 @@ class KamarController extends Controller
             'fasilitas.required' => 'Fasilitas wajib di isi',
             'status.required' => 'Status wajib di isi',
             'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
-            'kost_id.required' => 'Lokasi kos wajib dipilih',
-            'kost_id.exists' => 'Lokasi kos yang dipilih tidak valid',
+            'lokasi_id.required' => 'Lokasi kos wajib dipilih',
+            'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
         ]);
     
         $data = [
@@ -88,11 +89,11 @@ class KamarController extends Controller
             'keterangan' => $request->keterangan,
             'fasilitas' => $request->fasilitas,
             'status' => $request->status,
-            'kost_id' => $request->kost_id,
+            'lokasi_id' => $request->lokasi_id,
         ];
 
 
-    //  \Illuminate\Support\Facades\Cache::forget('kamar.index');
+  
     Kamar::create($data);
     $page = $request->input('page', 1); // Get the current page or default to 1
     return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar');
@@ -116,7 +117,7 @@ class KamarController extends Controller
             'harga' => 'required',
             'keterangan' => 'required',
             'fasilitas' => 'required',
-            'status' => 'required|in:belum terisi,sudah terisi', // Ensure the selected status is valid
+            'status' => 'required|in:belum terisi,sudah terisi',
         ], [
             'harga.required' => 'Harga wajib di isi',
             'keterangan.required' => 'Keterangan wajib di isi',
@@ -125,6 +126,23 @@ class KamarController extends Controller
             'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
         ]);
     
+        // Check if the status is "belum terisi"
+        if ($request->status === 'belum terisi') {
+            // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
+            $kamar = Kamar::findOrFail($id);
+            $lokasiId = $kamar->lokasi_id;
+            $noKamar = $kamar->no_kamar;
+            
+            $penyewa = Penyewa::where('no_kamar', $noKamar)
+                ->where('lokasi_id', $lokasiId)
+                ->first();
+    
+            if ($penyewa) {
+                // Delete the related Penyewa record
+                $penyewa->delete();
+            }
+        }
+    
         $data = [
             'harga' => $request->harga,
             'keterangan' => $request->keterangan,
@@ -132,7 +150,8 @@ class KamarController extends Controller
             'status' => $request->status,
         ];
     
-        Kamar::where('id', $id)->update($data); // Update the kamar record
+        Kamar::where('id', $id)->update($data);
+    
         return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
     }
     

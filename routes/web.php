@@ -54,9 +54,7 @@ Route::get('/penghuni/create', [PenghuniController::class, 'create'])->name('pen
 Route::post('/penghuni', [PenghuniController::class, 'store'])->name('penghuni.store');
 
 
-Route::get('/penyewa', [PenyewaController::class, 'index'])->name('penyewa.index');
-Route::get('/penyewa/create', [PenyewaController::class, 'create'])->name('penyewa.create');
-Route::post('/penyewa', [PenyewaController::class, 'store'])->name('penyewa.store');
+
 
 //lokasi route
 Route::get('/lokasi_kos', [LokasiKostController::class, 'index'])->name('lokasi_kos.index');
@@ -67,7 +65,14 @@ Route::delete('/lokasi_kos/{id}', [LokasiKostController::class, 'destroy'])->nam
 
 //dashboard
 
-
+Route::get('/penyewa', [PenyewaController::class, 'index'])->name('penyewa.index');
+Route::get('/penyewa/create', [PenyewaController::class, 'create'])->name('penyewa.create');
+// Route::get('/get-available-rooms/{kosId}', [PenyewaController::class, 'getAvailableRooms'])->name('penyewa.getAvailableRooms');
+Route::post('/penyewa', [PenyewaController::class, 'store'])->name('penyewa.store');
+Route::get('/penyewa/{id}/edit', [PenyewaController::class, 'edit'])->name('penyewa.edit');
+Route::put('/penyewa/{id}', [PenyewaController::class, 'update'])->name('penyewa.update');
+Route::get('penyewa/{id}/detail', [PenyewaController::class, 'show'])->name('penyewa.show');
+Route::delete('/penyewa/{id}', [PenyewaController::class, 'destroy'])->name('penyewa.destroy');
 
 
 

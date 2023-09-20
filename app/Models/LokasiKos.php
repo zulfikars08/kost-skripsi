@@ -21,7 +21,11 @@ class LokasiKos extends Model
     // Kamar.php (Kamar model)
     public function kamars()
     {
-        return $this->hasMany(Kamar::class, 'kost_id');
+        return $this->hasMany(Kamar::class, 'lokasi_id');
     }
 
+    public function penyewa()
+    {
+        return $this->hasManyThrough(Penyewa::class, Kamar::class, 'lokasi_id', 'kamar_id');
+    }
 }

@@ -11,7 +11,7 @@
                 <div class="card-header bg-primary text-white text-start">
                     <h4 class="mb-0">Detail Lokasi</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4"> <!-- Added "p-4" class for padding -->
                     <table class="table table-bordered">
                         <tr>
                             <th class="bg-info text-white">Lokasi kos</th>
@@ -38,20 +38,30 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $kamarNumbers = []; // Array to track displayed room numbers
+                            @endphp
+                    
                             @forelse ($lokasiKos->kamars as $kamar)
-                            <tr>
-                                <td>{{ $kamar->no_kamar }}</td>
-                                <td>Rp{{ number_format($kamar->harga, 2) }}</td>
-                                <td>{{ $kamar->keterangan }}</td>
-                                <td>{{ $kamar->fasilitas }}</td>
-                            </tr>
+                                @if (!in_array($kamar->no_kamar, $kamarNumbers)) <!-- Check if room number is already displayed -->
+                                    <tr>
+                                        <td>{{ $kamar->no_kamar }}</td>
+                                        <td>Rp{{ number_format($kamar->harga, 2) }}</td>
+                                        <td>{{ $kamar->keterangan }}</td>
+                                        <td>{{ $kamar->fasilitas }}</td>
+                                    </tr>
+                                    @php
+                                        $kamarNumbers[] = $kamar->no_kamar; // Add room number to the array
+                                    @endphp
+                                @endif
                             @empty
-                            <tr>
-                                <td colspan="4" class="text-muted">Tidak ada kamar tersedia.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4" class="text-muted">Tidak ada kamar tersedia.</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    
                 </div>
             </div>
         </div>

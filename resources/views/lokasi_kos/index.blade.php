@@ -10,7 +10,7 @@
             <!-- SEARCH FORM -->
             <form class="d-flex" action="{{ route('lokasi_kos.index') }}" method="get" id="search-form">
                 <div class="input-group">
-                    <label class="input-group-text search-input" for="search-input">Search</label>
+                    {{-- <label class="input-group-text search-input" for="search-input">Search</label> --}}
                     <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
                         aria-label="Search" id="search-input">
                     <button class="btn btn-secondary" type="submit">Cari</button>
@@ -128,9 +128,12 @@
                         action="{{ route('lokasi_kos.destroy', $item->id)}}" method="post">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" name="submit" class="btn btn-danger btn-sm">Delete</button>
+                        <button type="submit" name="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </form>
-                    <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-success btn-sm">Detail</a>
+                    <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-primary btn-sm"> 
+                        <i class="fas fa-info-circle" style="color: white"></i></a>
                 </td>
             </tr>
             @php

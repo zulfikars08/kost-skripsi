@@ -21,4 +21,9 @@ class Penghuni extends Model
         'tanggal_lahir',
         'status'
     ];
+
+    public function penyewa()
+    {
+        return $this->hasMany(Penyewa::class, 'penghuni_id');
+    }
 }

@@ -1,8 +1,6 @@
 /* Sidebar styles */
 /* Customize sidebar styles */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 a {
     text-decoration: none;
@@ -34,9 +32,18 @@ body {
     font-size: 14px; /* Adjust the value as needed */
 }
 
+select option {
+    color: white; /* This sets the text color to white */
+}
 
+/* After (change to a readable color, e.g., black) */
+select option {
+    color: black;
+}
 
-
+#nama_kos option {
+    color: black; /* Adjust the color to a readable one */
+}
 
 
 /* Style for admin text */
@@ -62,12 +69,14 @@ body {
     flex-direction: column;
     /* align-items: center; */
     min-height: 80vh;
-    min-width: 170vh;
+    min-width: 180vh;
+    padding: 3%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background-color: white;
-    margin: 50px;
+    font-size: 14px;
+    margin: 40px;
 }
 /* Custom pagination styling */
 /* Custom pagination styling */
