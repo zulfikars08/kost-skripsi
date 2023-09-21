@@ -59,7 +59,7 @@ class PenyewaController extends Controller
             'lokasi_id' => 'nullable|exists:lokasi_kos,id',
             'tipe_pembayaran' => 'required|in:tunai,non-tunai',
             'jumlah_tarif' => 'required|integer',
-            'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,pdf',
+            'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png',
             'tanggal_pembayaran_awal' => 'nullable|date',
             'tanggal_pembayaran_akhir' => 'nullable|date',
             'keterangan' => 'required|string',

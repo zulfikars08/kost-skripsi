@@ -55,7 +55,7 @@
                     <!-- Bukti Pembayaran -->
                     <div class="mb-3 custom-form-group" id="bukti_pembayaran_field" style="display: none;">
                         <label for="bukti_pembayaran" class="form-label">Bukti Pembayaran</label>
-                        <input type="file" class="form-control" name="bukti_pembayaran" id="bukti_pembayaran">
+                        <input type="file" class="form-control" name="bukti_pembayaran" id="bukti_pembayaran" accept=".jpg, .png">
                     </div>
 
                     <!-- Status Pembayaran -->
