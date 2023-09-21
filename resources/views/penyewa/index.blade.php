@@ -39,10 +39,10 @@
                 <th>Jumlah Tarif</th>
                 <th>Tanggal Awal</th>
                 <th>Tanggal Akhir</th>
-                <th>Keterangan</th>
                 <th>Status Penyewa</th>
                 <th>Status Pembayaran</th>
                 <th>Bukti Pembayaran</th>
+                <th>Keterangan</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -70,7 +70,6 @@
                 <td>{{ $penyewa->jumlah_tarif }}</td>
                 <td>{{ $penyewa->tanggal_pembayaran_awal ? $penyewa->tanggal_pembayaran_awal : '-' }}</td>
                 <td>{{ $penyewa->tanggal_pembayaran_akhir ? $penyewa->tanggal_pembayaran_akhir : '-' }}</td>
-                <td>{{ $penyewa->keterangan }}</td>
                 <td>
                     @if ($penyewa->status_pembayaran === 'lunas')
                         <b><span style="color: green;">{{ $penyewa->status_pembayaran }}</span></b>
@@ -102,7 +101,7 @@
                         <button class="btn btn-danger btn-sm">Tidak Aktif</button>
                     @endif
                 </td>
-                
+                <td>{{ $penyewa->keterangan }}</td>
                 <td>
                     {{-- <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
                         action="{{ route('penyewa.destroy', $penyewa->id)}}" method="post">
