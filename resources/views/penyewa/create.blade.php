@@ -162,4 +162,16 @@
     }
 }
 
+function toggleTanggalPembayaranFields() {
+    const statusPembayaran = document.getElementById('status_pembayaran').value;
+    const tanggalPembayaranFields = document.getElementById('tanggal_pembayaran_fields');
+
+    if (statusPembayaran === 'cicil') {
+        tanggalPembayaranFields.style.display = 'block'; // Show the date fields for Cicil
+    } else {
+        tanggalPembayaranFields.style.display = 'none'; // Hide the date fields for Lunas dan Belum Lunas
+    }
+}
+
+
 </script>
