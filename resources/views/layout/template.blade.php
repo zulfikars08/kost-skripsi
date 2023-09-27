@@ -121,6 +121,7 @@
   </nav>
 {{--  --}}
 <script src="{{ asset('javascript/sidebar.js') }}"></script>
+
   <main >
     <div class="loading-overlay">
       <div class="loading-spinner"></div>
@@ -135,3 +136,4 @@
 </body>
 
 </html>
+<script src="{{ asset('javascript/autoHarga.js') }}"></script>
