@@ -35,14 +35,14 @@
                 <th>Nama</th>
                 <th>Nama Kos</th>
                 <th>No. Kamar</th>
-                <th>Tipe Pembayaran</th>
+                {{-- <th>Tipe Pembayaran</th>
                 <th>Jumlah Tarif</th>
                 <th>Tanggal Awal</th>
-                <th>Tanggal Akhir</th>
+                <th>Tanggal Akhir</th> --}}
                 <th>Status Penyewa</th>
-                <th>Status Pembayaran</th>
+                {{-- <th>Status Pembayaran</th>
                 <th>Bukti Pembayaran</th>
-                <th>Keterangan</th>
+                <th>Keterangan</th> --}}
                 <th>Action</th>
             </tr>
         </thead>
@@ -66,24 +66,24 @@
                     @endif
                 </td>
                 <td>{{ $penyewa->no_kamar }}</td>
-                <td>{{ $penyewa->tipe_pembayaran }}</td>
+                {{-- <td>{{ $penyewa->tipe_pembayaran }}</td>
                 <td>{{ $penyewa->jumlah_tarif }}</td>
                 <td>{{ $penyewa->tanggal_pembayaran_awal ? $penyewa->tanggal_pembayaran_awal : '-' }}</td>
-                <td>{{ $penyewa->tanggal_pembayaran_akhir ? $penyewa->tanggal_pembayaran_akhir : '-' }}</td>
-                <td>
+                <td>{{ $penyewa->tanggal_pembayaran_akhir ? $penyewa->tanggal_pembayaran_akhir : '-' }}</td> --}}
+                {{-- <td>
                     @if ($penyewa->status_pembayaran === 'lunas')
                         <b><span style="color: green;">{{ $penyewa->status_pembayaran }}</span></b>
                     @elseif ($penyewa->status_pembayaran === 'cicil')
-                        <b><span style="color: rgb(255, 123, 0);">{{ $penyewa->status_pembayaran }}</span></b>
+                        <b><span style="color: rgb(255, 123, 0);">{{ $penyewa->status_pembayaran }}</span></b> --}}
                     {{-- @elseif ($penyewa->status_pembayaran === 'belum_lunas')
                         <b><span style="color: red;">{{ $penyewa->status_pembayaran }}</span></b> --}}
-                    @else
+                    {{-- @else
                         {{ $penyewa->status_pembayaran }}
                     @endif
                 </td>
-                <td>
+                <td> --}}
                     <!-- Display the proof of payment button/icon if it exists and payment type is "non-tunai" -->
-                    @if ($penyewa->tipe_pembayaran === 'non-tunai' && $penyewa->bukti_pembayaran)
+                    {{-- @if ($penyewa->tipe_pembayaran === 'non-tunai' && $penyewa->bukti_pembayaran)
                         <button type="button" class="btn btn-link btn-sm"  style="background-color: blueviolet;color: aliceblue"   onclick="openImageModal('{{ asset('storage/' . $penyewa->bukti_pembayaran) }}')">
                             <!-- Use an icon (e.g., an eye icon) to indicate viewing -->
                             <i class="fas fa-eye"></i>
@@ -93,7 +93,7 @@
                     @else
                         No Bukti Pembayaran
                     @endif
-                </td>
+                </td> --}}
                 <td>
                     @if ($penyewa->status_penyewa === 'aktif')
                         <button class="btn btn-success btn-sm">Aktif</button>
@@ -101,7 +101,7 @@
                         <button class="btn btn-danger btn-sm">Tidak Aktif</button>
                     @endif
                 </td>
-                <td>{{ $penyewa->keterangan }}</td>
+                {{-- <td>{{ $penyewa->keterangan }}</td> --}}
                 <td>
                     {{-- <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
                         action="{{ route('penyewa.destroy', $penyewa->id)}}" method="post">
