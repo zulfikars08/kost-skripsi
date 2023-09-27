@@ -8,6 +8,7 @@ use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\TenatsController;
+use App\Http\Controllers\TransaksiController;
 use App\Models\Kamar;
 use App\Models\Penghuni;
 use Illuminate\Support\Facades\Route;
@@ -74,5 +75,5 @@ Route::put('/penyewa/{id}', [PenyewaController::class, 'update'])->name('penyewa
 Route::get('penyewa/{id}/detail', [PenyewaController::class, 'show'])->name('penyewa.show');
 Route::delete('/penyewa/{id}', [PenyewaController::class, 'destroy'])->name('penyewa.destroy');
 
-
-
+Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');

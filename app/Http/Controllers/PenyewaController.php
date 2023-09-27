@@ -99,11 +99,11 @@ class PenyewaController extends Controller
             'kamar_id' => $penyewa->kamar_id,
             'lokasi_id' => $penyewa->lokasi_id,
             'penyewa_id' => $penyewa->id,
-            'tipe_pembayaran' => 'non-tunai', // Set the default value or adjust as needed
+            'tipe_pembayaran' => null, // Set the default value or adjust as needed
             'jumlah_tarif' => 0, // Set to 0 for integer columns
-            'bukti_pembayaran' => '-', // Set to '-' for string columns
-            'tanggal_pembayaran_awal' => now(), // Set to the current date or adjust as needed
-            'tanggal_pembayaran_akhir' => now(), // Set to the current date or adjust as needed
+            'bukti_pembayaran' => null, // Set to '-' for string columns
+            'tanggal_pembayaran_awal' => null, // Set to the current date or adjust as needed
+            'tanggal_pembayaran_akhir' => null, // Set to the current date or adjust as needed
             'status_pembayaran' => 'belum_lunas', // Set the default value or adjust as needed
             'kebersihan' => 0, // Set to 0 for integer columns
             'pengeluaran' => 0, // Set to 0 for integer columns
