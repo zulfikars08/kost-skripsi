@@ -21,15 +21,7 @@ class Penyewa extends Model
         'nama',
         'no_kamar',
         'kamar_id',
-        'penghuni_id',
         'lokasi_id',
-        'tipe_pembayaran',
-        'jumlah_tarif',
-        'bukti_pembayaran',
-        'tanggal_pembayaran_awal',
-        'tanggal_pembayaran_akhir',
-        'keterangan',
-        'status_pembayaran',
         'status_penyewa',
         'created_by',
         'updated_by',
@@ -40,17 +32,18 @@ class Penyewa extends Model
     
     // Define relationships if needed
   // Penyewa.php
-    public function kamar()
+  public function kamar()
     {
-      return $this->belongsTo(Kamar::class, 'kamar_id');
-    }
-    public function penghuni()
-    {
-        return $this->belongsTo(Penghuni::class, 'penghuni_id');
+        return $this->belongsTo(Kamar::class);
     }
 
     public function lokasiKos()
     {
-        return $this->belongsTo(LokasiKos::class, 'lokasi_id');
+        return $this->belongsTo(LokasiKos::class);
+    }
+
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
     }
 }

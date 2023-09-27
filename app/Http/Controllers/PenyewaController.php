@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PenyewaCreated;
 use App\Models\Kamar;
 use App\Models\LokasiKos;
 use App\Models\Penyewa;
+use App\Models\Transaksi;
 use App\Rules\UniqueNoKamarNamaKos;
 
 use Illuminate\Http\Request;
@@ -51,19 +53,11 @@ class PenyewaController extends Controller
     
     public function store(Request $request)
     {
-        // Validate the incoming request data
         $request->validate([
             'nama' => 'required|string',
             'no_kamar' => 'required|string',
             'penghuni_id' => 'nullable|exists:penghuni,id',
             'lokasi_id' => 'nullable|exists:lokasi_kos,id',
-            'tipe_pembayaran' => 'required|in:tunai,non-tunai',
-            'jumlah_tarif' => 'required|integer',
-            'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png',
-            'tanggal_pembayaran_awal' => 'nullable|date',
-            'tanggal_pembayaran_akhir' => 'nullable|date',
-            'keterangan' => 'required|string',
-            'status_pembayaran' => 'required|in:lunas,belum_lunas,cicil',
             'status_penyewa' => 'required|in:aktif,tidak_aktif',
         ]);
     
@@ -72,15 +66,7 @@ class PenyewaController extends Controller
             'nama' => $request->input('nama'),
             'no_kamar' => $request->input('no_kamar'),
             'kamar_id' => Kamar::where('no_kamar', $request->input('no_kamar'))->firstOrFail()->id,
-            'penghuni_id' => $request->input('penghuni_id'),
             'lokasi_id' => $request->input('lokasi_id'),
-            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
-            'jumlah_tarif' => $request->input('jumlah_tarif'),
-            'bukti_pembayaran' => $request->input('bukti_pembayaran'),
-            'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
-            'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
-            'keterangan' => $request->input('keterangan'),
-            'status_pembayaran' => $request->input('status_pembayaran'),
             'status_penyewa' => $request->input('status_penyewa'),
         ];
     
@@ -104,23 +90,31 @@ class PenyewaController extends Controller
                 ->update(['status' => 'sudah terisi']);
         }
     
-        // Handle file upload (if a file is provided)
-        if ($request->hasFile('bukti_pembayaran')) {
-            $file = $request->file('bukti_pembayaran');
-            $fileName = $file->getClientOriginalName();
-            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
-            $data['bukti_pembayaran'] = $filePath;
-        }
-    
         // Create the Penyewa record
-        Penyewa::create($data);
+        $penyewa = Penyewa::create($data);
+    
+        // Automatically create a record in the 'transaksi' table
+        Transaksi::create([
+            'nama' => $penyewa->nama,
+            'kamar_id' => $penyewa->kamar_id,
+            'lokasi_id' => $penyewa->lokasi_id,
+            'penyewa_id' => $penyewa->id,
+            'tipe_pembayaran' => 'non-tunai', // Set the default value or adjust as needed
+            'jumlah_tarif' => 0, // Set to 0 for integer columns
+            'bukti_pembayaran' => '-', // Set to '-' for string columns
+            'tanggal_pembayaran_awal' => now(), // Set to the current date or adjust as needed
+            'tanggal_pembayaran_akhir' => now(), // Set to the current date or adjust as needed
+            'status_pembayaran' => 'belum_lunas', // Set the default value or adjust as needed
+            'kebersihan' => 0, // Set to 0 for integer columns
+            'pengeluaran' => 0, // Set to 0 for integer columns
+            'keterangan' => '-', // Set to '-' for string columns
+            'penyewa_id' => $penyewa->id, // Associate the Penyewa with this Transaksi
+        ]);
     
         // Redirect to the index page with a success message
         return redirect()->route('penyewa.index')->with('success_add', 'Data penyewa berhasil ditambahkan.');
     }
     
-    
-
     
         
     
