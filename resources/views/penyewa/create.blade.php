@@ -35,7 +35,7 @@
                     </div>
 
                     <!-- Jumlah Tarif -->
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="jumlah_tarif" class="form-label">Jumlah Tarif</label>
                         <input type="text" class="form-control" name="jumlah_tarif" id="jumlah_tarif"
                             value="{{ old('jumlah_tarif') }}" required>
@@ -84,7 +84,7 @@
                             <input type="date" class="form-control" name="tanggal_pembayaran_akhir"
                                 id="tanggal_pembayaran_akhir">
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="mb-3 custom-form-group">
                         <label for="status_penyewa">Edit Status Penyewa:</label>
                         <select name="status_penyewa" id="status_penyewa">
@@ -93,11 +93,11 @@
                         </select>
                     </div>
                     <!-- Keterangan Pembayaran -->
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="keterangan" class="form-label">Keterangan Pembayaran</label>
                         <input type="text" class="form-control" name="keterangan" id="keterangan"
                             value="{{ old('keterangan') }}" required>
-                    </div>
+                    </div> --}}
 
                 </div>
                 <div class="modal-footer">
@@ -108,70 +108,3 @@
         </div>
     </div>
 </div>
-<script>
-    function checkFormAndSubmit() {
-        // Check for validation errors
-        if (hasValidationErrors()) {
-            // Display an error toast
-            showErrorToast();
-        } else {
-            // Submit the form
-            document.getElementById('myForm').submit();
-        }
-    }
-
-    function hasValidationErrors() {
-        // Implement your validation logic here
-        // Check if there are any validation errors and return true if errors exist, false otherwise
-        // For example, you can check if required fields are empty
-
-        const noKamarField = document.getElementById('no_kamar');
-        if (!noKamarField.value.trim()) {
-            return true;
-        }
-
-        // Add more validation checks as needed
-
-        return false; // Return false if there are no errors
-    }
-
-    function showErrorToast() {
-        // Display an error toast or message here
-        // You can use a library like Bootstrap Toast or any other method to display the error message
-        // Example using Bootstrap Toast:
-        var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-        errorToast.show();
-    }
-
-    function showSuccessToast() {
-        // Display a success toast or message here
-        // You can use a library like Bootstrap Toast or any other method to display the success message
-        // Example using Bootstrap Toast:
-        var successToast = new bootstrap.Toast(document.getElementById('successToast'));
-        successToast.show();
-    }
-
-    function toggleBuktiPembayaranField() {
-    const tipePembayaran = document.getElementById('tipe_pembayaran').value;
-    const buktiPembayaranField = document.getElementById('bukti_pembayaran_field');
-
-    if (tipePembayaran === 'non-tunai') {
-        buktiPembayaranField.style.display = 'block'; // Show the field for Non-Tunai
-    } else {
-        buktiPembayaranField.style.display = 'none'; // Hide the field for Tunai
-    }
-}
-
-function toggleTanggalPembayaranFields() {
-    const statusPembayaran = document.getElementById('status_pembayaran').value;
-    const tanggalPembayaranFields = document.getElementById('tanggal_pembayaran_fields');
-
-    if (statusPembayaran === 'cicil') {
-        tanggalPembayaranFields.style.display = 'block'; // Show the date fields for Cicil
-    } else {
-        tanggalPembayaranFields.style.display = 'none'; // Hide the date fields for Lunas dan Belum Lunas
-    }
-}
-
-
-</script>
