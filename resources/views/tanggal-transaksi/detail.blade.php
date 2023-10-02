@@ -1,10 +1,18 @@
 @extends('layout.template')
 
 @section('content')
-@include('komponen.pesan')
 <div class="container-fluid">
-    <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Transaksi</h3>
-    <!-- TRANSAKSI LIST TABLE -->
+    <div class="mb-3 text-start">
+        <a href="{{ url('tanggal-transaksi') }}" class="btn btn-secondary mb-3 s">Kembali</a>
+    </div>
+    <h3 class="text-start" style="margin: 20px 0;">Detail Transaksi</h3>
+    <!-- Add these buttons to your Blade view -->
+<div class="mb-3 text-end">
+    <a href="{{ route('transaksi.export.excel') }}" class="btn btn-success">Export to Excel</a>
+
+</div>
+
+    <!-- Tampilkan data transaksi yang sesuai dengan bulan dan tahun -->
     <table class="table table-striped">
         <thead>
             <tr>
@@ -51,27 +59,24 @@
                         {{ $item->lokasiKos->nama_kos }}
                     @endif
                 </td>
-                <!-- Tanggal -->
+                <!-- Jumlah Tarif -->
                 <td>
                     {{ $item->tanggal ?? '-' }}
                 </td>
-                <!-- Jumlah Tarif -->
                 <td>{{ $item->jumlah_tarif }}</td>
                 <!-- Tipe Pembayaran -->
                 <td>{{ $item->tipe_pembayaran ? $item->tipe_pembayaran : '-' }}</td>
+                <!-- Bukti Pembayaran -->
                 <td>
-                    <!-- Display the proof of payment button/icon if it exists and payment type is "non-tunai" -->
                     @if ($item->tipe_pembayaran === 'non-tunai' && $item->bukti_pembayaran)
-                        <button type="button" class="btn btn-link btn-sm"  style="background-color: blueviolet;color: aliceblue"   onclick="openImageModal('{{ asset('storage/' . $item->bukti_pembayaran) }}')">
-                            <!-- Use an icon (e.g., an eye icon) to indicate viewing -->
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <a href="{{ asset('storage/' . $item->bukti_pembayaran) }}" target="_blank">Lihat Bukti Pembayaran</a>
                     @elseif ($item->tipe_pembayaran === 'tunai')
                         Cash Payment
                     @else
                         No Bukti Pembayaran
                     @endif
                 </td>
+                <!-- Status Pembayaran -->
                 <td>
                     @if ($item->status_pembayaran === 'lunas')
                         <b><span style="color: green;">{{ $item->status_pembayaran }}</span></b>
@@ -83,9 +88,10 @@
                         {{ $item->status_pembayaran }}
                     @endif
                 </td>
+                <!-- Tanggal Awal -->
                 <td>{{ $item->tanggal_pembayaran_awal ? $item->tanggal_pembayaran_awal : '-' }}</td>
+                <!-- Tanggal Akhir -->
                 <td>{{ $item->tanggal_pembayaran_akhir ? $item->tanggal_pembayaran_akhir : '-' }}</td>
-
                 <!-- Kebersihan -->
                 <td>{{ $item->kebersihan }}</td>
                 <!-- Total -->
@@ -94,52 +100,24 @@
                 <td>{{ $item->pengeluaran }}</td>
                 <!-- Keterangan -->
                 <td>{{ $item->keterangan }}</td>
+                <!-- Action -->
                 <td>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
                         Edit
                     </button>
                     @include('transaksi.edit')
-                    <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
-                        action="{{ route('transaksi.destroy', $item->id)}}" method="post">
+                    <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
                         @csrf
                         @method('DELETE')
                         <button type="submit" name="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>
-                
             </tr>
-            
             @php
             $i++;
             @endphp
             @endforeach
         </tbody>
-    </table>
-    {{ $transaksiData->withQueryString()->links() }}
-
+    </table>    
 </div>
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">Bukti Pembayaran</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <img id="buktiPembayaranImage" src="" alt="Bukti Pembayaran" class="img-fluid" style="max-width: 100%; max-height: 80vh;">
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    function openImageModal(imageUrl) {
-    // Set the image source
-    document.getElementById('buktiPembayaranImage').src = imageUrl;
-    // Open the modal
-    $('#imageModal').modal('show');
-}
-</script>
-
 @endsection

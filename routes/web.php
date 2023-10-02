@@ -7,10 +7,13 @@ use App\Http\Controllers\LokasiKostController;
 use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\SesiController;
+use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\TenatsController;
 use App\Http\Controllers\TransaksiController;
 use App\Models\Kamar;
 use App\Models\Penghuni;
+use App\Models\TanggalTransaksi;
+use App\Models\Transaksi;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -75,5 +78,22 @@ Route::put('/penyewa/{id}', [PenyewaController::class, 'update'])->name('penyewa
 Route::get('penyewa/{id}/detail', [PenyewaController::class, 'show'])->name('penyewa.show');
 Route::delete('/penyewa/{id}', [PenyewaController::class, 'destroy'])->name('penyewa.destroy');
 
-Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
-Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+
+
+Route::resource('transaksi', TransaksiController::class);
+
+
+Route::get('/tanggal-transaksi', [TanggalController::class, 'index'])->name('tanggal-transaksi.index');
+Route::get('/tanggal-transaksi/create', [TanggalController::class, 'create'])->name('tanggal-transaksi.create');
+Route::post('tanggal-transaksi', [TanggalController::class, 'store'])->name('tanggal-transaksi.store');
+Route::get('tanggal-transaksi/{id}/detail', [TanggalController::class, 'show'])->name('tanggal-transaksi.detail');
+Route::delete('/tanggal-transaksi/{id}', [TanggalController::class, 'destroy'])->name('tanggal-transaksi.destroy');
+
+
+
+// routes/web.php
+
+
+
+Route::get('/export/transaksi', [TransaksiController::class, 'exportExcel'])->name('transaksi.export.excel');
+

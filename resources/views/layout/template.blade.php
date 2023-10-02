@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
+ 
+ <title>Nur Residence</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -91,7 +92,7 @@
             </a>
           </li>
           <li class="tooltip-element" data-tooltip="5">
-            <a href="/laporan" data-active="5">
+            <a href="/tanggal-transaksi" data-active="5">
               <div class="icon">
                 <i class='bi bi-file-earmark-text'></i>
                 <i class='bi bi-file-earmark-text'></i>

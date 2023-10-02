@@ -20,6 +20,7 @@ class CreateTransaksiTable extends Migration
             $table->unsignedBigInteger('penyewa_id')->nullable();
             $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
             $table->integer('jumlah_tarif');
+            $table->date('tanggal')->nullable();
             $table->binary('bukti_pembayaran')->nullable()->default(null);
             $table->date('tanggal_pembayaran_awal')->nullable()->default(null);
             $table->date('tanggal_pembayaran_akhir')->nullable()->default(null);
@@ -32,13 +33,12 @@ class CreateTransaksiTable extends Migration
             $table->integer('updated_by')->nullable()->default(null);
             $table->integer('deleted_by')->nullable()->default(null);
             $table->dateTime('deleted_at')->nullable()->default(null);
-            
+
             $table->foreign('kamar_id')->references('id')->on('kamar')
                 ->onUpdate('cascade')->onDelete('cascade');
-            
             $table->foreign('lokasi_id')->references('id')->on('lokasi_kos') // Added foreign key for lokasi_id
                 ->onUpdate('cascade')->onDelete('cascade');
-                $table->foreign('penyewa_id')->references('id')->on('penyewa')
+            $table->foreign('penyewa_id')->references('id')->on('penyewa')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
     }

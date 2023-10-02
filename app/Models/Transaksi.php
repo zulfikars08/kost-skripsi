@@ -2,38 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    protected $table = 'transaksi'; // Specify the table name
-
+    protected $table = 'transaksi'; // Specify the table name if it's different from the model name
     protected $fillable = [
-        'kamar_id',
-        'penghuni_id',
-        'lokasi_id',
-        'penyewa_id',
-        'tipe_pembayaran',
+        'tanggal',
         'jumlah_tarif',
+        'kebersihan',
+        'pengeluaran',
+        'tipe_pembayaran',
         'bukti_pembayaran',
         'tanggal_pembayaran_awal',
         'tanggal_pembayaran_akhir',
-        'status_pembayaran',
-        'kebersihan',
-        'pengeluaran',
         'keterangan',
+        'status_pembayaran',
+        'kamar_id',
+        'lokasi_id',
+        'penyewa_id',
+        'tanggal_transaksi_id'
     ];
 
-    // Define the relationships with other models
+    public function penyewa()
+    {
+        return $this->belongsTo(Penyewa::class, 'penyewa_id');
+    }
+
     public function kamar()
     {
         return $this->belongsTo(Kamar::class, 'kamar_id');
-    }
-
-    public function penghuni()
-    {
-        return $this->belongsTo(Penghuni::class, 'penghuni_id');
     }
 
     public function lokasiKos()
@@ -41,8 +39,9 @@ class Transaksi extends Model
         return $this->belongsTo(LokasiKos::class, 'lokasi_id');
     }
 
-    public function penyewa()
+    public function tanggalTransaksi()
     {
-        return $this->belongsTo(Penyewa::class, 'penyewa_id');
+        return $this->belongsTo(TanggalTransaksi::class);
     }
 }
+

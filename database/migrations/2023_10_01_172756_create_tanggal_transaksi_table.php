@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePenghuniTable extends Migration
+class CreateTanggalTransaksiTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,21 @@ class CreatePenghuniTable extends Migration
      */
     public function up()
     {
-        Schema::create('penghuni', function (Blueprint $table) {
+        Schema::create('tanggal_transaksi', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('jenis_kelamin');
-            $table->string('no_hp');
-            $table->string('pekerjaan');
-            $table->string('perusahaan');
-            $table->date('tanggal_lahir');
-            $table->string('status');
+            $table->string('bulan'); // Menggunakan huruf kecil
+            $table->string('tahun');
+            $table->unsignedBigInteger('transaksi_id')->nullable(); 
             $table->timestamps();
+            $table->unique(['bulan', 'tahun']);
             $table->integer('created_by')->nullable()->default(null);
             $table->integer('updated_by')->nullable()->default(null);
             $table->integer('deleted_by')->nullable()->default(null);
             $table->dateTime('deleted_at')->nullable()->default(null);
+            // Menambahkan batasan unik pada kolom 'bulan' dan 'tahun'
+            
+            $table->foreign('transaksi_id')->references('id')->on('transaksi')
+            ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -37,6 +38,6 @@ class CreatePenghuniTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('penghuni');
+        Schema::dropIfExists('tanggal_transaksi');
     }
 }

@@ -33,58 +33,6 @@
                         <label for="nama" class="form-label">Nama</label>
                         <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama') }}" required>
                     </div>
-
-                    <!-- Jumlah Tarif -->
-                    {{-- <div class="mb-3 custom-form-group">
-                        <label for="jumlah_tarif" class="form-label">Jumlah Tarif</label>
-                        <input type="text" class="form-control" name="jumlah_tarif" id="jumlah_tarif"
-                            value="{{ old('jumlah_tarif') }}" required>
-                    </div>
-
-                    <!-- Tipe Pembayaran -->
-                    <div class="mb-3 custom-form-group">
-                        <label for="tipe_pembayaran" class="form-label">Tipe Pembayaran</label>
-                        <select class="form-select" name="tipe_pembayaran" id="tipe_pembayaran" required
-                        onchange="toggleBuktiPembayaranField()">
-                    <option value="tunai">Tunai</option>
-                    <option value="non-tunai">Non-Tunai</option>
-                </select>
-                
-                    </div>
-
-                    <!-- Bukti Pembayaran -->
-                    <div class="mb-3 custom-form-group" id="bukti_pembayaran_field" style="display: none;">
-                        <label for="bukti_pembayaran" class="form-label">Bukti Pembayaran</label>
-                        <input type="file" class="form-control" name="bukti_pembayaran" id="bukti_pembayaran" accept=".jpg, .png">
-                    </div>
-
-                    <!-- Status Pembayaran -->
-                    <div class="mb-3 custom-form-group">
-                        <label for="status_pembayaran" class="form-label">Status Pembayaran</label>
-                        <select class="form-select" name="status_pembayaran" id="status_pembayaran" required
-                            onchange="toggleTanggalPembayaranFields()">
-                            <option value="lunas">Lunas</option>
-                            <option value="belum_lunas">Belum Lunas</option>
-                            <option value="cicil">Cicil</option>
-                        </select>
-                    </div>
-
-                    <!-- Tanggal Pembayaran Awal and Tanggal Pembayaran Akhir Container -->
-                    <div id="tanggal_pembayaran_fields" style="display: none;">
-                        <!-- Tanggal Pembayaran Awal -->
-                        <div class="mb-3 custom-form-group">
-                            <label for="tanggal_pembayaran_awal" class="form-label">Tanggal Pembayaran Awal</label>
-                            <input type="date" class="form-control" name="tanggal_pembayaran_awal"
-                                id="tanggal_pembayaran_awal">
-                        </div>
-
-                        <!-- Tanggal Pembayaran Akhir -->
-                        <div class="mb-3 custom-form-group">
-                            <label for="tanggal_pembayaran_akhir" class="form-label">Tanggal Pembayaran Akhir</label>
-                            <input type="date" class="form-control" name="tanggal_pembayaran_akhir"
-                                id="tanggal_pembayaran_akhir">
-                        </div>
-                    </div> --}}
                     <div class="mb-3 custom-form-group">
                         <label for="status_penyewa">Edit Status Penyewa:</label>
                         <select name="status_penyewa" id="status_penyewa">
