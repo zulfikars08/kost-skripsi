@@ -1,1 +1,0 @@
-<?php /**PATH C:\kost-skripsi\resources\views/lokasi_kos/edit.blade.php ENDPATH**/ ?>
