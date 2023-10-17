@@ -3,15 +3,14 @@
 @section('content')
 <div class="container-fluid">
     <div class="mb-3 text-start">
-        <a href="{{ url('tanggal-transaksi') }}" class="btn btn-secondary mb-3 s">Kembali</a>
-    </div>
+        <a href="{{ url()->previous() }}" class="btn btn-secondary mb-3">Kembali</a>
+    </div>    
     <h3 class="text-start" style="margin: 20px 0;">Detail Transaksi</h3>
     <!-- Add these buttons to your Blade view -->
 <div class="mb-3 text-end">
     <a href="{{ route('transaksi.export.excel') }}" class="btn btn-success">Export to Excel</a>
-
 </div>
-
+@foreach($groupedTransaksi as $namaKos => $transaksiData)
     <!-- Tampilkan data transaksi yang sesuai dengan bulan dan tahun -->
     <table class="table table-striped">
         <thead>
@@ -56,7 +55,7 @@
                 <!-- Nama Kos -->
                 <td>
                     @if ($item->lokasiKos)
-                        {{ $item->lokasiKos->nama_kos }}
+                    {{ $item->lokasiKos->nama_kos }}
                     @endif
                 </td>
                 <!-- Jumlah Tarif -->
@@ -118,6 +117,7 @@
             @endphp
             @endforeach
         </tbody>
-    </table>    
-</div>
+    </table>  
+    @endforeach  
+
 @endsection

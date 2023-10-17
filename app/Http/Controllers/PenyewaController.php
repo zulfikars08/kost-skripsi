@@ -92,9 +92,14 @@ class PenyewaController extends Controller
     
         // Create the Penyewa record
         $penyewa = Penyewa::create($data);
-    
+        if ($penyewa->kamar && $penyewa->kamar->lokasi) {
+            $nama_kos = $penyewa->kamar->lokasi->nama_kos;
+        } else {
+            $nama_kos = "Nama Kos Tidak Ditemukan";
+        }
         // Automatically create a record in the 'transaksi' table
         Transaksi::create([
+            'nama_kos' => $nama_kos,
             'nama' => $penyewa->nama,
             'kamar_id' => $penyewa->kamar_id,
             'lokasi_id' => $penyewa->lokasi_id,

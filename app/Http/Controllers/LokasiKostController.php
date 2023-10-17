@@ -26,6 +26,21 @@ class LokasiKostController extends Controller
         return view('lokasi_kos.index', compact('data'));
     }
 
+    public function lokasi(Request $request)
+{
+    sleep(1);
+    $katakunci = $request->input('katakunci');
+    
+    $lokasiKosData = LokasiKos::with('kamars')
+        ->when($katakunci, function ($query) use ($katakunci) {
+            return $query->where('nama_kos', 'like', "%$katakunci%");
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
+
+    return view('tanggal-transaksi.lokasi', compact('lokasiKosData'));
+}
+
     /**
      * Show the form for creating a new resource.
      *

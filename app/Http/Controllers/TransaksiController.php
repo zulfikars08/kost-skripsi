@@ -2,30 +2,56 @@
 
 namespace App\Http\Controllers;
 
-
-use Illuminate\Http\Request;
 use App\Kamar;
 use App\LokasiKos;
-use App\Http\Controllers\DB;
 use App\Models\Kamar as ModelsKamar;
 use App\Models\Penyewa;
 use App\Models\TanggalTransaksi;
 use App\Models\Transaksi;
 use Illuminate\Support\Carbon;
 use App\Exports\TransaksiExport;
+use App\Models\LokasiKos as ModelsLokasiKos;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf;
+use App\Exports\FilteredTransaksiExport;
+use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil data transaksi dari model Transaksi (sesuaikan query jika perlu)
-        $transaksiData = Transaksi::paginate(10);
-
-        // Tampilkan view 'transaksi.index' dan kirimkan data transaksi
-        return view('transaksi.index', compact('transaksiData'));
+        $lokasiKosData = ModelsLokasiKos::all();
+    
+        $months = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format to two digits (e.g., 01, 02, ...)
+            $monthName = date("F", mktime(0, 0, 0, $i, 1)); // Get month name from numeric value
+            $months[$monthValue] = $monthName;
+            // ... (your month data creation)
+        }
+        // Generate an array of years (e.g., from the current year to 10 years ago)
+        $currentYear = date('Y');
+        $years = range($currentYear, $currentYear - 10);
+    
+        // Check for the search query
+        if ($request->has('katakunci')) {
+            $katakunci = $request->input('katakunci');
+            // Update your query to filter the data based on your search criteria
+            $transaksiData = Transaksi::where('nama', 'like', '%' . $katakunci . '%')
+                ->paginate(10) // Use the number that suits your pagination.
+                ->withQueryString();
+        } else {
+            // If no search query, just retrieve the standard data
+            $transaksiData = Transaksi::paginate(10)->withQueryString();
+        }
+    
+        // Tampilkan view 'transaksi.index' and kirimkan data transaksi
+        return view('transaksi.index', compact('lokasiKosData', 'transaksiData', 'months', 'years'));
+    
+        
     }
+
 
 
 
@@ -88,12 +114,12 @@ class TransaksiController extends Controller
             'tanggal' => 'nullable|date',
             'jumlah_tarif' => 'required|numeric',
             'kebersihan' => 'required|numeric',
-            'pengeluaran' => 'required|numeric',
+            // 'pengeluaran' => 'required|numeric',
             'tipe_pembayaran' => 'required|in:tunai,non-tunai',
             'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,pdf',
             'tanggal_pembayaran_awal' => 'nullable|date',
             'tanggal_pembayaran_akhir' => 'nullable|date',
-            'keterangan' => 'required|string',
+            // 'keterangan' => 'required|string',
             'status_pembayaran' => 'required|in:lunas,belum_lunas,cicil',
             // Add validation rules for other fields as needed
         ]);
@@ -106,12 +132,12 @@ class TransaksiController extends Controller
             'tanggal' => $request->input('tanggal'),
             'jumlah_tarif' => $request->input('jumlah_tarif'),
             'kebersihan' => $request->input('kebersihan'),
-            'pengeluaran' => $request->input('pengeluaran'),
+            // 'pengeluaran' => $request->input('pengeluaran'),
             'tipe_pembayaran' => $request->input('tipe_pembayaran'),
             'bukti_pembayaran' => $request->input('bukti_pembayaran'),
             'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
             'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
-            'keterangan' => $request->input('keterangan'),
+            // 'keterangan' => $request->input('keterangan'),
             'status_pembayaran' => $request->input('status_pembayaran'),
             // Update other fields here
         ];
@@ -155,16 +181,57 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi.index')->with('success_add', 'Data Transaksi berhasil diupdate.');
     }
 
-    public function exportExcel()
+
+
+    public function showGenerateFinancialReportView()
     {
-        
-        return Excel::download(new TransaksiExport, 'transaksi.xlsx');
+        // Fetch the necessary data for populating dropdowns, e.g., list of Kos, months, and years
+        $lokasiKosData = ModelsLokasiKos::all(); // Adjust the model and query as needed
+        $months = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format to two digits (e.g., 01, 02, ...)
+            $monthName = date("F", mktime(0, 0, 0, $i, 1)); // Get month name from numeric value
+            $months[$monthValue] = $monthName;
+        }
 
+        // Generate an array of years (e.g., from the current year to 10 years ago)
+        $currentYear = date('Y');
+        $years = range($currentYear, $currentYear - 10);
+
+        return view('transaksi.export', compact('lokasiKosData', 'months', 'years'));
     }
-    
 
+    public function generateFinancialReport(Request $request)
+    {
+        // Validate the form data
+        $lokasiKosId = $request->input('nama_kos');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
 
+        // Get the name of the selected kos (assuming you have a Kos model)
+        $namaKos = ModelsLokasiKos::find($lokasiKosId)->nama_kos;
 
+        // Get the name of the selected month
+        $namaBulan = date("F", mktime(0, 0, 0, $bulan, 10));
+
+        // Perform data filtering based on the input values
+        $filteredTransaksiData = Transaksi::when($lokasiKosId, function ($query) use ($lokasiKosId) {
+            return $query->where('lokasi_id', $lokasiKosId);
+        })
+            ->when($bulan, function ($query) use ($bulan) {
+                return $query->whereMonth('tanggal', $bulan);
+            })
+            ->when($tahun, function ($query) use ($tahun) {
+                return $query->whereYear('tanggal', $tahun);
+            })
+            ->get();
+
+        // Create an instance of your export class with dynamic names
+        $export = new TransaksiExport($filteredTransaksiData, $namaKos, $namaBulan);
+
+        // Generate and download the Excel file
+        return Excel::download($export, 'laporan-keuangan.xlsx');
+    }
 
     /**
      * Remove the specified resource from storage.

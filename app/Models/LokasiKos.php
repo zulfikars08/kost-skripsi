@@ -29,7 +29,7 @@ class LokasiKos extends Model
         return $this->hasManyThrough(Penyewa::class, Kamar::class, 'lokasi_id', 'kamar_id');
     }
     public function transaksi()
-{
-    return $this->hasMany(Transaksi::class);
-}
+    {
+        return $this->hasMany(Transaksi::class, 'lokasi_id');
+    }
 }

@@ -14,11 +14,41 @@ class TanggalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tanggalTransaksis = TanggalTransaksi::all();
-        return view('tanggal-transaksi.index', compact('tanggalTransaksis'));
+        $lokasiId = $request->input('lokasi_id');
+        $katakunci = $request->input('katakunci');
+    
+        $tanggalTransaksis = TanggalTransaksi::with('transaksi.lokasiKos')
+            ->whereHas('transaksi', function ($query) use ($lokasiId) {
+                $query->where('lokasi_id', $lokasiId);
+            })
+            ->when($katakunci, function ($query) use ($katakunci) {
+                $query->whereHas('transaksi.lokasiKos', function ($subQuery) use ($katakunci) {
+                    $subQuery->where('nama_kos', 'like', "%$katakunci%");
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Group the data by 'nama_kos' after retrieving it
+        $groupedTransaksi = $tanggalTransaksis->groupBy(function ($item) {
+            return optional(optional($item->transaksi)->lokasiKos)->nama_kos;
+        });
+    
+        // Ensure $groupedTransaksi is always defined
+        $groupedTransaksi = $groupedTransaksi ?? collect();
+    
+        return view('tanggal-transaksi.detail', compact('tanggalTransaksi', 'transaksiData', 'groupedTransaksi'));
+
     }
+    
+
+    
+    
+
+    
+    
 
     /**
      * Show the form for creating a new resource.
@@ -68,7 +98,13 @@ class TanggalController extends Controller
      */
     public function show($id)
     {
-        $tanggalTransaksi = TanggalTransaksi::findOrFail($id);
+        // Retrieve the 'TanggalTransaksi' record by ID
+        $tanggalTransaksi = TanggalTransaksi::find($id);
+    
+        // Check if the record exists
+        if (!$tanggalTransaksi) {
+            return abort(404); // Handle the case where the record does not exist
+        }
     
         // Extract the 'bulan' and 'tahun' values from the 'TanggalTransaksi' record
         $bulan = $tanggalTransaksi->bulan;
@@ -77,11 +113,16 @@ class TanggalController extends Controller
         // Retrieve transactions based on the 'tanggal' column within the specified month and year
         $transaksiData = Transaksi::whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', $bulan)
+            ->join('lokasi_kos', 'transaksi.lokasi_id', '=', 'lokasi_kos.id')
+            ->orderBy('tanggal', 'desc') // Order by 'tanggal' (date) in descending order
+            ->orderBy('lokasi_kos.nama_kos') // Order by 'nama_kos'
             ->get();
     
         // Pass the data to the view
         return view('tanggal-transaksi.detail', compact('tanggalTransaksi', 'transaksiData'));
     }
+    
+    
     
 
     /**

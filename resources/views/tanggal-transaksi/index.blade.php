@@ -3,6 +3,9 @@
 @section('content')
 @include('komponen.pesan')
 <div class="container-fluid">
+    <div class="mb-3 text-start">
+        <a href="{{ url('lokasi') }}" class="btn btn-secondary mb-3 s">Kembali</a>
+    </div>
     <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Tanggal Transaksi</h3>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">
@@ -42,16 +45,15 @@
             @php
             $i = 1;
             @endphp
-            @foreach ($tanggalTransaksis as $tanggalTransaksi)
+            @foreach ($tanggalTransaksi as $tanggalTransaksi)
             <tr>
                 <td>{{ $i }}</td>
                 <td>{{ $tanggalTransaksi->bulan }}</td>       
                 <td>{{ $tanggalTransaksi->tahun }}</td>
-                <td>
+                <td >
                     <a href="{{ route('tanggal-transaksi.detail', ['id' => $tanggalTransaksi->id]) }}" class="btn btn-primary btn-sm"> 
                         <i class="fas fa-info-circle" style="color: white"></i>
-                    </a>                    
-                    
+                    </a>                   
                     <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
                         action="{{ route('tanggal-transaksi.destroy', $tanggalTransaksi->id) }}" method="post">
                         @csrf

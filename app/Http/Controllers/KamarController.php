@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use App\Models\Kamar;
 use App\Models\LokasiKos;
 use App\Models\Penyewa;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-
 class KamarController extends Controller
 {
     // Display a listing of the resource.

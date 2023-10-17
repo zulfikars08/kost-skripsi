@@ -14,8 +14,8 @@ class TanggalTransaksi extends Model
     ];
 
     public function transaksi()
-    {
-        return $this->hasMany(Transaksi::class, 'transaksi_id'); // Use the correct foreign key
-    }
+{
+    return $this->hasMany(Transaksi::class, 'tanggal_transaksi_id'); // Ensure the foreign key is correct
+}
 }
 

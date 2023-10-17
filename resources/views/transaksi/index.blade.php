@@ -5,6 +5,26 @@
 <div class="container-fluid">
     <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Transaksi</h3>
     <!-- TRANSAKSI LIST TABLE -->
+    <div class="d-flex justify-content-between align-items-center pb-3">
+        <!-- SEARCH FORM -->
+        <form class="d-flex" action="{{ route('transaksi.index') }}" method="get" id="search-form">
+            <div class="input-group">
+                {{-- <label class="input-group-text search-input" for="search-input">Search</label> --}}
+                <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
+                    aria-label="Search" id="search-input">
+                <button class="btn btn-secondary" type="submit">Cari</button>
+            </div>
+        </form>
+
+        <!-- Include the modal partial -->
+
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#generateReportModal">
+            Excel
+        </button>
+        @include('transaksi.export')
+    </div>
+</div>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -21,9 +41,12 @@
                 <th>Tanggal Akhir</th>
                 <th>Kebersihan</th>
                 <th>Total</th>
-                <th>Pengeluaran</th>
                 <th>Keterangan</th>
+                <th>Pengeluaran</th>
                 <th>Action</th>
+            </tr>
+            <tr>
+                
             </tr>
         </thead>
         <tbody>
@@ -90,10 +113,10 @@
                 <td>{{ $item->kebersihan }}</td>
                 <!-- Total -->
                 <td>{{ ($item->jumlah_tarif === 0 && $item->kebersihan === 0) ? 0 : ($item->jumlah_tarif - $item->kebersihan) }}</td>
+                  <!-- Keterangan -->
+                <td>{{ $item->keterangan }}</td>
                 <!-- Pengeluaran -->
                 <td>{{ $item->pengeluaran }}</td>
-                <!-- Keterangan -->
-                <td>{{ $item->keterangan }}</td>
                 <td>
                     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
                         Edit

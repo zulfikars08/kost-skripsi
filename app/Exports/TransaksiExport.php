@@ -1,47 +1,67 @@
 <?php
 
+// Unfiltered Transaction Export
+// app/Exports/TransaksiExport.php
+
+// app/Exports/TransaksiExport.php
+
+// app/Exports/TransaksiExport.php
+
+
+
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Events\AfterSheet;
-use App\Models\Transaksi;
-use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Reader\Xls\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Border as StyleBorder;
 
-class TransaksiExport implements FromView, WithHeadings, ShouldAutoSize, WithEvents
+class TransaksiExport implements FromCollection, WithHeadings, WithStyles
 {
-    use Exportable;
+    protected $filteredTransaksiData;
+    protected $namaKos;
+    protected $namaBulan;
 
-    public function view(): View
+    public function __construct($filteredTransaksiData, $namaKos, $namaBulan)
     {
-        // Query the data you need and map it to the desired format
-        $transaksiData = Transaksi::all()->map(function ($item) {
-            return [
-                $item->id,
-                $item->kamar ? $item->kamar->no_kamar : '-',
-                $item->penyewa ? $item->penyewa->nama : '-',
-                $item->lokasiKos ? $item->lokasiKos->nama_kos : '-',
-                $item->tanggal ?? '-',
-                $item->jumlah_tarif,
-                $item->tipe_pembayaran ?: '-',
-                $item->tipe_pembayaran === 'non-tunai' && $item->bukti_pembayaran
-                    ? asset('storage/' . $item->bukti_pembayaran)
-                    : ($item->tipe_pembayaran === 'tunai' ? 'Cash Payment' : 'No Bukti Pembayaran'),
-                $item->status_pembayaran,
-                $item->tanggal_pembayaran_awal ?: '-',
-                $item->tanggal_pembayaran_akhir ?: '-',
-                $item->kebersihan,
-                ($item->jumlah_tarif === 0 && $item->kebersihan === 0) ? 0 : ($item->jumlah_tarif - $item->kebersihan),
-                $item->pengeluaran,
-                $item->keterangan,
-            ];
-        });
+        $this->filteredTransaksiData = $filteredTransaksiData;
+        $this->namaKos = $namaKos;
+        $this->namaBulan = $namaBulan;
+    }
 
-        return view('pdf.template', compact('transaksiData'));
+    public function collection()
+    {
+        // Transform your $this->data into a collection
+        $collection = new Collection();
+
+        $nomor = 1;
+        foreach ($this->filteredTransaksiData as $item) {
+            $collection->push([
+                'No' =>  $nomor++,
+                'No Kamar' => $item->kamar ? $item->kamar->no_kamar : '-',
+                'Nama' => $item->penyewa ? $item->penyewa->nama : '-',
+                'Nama Kos' => $item->lokasiKos ? $item->lokasiKos->nama_kos : '-',
+                'Tanggal' => $item->tanggal ?? '-',
+                'Jumlah Tarif' => $item->jumlah_tarif,
+                'Tipe Pembayaran' => $item->tipe_pembayaran ? $item->tipe_pembayaran : '-',
+                'Bukti Pembayaran' => $item->tipe_pembayaran === 'non-tunai' && $item->bukti_pembayaran ? asset('storage/' . $item->bukti_pembayaran) : 'No Bukti Pembayaran',
+                'Tanggal Awal Pembayaran' => $item->tanggal_pembayaran_awal ?? '-',
+                'Tanggal Akhir Pembayaran' => $item->tanggal_pembayaran_akhir ?? '-',
+                'Kebersihan' => $item->kebersihan,
+                'Total' => ($item->jumlah_tarif === 0 && $item->kebersihan === 0) ? 0 : ($item->jumlah_tarif - $item->kebersihan),
+                'Pengeluaran' => $item->pengeluaran,
+                'Keterangan' => $item->keterangan,
+                'Status Pembayaran' => $item->status_pembayaran,
+                // Tambahkan kolom lainnya sesuai kebutuhan Anda
+            ]);
+        }
+
+        return $collection;
     }
 
     public function headings(): array
@@ -55,23 +75,35 @@ class TransaksiExport implements FromView, WithHeadings, ShouldAutoSize, WithEve
             'Jumlah Tarif',
             'Tipe Pembayaran',
             'Bukti Pembayaran',
-            'Status Pembayaran',
-            'Tanggal Awal',
-            'Tanggal Akhir',
+            'Tanggal Awal Pembayaran',
+            'Tanggal Akhir Pembayaran',
             'Kebersihan',
             'Total',
             'Pengeluaran',
             'Keterangan',
+            'Status Pembayaran',
+            // Tambahkan kolom lainnya sesuai kebutuhan Anda
         ];
     }
 
-    public function registerEvents(): array
+    public function styles(Worksheet $sheet)
     {
+        $rowCount = count($this->filteredTransaksiData);
+        $cellRange = 'A2:O' . ($rowCount + 1);
+
         return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $cellRange = 'A1:O1'; // All headers
-                $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
-            },
+            1 => [
+                'font' => ['bold' => true],
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT], // Rata kiri
+            ],
+            $cellRange => [
+                'alignment' => ['horizontal' => Alignment::HORIZONTAL_LEFT], // Rata kiri
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => StyleBorder::BORDER_THIN,
+                    ],
+                ],
+            ],
         ];
     }
 }

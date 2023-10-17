@@ -83,6 +83,20 @@ select option {
 /* Style for pagination container */
 /* Change the existing .pagination selector to a more specific selector */
 /* Custom pagination styling */
+/* Style for empty cells */
+.empty-cell {
+    border: none; /* Remove borders from empty cells */
+    background-color: transparent; /* Make the background transparent */
+    padding: 0; /* Remove padding from empty cells */
+}
+
+/* Style for subheadings */
+.subheading {
+    text-align: center; /* Center-align subheadings */
+    font-weight: bold; /* Make subheadings bold */
+    background-color: #f0f0f0; /* Apply a background color */
+    padding: 5px; /* Add some padding for spacing */
+}
 
 
 .btn-add-data {

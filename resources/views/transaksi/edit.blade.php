@@ -79,18 +79,18 @@
                     </div>
 
                     <!-- Pengeluaran -->
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="pengeluaran" class="form-label">Pengeluaran</label>
                         <input type="number" class="form-control" name="pengeluaran" id="pengeluaran"
                             value="{{ $item->pengeluaran }}" required>
-                    </div>
+                    </div> --}}
 
                     <!-- Keterangan Pembayaran -->
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="keterangan" class="form-label">Keterangan</label>
                         <input type="text" class="form-control" name="keterangan" id="keterangan"
                             value="{{ old('keterangan') }}" required>
-                    </div>
+                    </div> --}}
                     <!-- Add other fields as needed -->
                 </div>
                 <div class="modal-footer">
