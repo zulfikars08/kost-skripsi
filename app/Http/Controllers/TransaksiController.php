@@ -37,14 +37,25 @@ class TransaksiController extends Controller
         // Check for the search query
         if ($request->has('katakunci')) {
             $katakunci = $request->input('katakunci');
-            // Update your query to filter the data based on your search criteria
-            $transaksiData = Transaksi::where('nama', 'like', '%' . $katakunci . '%')
-                ->paginate(10) // Use the number that suits your pagination.
+            $transaksiData = Transaksi::where('nama_kos', 'like', '%' . $katakunci . '%')
+                ->orWhereHas('penyewa', function ($query) use ($katakunci) {
+                    $query->where('nama', 'like', '%' . $katakunci . '%');
+                })
+                ->orWhereHas('lokasiKos', function ($query) use ($katakunci) {
+                    $query->where('nama_kos', 'like', '%' . $katakunci . '%');
+                })
+                ->orWhereHas('kamar', function ($query) use ($katakunci) {
+                    $query->where('no_kamar', 'like', '%' . $katakunci . '%');
+                })
+                ->paginate(10)
                 ->withQueryString();
         } else {
-            // If no search query, just retrieve the standard data
             $transaksiData = Transaksi::paginate(10)->withQueryString();
         }
+    
+        
+        
+        
     
         // Tampilkan view 'transaksi.index' and kirimkan data transaksi
         return view('transaksi.index', compact('lokasiKosData', 'transaksiData', 'months', 'years'));

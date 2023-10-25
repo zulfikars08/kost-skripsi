@@ -28,8 +28,6 @@ use Maatwebsite\Excel\Facades\Excel;
 |
 */
 
-Route::get('/', [SesiController::class, 'index'])->name('login');
-Route::post('/', [SesiController::class, 'login']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -93,3 +91,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/generate-report', [TransaksiController::class, 'generateFinancialReport'])->name('generate-financial-report');
 
 });
+Route::get('/register', [SesiController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [SesiController::class, 'register']);
+
+Route::get('/', [SesiController::class, 'index'])->name('login');
+Route::post('/', [SesiController::class, 'login']);

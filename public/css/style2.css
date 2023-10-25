@@ -1,0 +1,86 @@
+/* style2.css */
+
+/* Apply some styling to the body */
+body {
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+}
+
+/* Center the content vertically and horizontally */
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Style the login form container */
+.form-container {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 80px;
+    max-width: 700px; /* Increase the max-width as needed */
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Use flex to create two sections */
+}
+
+/* Left Section: Style the logo image */
+.logo-section {
+    flex: 1; /* Occupy 50% of the width */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    max-width: 110%; /* Make the image responsive */
+    height: auto;
+    margin-top: -30px;
+    margin-left: -60px;
+}
+
+/* Right Section: Style the input fields and labels */
+.form-section {
+    flex: 1; /* Occupy 50% of the width */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+/* Style the password toggle button */
+#passwordToggle {
+    cursor: pointer;
+}
+
+/* Center the login button */
+.login-button {
+    display: flex;
+    justify-content: center;
+}
+
+/* Add a bit of margin to the bottom link */
+.bottom-link {
+    margin-top: 20px;
+}

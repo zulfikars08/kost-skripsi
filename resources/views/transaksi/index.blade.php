@@ -24,38 +24,35 @@
         @include('transaksi.export')
     </div>
 </div>
-
+<div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>No</th>
-                <th>No Kamar</th>
-                <th>Nama</th>
-                <th>Nama Kos</th>
-                <th>Tanggal</th>
-                <th>Jumlah Tarif</th>
-                <th>Tipe Pembayaran</th>
-                <th>Bukti Pembayaran</th>
-                <th>Status Pembayaran</th>
-                <th>Tanggal Awal</th>
-                <th>Tanggal Akhir</th>
-                <th>Kebersihan</th>
-                <th>Total</th>
-                <th>Keterangan</th>
-                <th>Pengeluaran</th>
-                <th>Action</th>
+                <th style="white-space: nowrap;">No</th>
+                <th style="white-space: nowrap;">No Kamar</th>
+                <th style="white-space: nowrap;">Nama</th>
+                <th style="white-space: nowrap;">Nama Kos</th>
+                <th style="white-space: nowrap;">Tanggal</th>
+                <th style="white-space: nowrap;">Jumlah Tarif</th>
+                <th style="white-space: nowrap;">Tipe Pembayaran</th>
+                <th style="white-space: nowrap;">Bukti Pembayaran</th>
+                <th style="white-space: nowrap;">Status Pembayaran</th>
+                <th style="white-space: nowrap;">Tanggal Awal</th>
+                <th style="white-space: nowrap;">Tanggal Akhir</th>
+                <th style="white-space: nowrap;">Kebersihan</th>
+                <th style="white-space: nowrap;">Total</th>
+                <th style="white-space: nowrap;">Keterangan</th>
+                <th style="white-space: nowrap;">Pengeluaran</th>
+                <th style="white-space: nowrap;">Action</th>
             </tr>
             <tr>
                 
             </tr>
         </thead>
         <tbody>
-            @php
-            $i = 1;
-            @endphp
-            @foreach ($transaksiData as $item)
+            @forelse ($transaksiData as $item)
             <tr>
-                <td>{{ $i }}</td>
+                <td>{{ $loop->index + 1 }}</td>
                 <!-- No Kamar -->
                 <td>
                     @if ($item->kamar)
@@ -118,28 +115,29 @@
                 <!-- Pengeluaran -->
                 <td>{{ $item->pengeluaran }}</td>
                 <td>
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
-                        Edit
-                    </button>
-                    @include('transaksi.edit')
-                    <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
-                        action="{{ route('transaksi.destroy', $item->id)}}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" name="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
+                    <div class="d-flex">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
+                            Edit
+                        </button>
+                        @include('transaksi.edit')
+                        <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" name="submit" class="btn btn-danger btn-sm" style="margin-left: 5px;">Delete</button>
+                        </form>
+                    </div>
                 </td>
-                
+                             
             </tr>
-            
-            @php
-            $i++;
-            @endphp
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="16">Tidak ada data.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
     {{ $transaksiData->withQueryString()->links() }}
-
+</div>
 </div>
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

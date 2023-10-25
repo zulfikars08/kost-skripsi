@@ -18,7 +18,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        PenyewaCreated::class => [
+            CreateTransaksi::class,
+        ],
     ];
+
+    
 
     /**
      * Register any events for your application.

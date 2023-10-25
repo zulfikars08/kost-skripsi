@@ -60,7 +60,6 @@ select option {
 }
 
 
-
 /* Customize main content area */
 /* Custom CSS for main content area */
 .centered-content {
@@ -69,7 +68,7 @@ select option {
     flex-direction: column;
     /* align-items: center; */
     min-height: 80vh;
-    min-width: 185vh;
+    min-width: 170vh;
     padding: 1%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
