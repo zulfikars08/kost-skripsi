@@ -9,16 +9,16 @@
 }
 
 :root {
-  --main-color: #3531f1;
-  --main-color-dark: #3651d4;
-  --main-color-light: #5872f5;
-  --text-color: #cfcde7;
+  --main-color: #ffffff;
+  --main-color-dark: #209cc2;
+  --main-color-light: #209cc2;
+  --text-color: #504f53;
 }
 
 body {
   font-family: "Poppins", sans-serif;
   overflow-x: hidden;
-  background-color: #e4e2f5;
+  background: linear-gradient(135deg, #b8c7cc, #209cc2 , #b9c2c5);
   min-height: 100vh;
   display: flex;
   position: relative;
@@ -47,7 +47,7 @@ ul {
 } */
 
 .nav-link:hover {
-  color: rgb(68, 35, 255); 
+  color: rgb(255, 255, 255); 
 }
 
 /* Change color of logout button */
@@ -80,10 +80,10 @@ nav::before {
   align-items: center;
 }
 
-.sidebar-top .logo {
+/* .sidebar-top .logo {
   width: 2.1rem;
   margin: 0 0.8rem;
-}
+} */
 
 .sidebar-top h3 {
   padding-left: 0.5rem;
@@ -153,7 +153,7 @@ nav:hover .shrink-btn,
 
 .sidebar-links ul {
   position: relative;
-  padding-left: 10px; /* Kompensasi untuk margin kiri pada elemen utama */
+  padding-left: 10px; 
 }
 
 .sidebar-links li {
@@ -165,19 +165,19 @@ nav:hover .shrink-btn,
 .sidebar-links a {
   color: var(--text-color);
   font-weight: 400;
-  font-size: 0.9rem;
+  font-size: 1.0rem;
   display: flex;
   align-items: center;
   height: 53px;
 }
 
 .icon {
-  font-size: 1.7rem;
+  font-size: 1.0rem;
   text-align: center;
   min-width: 3.7rem;
   display: grid;
   margin-right: 0; /* Menghilangkan margin kanan */
-  margin-left: -12px;
+  margin-left: -10px;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
 }
@@ -196,11 +196,12 @@ nav:hover .shrink-btn,
   position: sticky;
   top: 0;
   left: 0;
-  height: 100vh;
-  background-color: #4322fb;
-  width: 24rem;
+  height: 90vh;
+  background-color: #ffffff;
+  width: 240px;
+  height: auto;
   padding: 1.8rem 0.85rem;
-  color: #fff;
+  color: #209cc2;
   display: flex;
   flex-direction: column;
   transition: width 0.5s ease-in-out;
@@ -208,7 +209,7 @@ nav:hover .shrink-btn,
 
 .sidebar-links a.active,
 .sidebar-links a:hover {
-  color: #fff;
+  color: #209cc2;
   
 }
 

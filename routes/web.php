@@ -71,7 +71,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transaksi', TransaksiController::class);
     Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
     Route::put('/transaksi/{id}', [TransaksiController::class, 'update'])->name('transaksi.update');
-
+    Route::get('/filter-transaksi', [TransaksiController::class, 'filterTransaksi'])->name('filter-transaksi');
 
     Route::get('/lokasi', [LokasiKostController::class, 'lokasi'])->name('tanggal-transaksi.lokasi');
     Route::get('/tanggal-transaksi', [TanggalController::class, 'index'])->name('tanggal-transaksi.index');
@@ -85,6 +85,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/export-all-transaksi', [TransaksiController::class, 'exportAllTransaksi'])->name('export-all-transaksi');
     Route::get('/export-filtered-transaksi', [TransaksiController::class, 'exportFilteredTransaksi'])->name('export-filtered-transaksi');
     Route::get('/transaksi/export-excel',  [TransaksiController::class, 'exportToExcel'])->name('transaksi.export.excel');
+    
+
 
     Route::get('/generate-report', [TransaksiController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
 // Route to generate the financial report

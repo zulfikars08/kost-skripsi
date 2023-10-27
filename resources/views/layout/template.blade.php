@@ -32,15 +32,13 @@
 
 <body>
   <nav  class="sidebar">
+    <h5 class="hide" style="display: flex; align-items: center; justify-content: center;" id="admin"><!-- Second icon -->
+      ADMIN <!-- Text -->
+    </h5>
     <div class="sidebar-top">
       <span class="shrink-btn">
         <i class='bi bi-chevron-left'></i>
       </span>
-      <h3 class="hide" style="display: flex; align-items: center; justify-content: center;">
-        <i class="bi bi-gear-fill" style="margin-right: 10px;"></i> <!-- Second icon -->
-        ADMIN <!-- Text -->
-      </h3>
-    
     </div>
     <hr class="my-2">
     <div class="sidebar-links">
@@ -79,7 +77,7 @@
                 <i class='bi bi-person'></i>
                 <i class='bi bi-person'></i>
               </div>
-              <span class="link hide">Data Penyewa</span>
+              <span class="link hide" style="white-space: nowrap;">Data Penyewa</span>
             </a>
           </li>
           <li class="tooltip-element" data-tooltip="4">
@@ -88,7 +86,7 @@
                 <i class='bi bi-file-earmark-text'></i>
                 <i class='bi bi-file-earmark-text'></i>
               </div>
-              <span class="link hide">Data Transaksi</span>
+              <span class="link hide" style="white-space: nowrap;">Data Transaksi</span>
             </a>
           </li>
           {{-- <li class="tooltip-element" data-tooltip="5">

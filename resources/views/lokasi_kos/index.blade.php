@@ -23,60 +23,57 @@
             @include('lokasi_kos.create')
             <!-- Include the modal partial -->
         </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Kos</th>
+                    <th>Jumlah Kamar</th>
+                    <th>Alamat</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                $i = $data->firstItem();
+                @endphp
+                @forelse ($data as $item)
+                <tr>
+                    <td>{{ $i }}</td>
+                    <td>{{ $item->nama_kos }}</td>
+                    <td>{{ $item->jumlah_kamar }}</td>
+                    <td>{{ $item->alamat_kos }}</td>
+                    <td>
+                        <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
+                            action="{{ route('lokasi_kos.destroy', $item->id)}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" name="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                        <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-primary btn-sm"> 
+                            <i class="fas fa-info-circle" style="color: white"></i></a>
+                    </td>
+                </tr>
+                @php
+                $i++;
+                @endphp
+                @empty
+                <tr>
+                    <td colspan="5">Tidak ada data.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+        {{ $data->withQueryString()->links() }}
     </div>
 
-    <div class="modal fade" id="tambahDataModal" tabindex="-1" role="dialog" aria-labelledby="tambahDataModalLabel" aria-hidden="true">
-        <!-- Modal content here -->
-    </div>
 
     <!-- LOKASI_KOS LIST TABLE -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Kos</th>
-                <th>Jumlah Kamar</th>
-                <th>Alamat</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-            $i = $data->firstItem();
-            @endphp
-            @forelse ($data as $item)
-            <tr>
-                <td>{{ $i }}</td>
-                <td>{{ $item->nama_kos }}</td>
-                <td>{{ $item->jumlah_kamar }}</td>
-                <td>{{ $item->alamat_kos }}</td>
-                <td>
-                    <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
-                        action="{{ route('lokasi_kos.destroy', $item->id)}}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" name="submit" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
-                    <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-primary btn-sm"> 
-                        <i class="fas fa-info-circle" style="color: white"></i></a>
-                </td>
-            </tr>
-            @php
-            $i++;
-            @endphp
-            @empty
-            <tr>
-                <td colspan="5">Tidak ada data.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-    {{ $data->withQueryString()->links() }}
+    
+
 </div>
-</div>
-</div>
-</div>
+
 
 @endsection

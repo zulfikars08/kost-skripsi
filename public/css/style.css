@@ -64,11 +64,13 @@ select option {
 /* Custom CSS for main content area */
 .centered-content {
     display: flex;
-    /* position: absolute; */
+    position: absolute;
     flex-direction: column;
-    /* align-items: center; */
-    min-height: 80vh;
-    min-width: 170vh;
+    align-items: center;
+    min-height: 90%;
+    /* min-width: 80%; */
+    width: 83%;
+    height: 0%;
     padding: 1%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

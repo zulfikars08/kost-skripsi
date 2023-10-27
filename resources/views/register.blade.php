@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body style="background: linear-gradient(135deg, #3498db, #9b59b6)">
+<body>
     <div class="centered-content">
         <div class="form-container">
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">

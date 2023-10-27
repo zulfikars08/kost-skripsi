@@ -1,14 +1,18 @@
-
- const shrink_btn = document.querySelector(".shrink-btn");
+const shrink_btn = document.querySelector(".shrink-btn");
+const sidebar = document.querySelector(".sidebar");
 const sidebar_links = document.querySelectorAll(".sidebar-links a");
 const active_tab = document.querySelector(".active-tab");
 const shortcuts = document.querySelector(".sidebar-links h4");
 const tooltip_elements = document.querySelectorAll(".tooltip-element");
+const loadingOverlay = document.querySelector('.loading-overlay');
 
 let activeIndex;
 
 shrink_btn.addEventListener("click", () => {
   document.body.classList.toggle("shrink");
+  sidebar.classList.toggle("shrink");
+  active_tab.classList.toggle("shrink");
+  shortcuts.classList.toggle("shrink");
   setTimeout(moveActiveTab, 400);
 
   shrink_btn.classList.add("hovered");
@@ -28,20 +32,17 @@ function moveActiveTab() {
   active_tab.style.top = `${topPosition}px`;
 }
 
-function changeLink() {
+function setActiveMenuItem(index) {
   sidebar_links.forEach((sideLink) => sideLink.classList.remove("active"));
-  this.classList.add("active");
+  sidebar_links[index].classList.add("active");
 
-  activeIndex = this.dataset.active;
+  activeIndex = index;
 
   moveActiveTab();
 
   // Trigger the tooltip hover effect for the clicked menu
   tooltip_elements[activeIndex].dispatchEvent(new Event("mouseover"));
 }
-
-sidebar_links.forEach((link) => link.addEventListener("click", changeLink));
-
 
 function showTooltip() {
   let tooltip = this.parentNode.lastElementChild;
@@ -59,22 +60,22 @@ tooltip_elements.forEach((elem) => {
 });
 
 function showLoadingOverlay() {
-  const loadingOverlay = document.querySelector('.loading-overlay');
   loadingOverlay.style.display = 'flex';
 }
 
 function hideLoadingOverlay() {
-  const loadingOverlay = document.querySelector('.loading-overlay');
   loadingOverlay.style.display = 'none';
 }
 
 function changeLink() {
   showLoadingOverlay(); // Show loading overlay when a menu item is clicked
   
-  activeIndex = parseInt(this.dataset.active);
-  setActiveMenuItem(activeIndex);
+  const index = parseInt(this.dataset.active);
+  setActiveMenuItem(index);
   
   setTimeout(() => {
     hideLoadingOverlay(); // Hide loading overlay after a short delay (simulate loading)
   }, 500); // Adjust the delay as needed
 }
+
+sidebar_links.forEach((link) => link.addEventListener("click", changeLink));

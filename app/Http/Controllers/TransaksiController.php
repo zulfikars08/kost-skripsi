@@ -21,8 +21,11 @@ class TransaksiController extends Controller
 {
     public function index(Request $request)
     {
+        
         $lokasiKosData = ModelsLokasiKos::all();
-    
+
+        $filter_by_lokasi = $request->input('filter_by_lokasi');
+        $filter_by_status_pembayaran = $request->input('filter_by_status_pembayaran');
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format to two digits (e.g., 01, 02, ...)
@@ -47,14 +50,29 @@ class TransaksiController extends Controller
                 ->orWhereHas('kamar', function ($query) use ($katakunci) {
                     $query->where('no_kamar', 'like', '%' . $katakunci . '%');
                 })
-                ->paginate(10)
+                ->paginate(5)
                 ->withQueryString();
         } else {
-            $transaksiData = Transaksi::paginate(10)->withQueryString();
+            $transaksiData = Transaksi::paginate(5)->withQueryString();
         }
-    
         
+         $transaksiData = Transaksi::when($filter_by_lokasi, function ($query) use ($filter_by_lokasi) {
+         $query->whereHas('lokasiKos', function ($subQuery) use ($filter_by_lokasi) {
+            $subQuery->where('nama_kos', $filter_by_lokasi);
+        });
+        })->when($filter_by_status_pembayaran, function ($query) use ($filter_by_status_pembayaran) {
+            $query->where('status_pembayaran', $filter_by_status_pembayaran);
+        })
+        ->with('lokasiKos')
+        ->paginate(5);
+
+        // $transaksiData = Transaksi::when($filter_by_status_pembayaran, function ($query) use ($filter_by_status_pembayaran) {
+        //     $query->whereHas('transaksi', function ($subQuery) use ($filter_by_status_pembayaran) {
+        //        $subQuery->where('status_pembayaran', $filter_by_status_pembayaran);
+        //    });
+        //    })->paginate(5);
         
+       
         
     
         // Tampilkan view 'transaksi.index' and kirimkan data transaksi
@@ -243,6 +261,36 @@ class TransaksiController extends Controller
         // Generate and download the Excel file
         return Excel::download($export, 'laporan-keuangan.xlsx');
     }
+    
+
+    public function filterTransaksi(Request $request)
+    {
+        $namaKos = $request->input('nama_kos');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+        $statusPembayaran = $request->input('status_pembayaran');
+    
+        $filteredData = Transaksi::query()
+            ->when($namaKos, function ($query) use ($namaKos) {
+                return $query->where('nama_kos', $namaKos);
+            })
+            ->when($statusPembayaran, function ($query) use ($statusPembayaran) {
+                return $query->where('status_pembayaran', $statusPembayaran);
+            })
+            ->when($bulan, function ($query) use ($bulan) {
+                return $query->whereMonth('tanggal', $bulan);
+            })
+            ->when($tahun, function ($query) use ($tahun) {
+                return $query->whereYear('tanggal', $tahun);
+            })
+            ->get();
+    
+        return view('transaksi.index', compact('filteredData'));
+    }
+    
+    
+    
+
 
     /**
      * Remove the specified resource from storage.
