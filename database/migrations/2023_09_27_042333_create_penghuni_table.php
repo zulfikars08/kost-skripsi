@@ -16,12 +16,13 @@ class CreatePenghuniTable extends Migration
         Schema::create('penghuni', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('penyewa_id')->nullable();
-            $table->string('jenis_kelamin');
-            $table->string('no_hp');
-            $table->string('pekerjaan');
-            $table->string('perusahaan');
-            $table->date('tanggal_lahir');
-            $table->string('martial_status');
+            $table->string('nama')->nullable();
+            $table->string('jenis_kelamin')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('pekerjaan')->nullable();
+            $table->string('perusahaan')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('martial_status')->nullable();
             $table->timestamps();
             $table->integer('created_by')->nullable()->default(null);
             $table->integer('updated_by')->nullable()->default(null);
