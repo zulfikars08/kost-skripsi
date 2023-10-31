@@ -49,7 +49,9 @@ class TransaksiExport implements FromCollection, WithHeadings, WithStyles
                 'Tanggal' => $item->tanggal ?? '-',
                 'Jumlah Tarif' => $item->jumlah_tarif,
                 'Tipe Pembayaran' => $item->tipe_pembayaran ? $item->tipe_pembayaran : '-',
-                'Bukti Pembayaran' => $item->tipe_pembayaran === 'non-tunai' && $item->bukti_pembayaran ? asset('storage/' . $item->bukti_pembayaran) : 'No Bukti Pembayaran',
+                'Bukti Pembayaran' => $item->tipe_pembayaran === 'non-tunai' && $item->bukti_pembayaran
+                ? asset('storage/' . $item->bukti_pembayaran)
+                : ($item->tipe_pembayaran === 'tunai' ? 'Cash Payment' : 'No Bukti Pembayaran'),
                 'Tanggal Awal Pembayaran' => $item->tanggal_pembayaran_awal ?? '-',
                 'Tanggal Akhir Pembayaran' => $item->tanggal_pembayaran_akhir ?? '-',
                 'Kebersihan' => $item->kebersihan,

@@ -47,7 +47,7 @@
                         <div class="login-button">
                             <button name="submit" type="submit" class="btn btn-primary">Login</button>
                         </div>
-                        <p class="bottom-link text-center">Jika belum punya akun, <a href="{{ route('register') }}">segera daftar</a></p>
+                        {{-- <p class="bottom-link text-center">Jika belum punya akun, <a href="{{ route('register') }}">segera daftar</a></p> --}}
                         </div>
                     </form>
             </div>

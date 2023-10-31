@@ -27,7 +27,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Nama Kos</th>
+                    <th>Lokasi Kos</th>
                     <th>Jumlah Kamar</th>
                     <th>Alamat</th>
                     <th>Action</th>

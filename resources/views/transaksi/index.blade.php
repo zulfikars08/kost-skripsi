@@ -17,15 +17,17 @@
                 </div>
             </form>
 
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
-                <i class="fas fa-filter"></i> Filter
-            </button>
-            {{-- @include('transaksi.filter') --}}
-            <!-- Include the modal partial -->
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#generateReportModal">
-                Excel
-            </button>
-            @include('transaksi.export')
+            <div class="d-flex justify-content-between mb-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    Filter
+                </button>
+                @include('transaksi.filter') <!-- Include the filter modal -->
+            
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#generateReportModal" style="margin-left: 5px;">
+                    Excel
+                </button>
+                @include('transaksi.export')
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table table-striped" style="width: 100%;">
@@ -34,9 +36,9 @@
                         <th style="white-space: nowrap;">No</th>
                         <th style="white-space: nowrap;">No Kamar</th>
                         <th style="white-space: nowrap;">Nama</th>
-                        <th>
+                        <th style="white-space: nowrap;">Lokasi Kos</th>
                             <!-- Filter by Lokasi Kos dropdown here -->
-                            <div class="dropdown">
+                            {{-- <div class="dropdown">
                                 <a class="filter-icon dropdown-toggle" href="#" role="button" id="lokasiDropdown"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Lokasi Kos
@@ -57,14 +59,15 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div> --}}
                         </th>
                         <th style="white-space: nowrap;">Tanggal</th>
                         <th style="white-space: nowrap;">Jumlah Tarif</th>
                         <th style="white-space: nowrap;">Tipe Pembayaran</th>
                         <th style="white-space: nowrap;">Bukti Pembayaran</th>
-                        <th>
-                            <div class="dropdown">
+                        <th style="white-space: nowrap;">Status Pembayaran</th>
+                            
+                            {{-- <div class="dropdown">
                                 <a class="filter-icon dropdown-toggle" href="#" role="button" id="statusDropdown"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Status
@@ -78,7 +81,7 @@
                                                     ? 'selected' : '' }}>Lunas</option>
                                                 <option value="Cicil" {{ request('filter_by_status_pembayaran')==='Cicil'
                                                     ? 'selected' : '' }}>Cicil</option>
-                                                <option value="" {{ request('filter_by_status_pembayaran')==='Belum Lunas'
+                                                <option value="belum_lunas" {{ request('filter_by_status_pembayaran')==='Belum Lunas'
                                                     ? 'selected' : '' }}>Belum Lunas</option>
                                             </select>
                                         </div>
@@ -87,15 +90,15 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div> --}}
                         </th>
     
                         <th style="white-space: nowrap;">Tanggal Awal</th>
                         <th style="white-space: nowrap;">Tanggal Akhir</th>
-                        <th style="white-space: nowrap;">Kebersihan</th>
-                        <th style="white-space: nowrap;">Total</th>
+                        {{-- <th style="white-space: nowrap;">Kebersihan</th>
+                        <th style="white-space: nowrap;">Total</th> --}}
                         <th style="white-space: nowrap;">Keterangan</th>
-                        <th style="white-space: nowrap;">Pengeluaran</th>
+                        {{-- <th style="white-space: nowrap;">Pengeluaran</th> --}}
                         <th style="white-space: nowrap;">Action</th>
                     </tr>
                     <tr>
@@ -147,11 +150,11 @@
                         </td>
                         <td>
                             @if ($item->status_pembayaran === 'lunas')
-                                <b><span style="color: green;">{{ $item->status_pembayaran }}</span></b>
+                                <b><span style="color: green;"> Lunas </span></b>
                             @elseif ($item->status_pembayaran === 'cicil')
-                                <b><span style="color: rgb(255, 123, 0);">{{ $item->status_pembayaran }}</span></b>
+                                <b><span style="color: rgb(255, 123, 0);"> Cicil </span></b>
                             @elseif ($item->status_pembayaran === 'belum_lunas')
-                                <b><span style="color: red;">{{ $item->status_pembayaran }}</span></b>
+                                <b><span style="color: red;"> Belum Lunas </span></b>
                             @else
                                 {{ $item->status_pembayaran }}
                             @endif
@@ -160,23 +163,23 @@
                         <td>{{ $item->tanggal_pembayaran_akhir ? $item->tanggal_pembayaran_akhir : '-' }}</td>
         
                         <!-- Kebersihan -->
-                        <td>{{ $item->kebersihan }}</td>
+                        {{-- <td>{{ $item->kebersihan }}</td> --}}
                         <!-- Total -->
-                        <td>{{ ($item->jumlah_tarif === 0 && $item->kebersihan === 0) ? 0 : ($item->jumlah_tarif - $item->kebersihan) }}</td>
+                        {{-- <td>{{ ($item->jumlah_tarif === 0 && $item->kebersihan === 0) ? 0 : ($item->jumlah_tarif - $item->kebersihan) }}</td> --}}
                         <!-- Keterangan -->
                         <td>{{ $item->keterangan }}</td>
                         <!-- Pengeluaran -->
-                        <td>{{ $item->pengeluaran }}</td>
+                        {{-- <td>{{ $item->pengeluaran }}</td> --}}
                         <td>
                             <div class="d-flex">
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
-                                    Edit
+                                     <i class="fas fa-edit" style="color: white"></i>
                                 </button>
                                 @include('transaksi.edit')
                                 <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" name="submit" class="btn btn-danger btn-sm" style="margin-left: 5px;">Delete</button>
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>

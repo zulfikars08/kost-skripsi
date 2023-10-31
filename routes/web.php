@@ -6,9 +6,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\LokasiKostController;
+use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\SesiController;
+use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\TransaksiController;
 use App\Models\Kamar;
@@ -27,6 +29,12 @@ use Maatwebsite\Excel\Facades\Excel;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/register', [SesiController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [SesiController::class, 'register']);
+
+Route::get('/', [SesiController::class, 'index'])->name('login');
+Route::post('/', [SesiController::class, 'login']);
 
 
 Route::middleware(['auth'])->group(function () {
@@ -47,19 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/kamar/{id}', [KamarController::class, 'update'])->name('kamar.update');
     Route::delete('/kamar/{id}', [KamarController::class, 'destroy'])->name('kamar.destroy');
 
-    // Penghuni routes
-    Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penghuni.index');
-    Route::get('/penghuni/create', [PenghuniController::class, 'create'])->name('penghuni.create');
-    Route::post('/penghuni', [PenghuniController::class, 'store'])->name('penghuni.store');
-
-    // Lokasi Kos routes
-    Route::get('/lokasi_kos', [LokasiKostController::class, 'index'])->name('lokasi_kos.index');
-    Route::get('/lokasi_kos/create', [LokasiKostController::class, 'create'])->name('lokasi_kos.create');
-    Route::post('/lokasi_kos', [LokasiKostController::class, 'store'])->name('lokasi_kos.store');
-    Route::get('/lokasi_kos/{id}/detail', [LokasiKostController::class, 'show'])->name('lokasi_kos.detail');
-    Route::delete('/lokasi_kos/{id}', [LokasiKostController::class, 'destroy'])->name('lokasi_kos.destroy');
-
-    // Dashboard
+    // penyewa routes
     Route::get('/penyewa', [PenyewaController::class, 'index'])->name('penyewa.index');
     Route::get('/penyewa/create', [PenyewaController::class, 'create'])->name('penyewa.create');
     Route::post('/penyewa', [PenyewaController::class, 'store'])->name('penyewa.store');
@@ -68,33 +64,33 @@ Route::middleware(['auth'])->group(function () {
     Route::get('penyewa/{id}/detail', [PenyewaController::class, 'show'])->name('penyewa.show');
     Route::delete('/penyewa/{id}', [PenyewaController::class, 'destroy'])->name('penyewa.destroy');
 
-    Route::resource('transaksi', TransaksiController::class);
-    Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
-    Route::put('/transaksi/{id}', [TransaksiController::class, 'update'])->name('transaksi.update');
-    Route::get('/filter-transaksi', [TransaksiController::class, 'filterTransaksi'])->name('filter-transaksi');
+    // Route::middleware('role:user')->group(function () {
 
-    Route::get('/lokasi', [LokasiKostController::class, 'lokasi'])->name('tanggal-transaksi.lokasi');
-    Route::get('/tanggal-transaksi', [TanggalController::class, 'index'])->name('tanggal-transaksi.index');
-    Route::get('/tanggal-transaksi/create', [TanggalController::class, 'create'])->name('tanggal-transaksi.create');
-    Route::post('tanggal-transaksi', [TanggalController::class, 'store'])->name('tanggal-transaksi.store');
-    Route::get('tanggal-transaksi/{id}/detail', [TanggalController::class, 'show'])->name('tanggal-transaksi.detail');
-    Route::delete('/tanggal-transaksi/{id}', [TanggalController::class, 'destroy'])->name('tanggal-transaksi.destroy');
-    
-    Route::get('/laporan-keuangan', [TransaksiController::class, 'laporan'])->name('laporan-keuangan.laporan');
-    Route::post('/laporan-keuangan', [TransaksiController::class, 'generateFinancialReport'])->name('laporan-keuangan.generate');
-    Route::get('/export-all-transaksi', [TransaksiController::class, 'exportAllTransaksi'])->name('export-all-transaksi');
-    Route::get('/export-filtered-transaksi', [TransaksiController::class, 'exportFilteredTransaksi'])->name('export-filtered-transaksi');
-    Route::get('/transaksi/export-excel',  [TransaksiController::class, 'exportToExcel'])->name('transaksi.export.excel');
-    
+    // });
 
+    Route::middleware('role:admin')->group(function () {
+         // lokasi routes
+        Route::get('/lokasi_kos', [LokasiKostController::class, 'index'])->name('lokasi_kos.index');
+        Route::get('/lokasi_kos/create', [LokasiKostController::class, 'create'])->name('lokasi_kos.create');
+        Route::post('/lokasi_kos', [LokasiKostController::class, 'store'])->name('lokasi_kos.store');
+        Route::get('/lokasi_kos/{id}/detail', [LokasiKostController::class, 'show'])->name('lokasi_kos.detail');
+        Route::delete('/lokasi_kos/{id}', [LokasiKostController::class, 'destroy'])->name('lokasi_kos.destroy');
 
-    Route::get('/generate-report', [TransaksiController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
-// Route to generate the financial report
-    Route::post('/generate-report', [TransaksiController::class, 'generateFinancialReport'])->name('generate-financial-report');
+        //transaksi routes
+        Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+        Route::resource('transaksi', TransaksiController::class);
+        Route::get('/transaksi/filter', [TransaksiController::class, 'filterTransaksi'])->name('transaksi.filter');
+        Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
+        Route::put('/transaksi/{id}', [TransaksiController::class, 'update'])->name('transaksi.update');
 
+        //manage user route
+        Route::get('/manage-users', [ManageUserController::class, 'index'])->name('manage-users.index');
+        Route::post('/manage-users/create', [ManageUserController::class, 'create'])->name('manage-users.create');
+        Route::get('/manage-users/{user}/edit', [ManageUserController::class, 'edit'])->name('manage-users.edit');
+        Route::patch('/manage-users/{user}', [ManageUserController::class, 'update'])->name('manage-users.update');
+
+        //excel route
+        Route::get('/generate-report', [TransaksiController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
+        Route::post('/generate-report', [TransaksiController::class, 'generateFinancialReport'])->name('generate-financial-report');
+    });
 });
-Route::get('/register', [SesiController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [SesiController::class, 'register']);
-
-Route::get('/', [SesiController::class, 'index'])->name('login');
-Route::post('/', [SesiController::class, 'login']);

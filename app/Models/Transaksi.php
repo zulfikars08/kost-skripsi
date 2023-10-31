@@ -8,11 +8,11 @@ class Transaksi extends Model
 {
     protected $table = 'transaksi'; // Specify the table name if it's different from the model name
     protected $fillable = [
-        'nama_kos',
+        // 'nama_kos',
         'tanggal',
         'jumlah_tarif',
-        'kebersihan',
-        'pengeluaran',
+        // 'kebersihan',
+        // 'pengeluaran',
         'tipe_pembayaran',
         'bukti_pembayaran',
         'tanggal_pembayaran_awal',

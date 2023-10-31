@@ -4,6 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="tambahDataModalLabel">Tambah Penyewa</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form  id="myForm" action="{{ route('penyewa.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
