@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KamarController;
+use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\LokasiKostController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\PenghuniController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\TanggalController;
+use App\Http\Controllers\TanggalLaporanController;
 use App\Http\Controllers\TransaksiController;
 use App\Models\Kamar;
 use App\Models\Penghuni;
@@ -61,12 +63,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/penyewa', [PenyewaController::class, 'store'])->name('penyewa.store');
     Route::get('/penyewa/{id}/edit', [PenyewaController::class, 'edit'])->name('penyewa.edit');
     Route::put('/penyewa/{id}', [PenyewaController::class, 'update'])->name('penyewa.update');
+    Route::get('penyewa/{id}/detail', [PenyewaController::class, 'show'])->name('penyewa.show');
     Route::delete('/penyewa/{id}', [PenyewaController::class, 'destroy'])->name('penyewa.destroy');
 
+
     // penghuni routes
-    Route::get('/penyewa/detail/{id}', [PenyewaController::class, 'show'])->name('penyewa.penghuni.index');
-    Route::get('/penyewa/create', [PenghuniController::class, 'create'])->name('penyewa.penghuni.create');
-    Route::post('/penyewa', [PenghuniController::class, 'store'])->name('penghuni.store');
+    // Route::get('/penyewa/detail/{id}', [PenyewaController::class, 'show'])->name('penyewa.penghuni.index');
+    Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penyewa.penghuni.index');
+    Route::get('/penghuni/create', [PenghuniController::class, 'create'])->name('penyewa.penghuni.create');
+    Route::post('/penghuni', [PenghuniController::class, 'store'])->name('penghuni.store');
 
     // Route::middleware('role:user')->group(function () {
 
@@ -96,5 +101,21 @@ Route::middleware(['auth'])->group(function () {
         //excel route
         Route::get('/generate-report', [TransaksiController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
         Route::post('/generate-report', [TransaksiController::class, 'generateFinancialReport'])->name('generate-financial-report');
+
+        //laporan keuangan route
+        Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.detail.index');
+        Route::get('/laporan-keuangan/create', [LaporanKeuanganController::class, 'create'])->name('laporan-keuangan.create');
+        Route::post('/laporan-keuangan', [LaporanKeuanganController::class, 'store'])->name('laporan-keuangan.store');
+        Route::get('laporan-keuangan/detail/{lokasi_id}/{bulan}/{tahun}', [TanggalLaporanController::class, 'showDetail'])
+            ->name('laporan-keuangan.detail.show');
+        Route::get('/export-laporan-keuangan', [LaporanKeuanganController::class, 'export'])->name('laporan-keuangan.export');
+        Route::get('/generate-report', [LaporanKeuanganController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
+        Route::post('/generate-report', [LaporanKeuanganController::class, 'generateFinancialReport'])->name('generate-financial-report');
+
+        //tanggal laporan route
+        Route::get('/tanggal-laporan', [TanggalLaporanController::class, 'index'])->name('laporan-keuangan.index');
+        Route::get('/tanggal-laporan/create', [TanggalLaporanController::class, 'create'])->name('laporan-keuangan.create');
+        Route::post('/tanggal-laporan', [TanggalLaporanController::class, 'store'])->name('tanggal-laporan.store');
+
     });
 });

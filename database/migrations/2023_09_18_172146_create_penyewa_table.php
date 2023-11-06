@@ -15,7 +15,9 @@ class CreatePenyewaTable extends Migration
     {
         Schema::create('penyewa', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_penyewa')->nullable();
             $table->string('nama');
+            $table->string('nama_kos')->nullable();
             $table->string('no_kamar');
             $table->unsignedBigInteger('kamar_id')->nullable();
             $table->unsignedBigInteger('lokasi_id')->nullable(); // Added lokasi_id column

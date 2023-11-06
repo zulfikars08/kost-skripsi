@@ -28,7 +28,7 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-
+                    
                     <!-- Nama -->
                     <div class="mb-3 custom-form-group">
                         <label for="nama" class="form-label">Nama</label>

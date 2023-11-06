@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\PenyewaCreated;
 use App\Models\Kamar;
 use App\Models\LokasiKos;
+use App\Models\Penghuni;
 use App\Models\Penyewa;
 use App\Models\Transaksi;
 use App\Rules\UniqueNoKamarNamaKos;
@@ -58,13 +59,33 @@ class PenyewaController extends Controller
             'no_kamar' => 'required|string',
             'penghuni_id' => 'nullable|exists:penghuni,id',
             'lokasi_id' => 'nullable|exists:lokasi_kos,id',
+            'kamar_id' => 'nullable|exists:kamar,id',
             'status_penyewa' => 'required|in:aktif,tidak_aktif',
         ]);
     
+        // Get the latest penyewa_id
+        $latestPenyewa = Penyewa::latest('kode_penyewa')->first();
+    
+        // Extract the numeric part of penyewa_id and increment it
+        $penyewaIdNumeric = $latestPenyewa ? (int)str_replace('PY', '', $latestPenyewa->kode_penyewa) + 1 : 1;
+    
+        // Format penyewa_id with 'PY' prefix and leading zeros
+        $penyewaId = 'PY' . str_pad($penyewaIdNumeric, 3, '0', STR_PAD_LEFT);
+
+        $existingKamar = Kamar::where('no_kamar', $request->input('no_kamar'))
+        ->where('lokasi_id', $request->input('lokasi_id'))
+        ->first();
+
+        if (!$existingKamar) {
+        return redirect()->back()->with('error', 'No Kamar tidak ditemukan.');
+        }
+    
         // Prepare the data for creating a new Penyewa record
         $data = [
+            'kode_penyewa' => $penyewaId, // Assign the unique penyewa_id
             'nama' => $request->input('nama'),
             'no_kamar' => $request->input('no_kamar'),
+            'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos,
             'kamar_id' => Kamar::where('no_kamar', $request->input('no_kamar'))->firstOrFail()->id,
             'lokasi_id' => $request->input('lokasi_id'),
             'status_penyewa' => $request->input('status_penyewa'),
@@ -92,18 +113,13 @@ class PenyewaController extends Controller
     
         // Create the Penyewa record
         $penyewa = Penyewa::create($data);
-        // if ($penyewa->kamar && $penyewa->kamar->lokasi) {
-        //     $nama_kos = $penyewa->kamar->lokasi->nama_kos;
-        // } else {
-        //     $nama_kos = "Nama Kos Tidak Ditemukan";
-        // }
+    
         // Automatically create a record in the 'transaksi' table
         Transaksi::create([
-            // 'nama_kos' => $nama_kos,
             'nama' => $penyewa->nama,
             'kamar_id' => $penyewa->kamar_id,
             'lokasi_id' => $penyewa->lokasi_id,
-            'penyewa_id' => $penyewa->id,
+            'penyewa_id' => $penyewa->id, // Assign the penyewa_id
             'tipe_pembayaran' => null, // Set the default value or adjust as needed
             'jumlah_tarif' => 0, // Set to 0 for integer columns
             'bukti_pembayaran' => null, // Set to '-' for string columns
@@ -114,15 +130,12 @@ class PenyewaController extends Controller
             'kebersihan' => 0, // Set to 0 for integer columns
             'pengeluaran' => 0, // Set to 0 for integer columns
             'keterangan' => '-', // Set to '-' for string columns
-            'penyewa_id' => $penyewa->id, // Associate the Penyewa with this Transaksi
         ]);
     
         // Redirect to the index page with a success message
         return redirect()->route('penyewa.index')->with('success_add', 'Data penyewa berhasil ditambahkan.');
     }
     
-    
-        
     
 
 

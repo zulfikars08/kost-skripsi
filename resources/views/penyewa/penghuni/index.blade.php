@@ -11,52 +11,50 @@
                 <div class="card-header bg-primary text-white text-start">
                     <h4 class="mb-0">Detail Penyewa</h4>
                 </div>
-                
-                <div class="card-body p-4"> <!-- Added "p-4" class for padding -->
-                    <table class="table table-bordered">
-                        <tr>
-                            <th class="bg-info text-white">Nama Penyewa</th>
-                            <td>{{ $penyewa->nama }}</td>
-                        </tr>
-                        <tr>
-                            <th class="bg-info text-white">No Kamar</th>
-                            <td>{{ $penyewa->no_kamar }}</td>
-                        </tr>
-                        <tr>
-                            <th class="bg-info text-white">Status Peyewa</th>
-                            <td>
-                                @if ($penyewa->status_penyewa === 'aktif')
-                                <button class="btn btn-success btn-sm">Aktif</button>
-                                @else
-                                <button class="btn btn-danger btn-sm">Tidak Aktif</button>
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="bg-info text-white">Nama Kos</th>
-                            <td>
-                                @if ($penyewa->lokasi_id)
-                                <?php
-                                    $lokasiKos = \App\Models\LokasiKos::find($penyewa->lokasi_id);
-                                    ?>
-                                @if ($lokasiKos)
-                                {{ $lokasiKos->nama_kos }}
-                                @else
-                                No Lokasi Kos
-                                @endif
-                                @else
-                                No Kamar
-                                @endif
-                            </td>
-                        </tr>
-                    </table>
 
-                    
+                <div class="card-body p-4"> <!-- Added "p-4" class for padding -->
+                    @foreach ($penyewaList as $item)
+                        <table class="table table-bordered">
+                            <tr>
+                                <th class="bg-info text-white">Nama Penyewa</th>
+                                <td>{{ $item->nama }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-info text-white">No Kamar</th>
+                                <td>{{ $item->no_kamar }}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-info text-white">Status Penyewa</th>
+                                <td>
+                                    @if ($item->status_penyewa === 'aktif')
+                                    <button class="btn btn-success btn-sm">Aktif</button>
+                                    @else
+                                    <button class="btn btn-danger btn-sm">Tidak Aktif</button>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="bg-info text-white">Nama Kos</th>
+                                <td>
+                                    @if ($item->lokasi_id)
+                                        <?php
+                                        $lokasiKos = \App\Models\LokasiKos::find($item->lokasi_id);
+                                        ?>
+                                        @if ($lokasiKos)
+                                            {{ $lokasiKos->nama_kos }}
+                                        @else
+                                            No Lokasi Kos
+                                        @endif
+                                    @else
+                                        No Kamar
+                                    @endif
+                                </td>
+                            </tr>
+                        </table>
+                    @endforeach
+
                     <div class="d-flex justify-content-between align-items-left pb-3">
                         <h5 class="mt-4">Daftar Penghuni</h5>
-            
-                       
-                        <!-- Include the modal partial -->
                     </div>
                     <div class="d-flex justify-content-between align-items-left pb-3">
                         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
@@ -64,7 +62,7 @@
                         </button>
                         @include('penyewa.penghuni.create')
                     </div>
-                    
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -78,27 +76,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                    
-                            {{-- @forelse ($lokasiKos->kamars as $kamar)
-                                @if (!in_array($kamar->no_kamar, $kamarNumbers)) <!-- Check if room number is already displayed -->
-                                    <tr>
-                                        <td>{{ $kamar->no_kamar }}</td>
-                                        <td>Rp{{ number_format($kamar->harga, 2) }}</td>
-                                        <td>{{ $kamar->keterangan }}</td>
-                                        <td>{{ $kamar->fasilitas }}</td>
-                                    </tr>
-                                    @php
-                                        $kamarNumbers[] = $kamar->no_kamar; // Add room number to the array
-                                    @endphp
-                                @endif
-                            @empty
+                            @foreach ($penghuni as $item)
                                 <tr>
-                                    <td colspan="4" class="text-muted">Tidak ada kamar tersedia.</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->tanggal_lahir }}</td>
+                                    <td>{{ $item->jenis_kelamin }}</td>
+                                    <td>{{ $item->no_hp }}</td>
+                                    <td>{{ $item->pekerjaan }}</td>
+                                    <td>{{ $item->perusahaan }}</td>
+                                    <td>{{ $item->martial_status }}</td>
                                 </tr>
-                            @endforelse --}}
+                            @endforeach
                         </tbody>
                     </table>
-                    
+                </div>
                 </div>
             </div>
         </div>

@@ -18,8 +18,10 @@ class Penyewa extends Model
 
     // Fillable fields in the database
     protected $fillable = [
+        'kode_penyewa',
         'nama',
         'no_kamar',
+        'nama_kos',
         'kamar_id',
         'lokasi_id',
         'status_penyewa',
@@ -29,21 +31,25 @@ class Penyewa extends Model
         'deleted_at',
     ];
 
-    
     // Define relationships if needed
   // Penyewa.php
   public function kamar()
-    {
-        return $this->belongsTo(Kamar::class);
-    }
+  {
+      return $this->belongsTo(Kamar::class, 'kamar_id');
+  }
 
-    public function lokasiKos()
-    {
-        return $this->belongsTo(LokasiKos::class);
-    }
+  public function lokasi()
+  {
+      return $this->belongsTo(LokasiKos::class, 'lokasi_id');
+  }
 
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class);
     }
+    public function penghuni()
+{
+    return $this->hasMany(Penghuni::class);
+}
+
 }

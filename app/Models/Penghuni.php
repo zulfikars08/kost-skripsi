@@ -18,18 +18,16 @@ class Penghuni extends Model
         'jenis_kelamin',
         'no_hp',
         'pekerjaan',
+        'penyewa_id',
         'perusahaan',
         'martial_status',
-        'penyewa_id'
     ];
+    
 
     public function penyewa()
     {
         return $this->belongsTo(Penyewa::class, 'penyewa_id'); 
     }
-
-    // public function penyewa()
-    // {
-    //     return $this->hasMany(Penyewa::class, 'penghuni_id');
-    // }
+    
+   
 }

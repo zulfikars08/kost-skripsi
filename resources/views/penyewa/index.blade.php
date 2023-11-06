@@ -30,6 +30,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>ID</th> <!-- Add the ID column -->
                         <th>Nama</th>
                         <th>Lokasi Kos</th>
                         <th>No Kamar</th>
@@ -41,22 +42,10 @@
                     @forelse ($penyewas as $penyewa)
                     <tr>
                         <td>{{ $loop->index + 1 + $penyewas->perPage() * ($penyewas->currentPage() - 1) }}</td>
+                        <td>{{ $penyewa->kode_penyewa }}</td> <!-- Display the ID -->
                         <td>{{ $penyewa->nama }}</td>
-                        <td>
-                            @if ($penyewa->lokasi_id)
-                            <?php
-                                $lokasiKos = \App\Models\LokasiKos::find($penyewa->lokasi_id);
-                                ?>
-                            @if ($lokasiKos)
-                            {{ $lokasiKos->nama_kos }}
-                            @else
-                            No Lokasi Kos
-                            @endif
-                            @else
-                            No Kamar
-                            @endif
-                        </td>
-                        <td>{{ $penyewa->no_kamar }}</td>
+                        <td>{{ $penyewa->kamar->no_kamar }}</td>
+                        <td>{{ $penyewa->lokasi->nama_kos }}</td>
                         <td>
                             @if ($penyewa->status_penyewa === 'aktif')
                             <button class="btn btn-success btn-sm">Aktif</button>
@@ -76,7 +65,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6">Tidak ada data.</td>
+                        <td colspan="8">Tidak ada data.</td>
                     </tr>
                     @endforelse
                 </tbody>
