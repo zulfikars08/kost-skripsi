@@ -70,9 +70,8 @@
                                 <i class="fas fa-edit" style="color: white"></i>
                             </button>
                             @include('penyewa.edit')
-                            <a href="{{ route('penyewa.show', $penyewa->id) }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-info-circle" style="color: white"></i>
-                            </a>
+                            <a href="{{ route('penyewa.penghuni.index', $penyewa->id) }}" class="btn btn-primary btn-sm"> 
+                                <i class="fas fa-info-circle" style="color: white"></i></a>
                         </td>
                     </tr>
                     @empty

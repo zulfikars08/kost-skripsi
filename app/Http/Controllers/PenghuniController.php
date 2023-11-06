@@ -49,42 +49,58 @@ class PenghuniController extends Controller
     {
         $request->validate([
             'nama' => 'required|string',
-            'jenis_kelamin' => 'required', // Sesuaikan dengan aturan validasi yang sesuai
-            'tanggal_lahir' => 'required',
-            'no_hp' => 'required', // Sesuaikan dengan aturan validasi yang sesuai
-            'pekerjaan' => 'required', // Sesuaikan dengan aturan validasi yang sesuai
-            'perusahaan' => 'required', // Sesuaikan dengan aturan validasi yang sesuai
-            'status' => 'required', // Sesuaikan dengan aturan validasi yang sesuai
-        ],
-        [
-            'nama.required' => 'Nama wajib di isi',
-            'jenis_kelamin.required' => 'Jenis kelamin wajib di isi',
-            'tanggal_lahir.required' => 'tanggal lahir wajib di isi',
-            'no_hp.required' => 'no hp wajib di isi',
-            'pekerjaan.required' => 'pekerjaan wajib di isi',
-            'perusahaan.required' => 'perusahaan wajib di isi',
-            'status.required' => 'status wajib di isi'
-            // ... tambahkan pesan validasi lainnya ...
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|string|in:laki_laki,perempuan',
+            'no_hp' => 'required|string',
+            'pekerjaan' => 'nullable|string',
+            'perusahaan' => 'nullable|string',
+            'martial_status' => 'required|string|in:belum_kawin,kawin,cerai_hidup,cerai_mati',
+            // 'penyewa_id' => 'penyewa,id',
+
+            // 'no_kamar' => 'required|string',
+            // 'harga' => 'required',
+            // 'keterangan' => 'required',
+            // 'fasilitas' => 'required',
+            // 'status' => 'required|in:belum terisi,sudah terisi', 
+            // 'lokasi_id' => 'required|exists:lokasi_kos,id', 
+        ], [
+            'nama.required' => 'Nama Penghuni wajib di isi',
+            'tanggal_lahir.required' => 'Tanggal Lahir wajib di isi',
+            'jenis_kelamin.required' => 'Jenis Kelamin wajib dipilih',
+            'no_hp.required' => 'No Handphone wajib di isi',
+            'martial_status.required' => 'Martial Status wajib dipilih'
+            // 'no_kamar.required' => 'Nomor kamar wajib di isi',
+            // 'harga.required' => 'Harga wajib di isi',
+            // 'keterangan.required' => 'Keterangan wajib di isi',
+            // 'fasilitas.required' => 'Fasilitas wajib di isi',
+            // 'status.required' => 'Status wajib di isi',
+            // 'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
+            // 'lokasi_id.required' => 'Lokasi kos wajib dipilih',
+            // 'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
         ]);
     
-        // Simpan data ke dalam model Penghuni
         $data = [
             'nama' => $request->nama,
-            'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
             'no_hp' => $request->no_hp,
             'pekerjaan' => $request->pekerjaan,
             'perusahaan' => $request->perusahaan,
-            'status' => $request->status,
+            'martial_status' => $request->martial_status,
+            'penyewa_id' => $penyewa->id,
+            
         ];
 
-        if ($request->pekerjaan === 'Lainnya') {
-            $data['pekerjaan'] = $request->pekerjaan_lainnya;
-        }
+
 
         Penghuni::create($data);
+        $Penghuni = Penghuni::create($data);
+        dd($Penghuni);
+        
+        $page = $request->input('page', 1); // Get the current page or default to 1
+        return redirect()->route('penyewa.penghuni.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data penghuni');
+  
     
-        return redirect()->route('lokasi_kos.index')->with('success_add', 'Berhasil menambahkan data');
     }
 
     /**

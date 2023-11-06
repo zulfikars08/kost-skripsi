@@ -14,16 +14,22 @@ class Penghuni extends Model
     public $incrementing = false;
     protected $fillable = [
         'nama',
+        'tanggal_lahir',
         'jenis_kelamin',
         'no_hp',
         'pekerjaan',
         'perusahaan',
-        'tanggal_lahir',
-        'status'
+        'martial_status',
+        'penyewa_id'
     ];
 
     public function penyewa()
     {
-        return $this->hasMany(Penyewa::class, 'penghuni_id');
+        return $this->belongsTo(Penyewa::class, 'penyewa_id'); 
     }
+
+    // public function penyewa()
+    // {
+    //     return $this->hasMany(Penyewa::class, 'penghuni_id');
+    // }
 }

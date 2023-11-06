@@ -136,7 +136,9 @@ class PenyewaController extends Controller
      */
     public function show($id)
     {
-        //
+        $penyewa = Penyewa::findOrFail($id);
+    
+        return view('penyewa.penghuni.index', compact('penyewa'));
     }
 
     /**
@@ -147,9 +149,10 @@ class PenyewaController extends Controller
      */
     public function edit($id)
     {
+        $lokasiKos = LokasiKos::all(); 
         $penyewa = Penyewa::findOrFail($id);
     
-        return view('penyewa.edit', compact('penyewa'));
+        return view('penyewa.edit', compact('penyewa', 'lokasiKos'));
     }
 
     /**
