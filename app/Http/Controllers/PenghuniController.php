@@ -17,6 +17,20 @@ class PenghuniController extends Controller
      */
     public function index(Request $request)
     {
+         // Retrieve all Penyewa records from the database
+         $penyewas = Penyewa::paginate(5); // You can adjust the number of records per page
+     
+         // If a search keyword is provided, filter the results
+         if ($request->has('katakunci')) {
+             $katakunci = $request->input('katakunci');
+             $penyewas = Penyewa::where('nama', 'like', '%' . $katakunci . '%')
+                 ->paginate(5); // You can adjust the number of records per page for search results
+         }
+     
+         $lokasiKos = LokasiKos::all();
+     
+         // Load the view and pass the data to it
+         return view('penyewa.index', compact('penyewas', 'lokasiKos'));
         //
         sleep(1);
         $penyewaList = Penyewa::all();
@@ -40,18 +54,11 @@ class PenghuniController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-{
-    // Retrieve all Penyewa records
-    // Replace $penyewaId with the actual Penyewa ID you want to retrieve
-    $penyewaList = Penyewa::all();
-
-    // Define an empty Penyewa instance (or you can set a default value if needed)
-    $selectedPenyewa = new Penyewa();
-
-    
-
-    return view('penyewa.penghuni.create', compact('penyewaList', 'selectedPenyewa'));
-}
+    {
+        $penyewa_id = Penyewa::all('penyewa_id');
+        dd($penyewa_id);
+        return view('penghuni.create', compact('penyewa_id'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -63,21 +70,31 @@ class PenghuniController extends Controller
 
      public function store(Request $request)
      {
-         $request->validate([
-             'penyewa_id' => 'required|exists:penyewa,id',
-             'nama' => 'required|string',
-             'tanggal_lahir' => 'required|date',
-             'jenis_kelamin' => 'required|in:laki_laki,perempuan',
-             'no_hp' => 'required|string',
-             'pekerjaan' => 'nullable|string',
-             'perusahaan' => 'nullable|string',
-             'martial_status' => 'required|in:belum_kawin,kawin,cerai_hidup,cerai_mati',
-         ]);
+        $validatedData = $request->validate([
+            'nama' => 'required|string',
+            'tanggal_lahir' => 'date',
+            'jenis_kelamin' => 'required|string',
+            'no_hp' => 'required|string',
+            'pekerjaan' => 'string|nullable',
+            'perusahaan' => 'string|nullable',
+            'martial_status' => 'required|string',
+        ]);
+        // Simpan data ke database
+        $penghuni = new Penghuni;
+        $penghuni->penyewa_id = $request->route('id');
+        $penghuni->nama = $validatedData['nama'];
+        $penghuni->tanggal_lahir = $validatedData['tanggal_lahir'];
+        $penghuni->jenis_kelamin = $validatedData['jenis_kelamin'];
+        $penghuni->no_hp = $validatedData['no_hp'];
+        $penghuni->pekerjaan = $validatedData['pekerjaan'];
+        $penghuni->perusahaan = $validatedData['perusahaan'];
+        $penghuni->martial_status = $validatedData['martial_status'];
+        $penghuni->save();
      
          // Create the Penghuni record with the validated data
-         Penghuni::create($request->all());
+        //  Penghuni::create($request->all());
      
-         return redirect()->route('penyewa.penghuni.index')->with('success', 'Penghuni added successfully.');
+         return redirect()->route('penyewa.penghuni.index', ['id' => $request->route('id')])->with('success', 'Penghuni added successfully.');
      }
      
     

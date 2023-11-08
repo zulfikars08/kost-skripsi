@@ -13,20 +13,19 @@
                 </div>
 
                 <div class="card-body p-4"> <!-- Added "p-4" class for padding -->
-                    @foreach ($penyewaList as $item)
                         <table class="table table-bordered">
                             <tr>
                                 <th class="bg-info text-white">Nama Penyewa</th>
-                                <td>{{ $item->nama }}</td>
+                                <td>{{ $penyewa->nama }}</td>
                             </tr>
                             <tr>
                                 <th class="bg-info text-white">No Kamar</th>
-                                <td>{{ $item->no_kamar }}</td>
+                                <td>{{ $penyewa->no_kamar }}</td>
                             </tr>
                             <tr>
                                 <th class="bg-info text-white">Status Penyewa</th>
                                 <td>
-                                    @if ($item->status_penyewa === 'aktif')
+                                    @if ($penyewa->status_penyewa === 'aktif')
                                     <button class="btn btn-success btn-sm">Aktif</button>
                                     @else
                                     <button class="btn btn-danger btn-sm">Tidak Aktif</button>
@@ -36,9 +35,9 @@
                             <tr>
                                 <th class="bg-info text-white">Nama Kos</th>
                                 <td>
-                                    @if ($item->lokasi_id)
+                                    @if ($penyewa->lokasi_id)
                                         <?php
-                                        $lokasiKos = \App\Models\LokasiKos::find($item->lokasi_id);
+                                        $lokasiKos = \App\Models\LokasiKos::find($penyewa->lokasi_id);
                                         ?>
                                         @if ($lokasiKos)
                                             {{ $lokasiKos->nama_kos }}
@@ -51,7 +50,6 @@
                                 </td>
                             </tr>
                         </table>
-                    @endforeach
 
                     <div class="d-flex justify-content-between align-items-left pb-3">
                         <h5 class="mt-4">Daftar Penghuni</h5>
@@ -76,7 +74,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($penghuni as $item)
+                            @foreach ($penghuniList as $item)
                                 <tr>
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->tanggal_lahir }}</td>

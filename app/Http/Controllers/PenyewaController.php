@@ -33,9 +33,9 @@ class PenyewaController extends Controller
              $penyewas = Penyewa::where('nama', 'like', '%' . $katakunci . '%')
                  ->paginate(5); // You can adjust the number of records per page for search results
          }
-     
+         
          $lokasiKos = LokasiKos::all();
-     
+         
          // Load the view and pass the data to it
          return view('penyewa.index', compact('penyewas', 'lokasiKos'));
      }
@@ -149,9 +149,16 @@ class PenyewaController extends Controller
      */
     public function show($id)
     {
+        // Ambil daftar penghuni terkait dengan penyewa tertentu
+        $penghuniList = Penghuni::where('penyewa_id', $id)->get();
+
+        // Kirim data penghuni ke view
+       
+        
+        $penyewa = Penyewa::with('penghuni')->find($id); // Replace $penyewaId with the actual ID
+
         $penyewa = Penyewa::findOrFail($id);
-    
-        return view('penyewa.penghuni.index', compact('penyewa'));
+        return view('penyewa.penghuni.index', ['penghuniList' => $penghuniList], compact('penyewa'));
     }
 
     /**

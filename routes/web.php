@@ -68,10 +68,10 @@ Route::middleware(['auth'])->group(function () {
 
 
     // penghuni routes
-    // Route::get('/penyewa/detail/{id}', [PenyewaController::class, 'show'])->name('penyewa.penghuni.index');
-    Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penyewa.penghuni.index');
+    Route::get('/penyewa/detail/{id}', [PenyewaController::class, 'show'])->name('penyewa.penghuni.index');
+    // Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penyewa.penghuni.index');
     Route::get('/penghuni/create', [PenghuniController::class, 'create'])->name('penyewa.penghuni.create');
-    Route::post('/penghuni', [PenghuniController::class, 'store'])->name('penghuni.store');
+    Route::post('/penyewa/detail/{id}', [PenghuniController::class, 'store'])->name('penyewa.detail.store');
 
     // Route::middleware('role:user')->group(function () {
 
