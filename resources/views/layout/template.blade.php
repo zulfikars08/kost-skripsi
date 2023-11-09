@@ -67,6 +67,39 @@
           </a>
         </li>
         @endif
+
+        <!-- Sidebar "Data Master" -->
+        <li class="tooltip-element" data-tooltip="7">
+          <a href="#" data-toggle="collapse" data-target="#dataMasterSubMenu" aria-expanded="false" data-active="7">
+            <div class="icon">
+              <i class='bi bi-database'></i>
+              <i class='bi bi-database'></i>
+            </div>
+            <span class="link hide">Data Master</span>
+          </a>
+          <!-- Subbar "Data Fasilitas" -->
+          <ul class="subbar collapse" id="dataMasterSubMenu">
+            <li class="tooltip-element" data-tooltip="8">
+              <a href="/data-fasilitas" data-active="8">
+                <div class="icon">
+                  <i class='bi bi-gear'></i>
+                  <i class='bi bi-gear'></i>
+                </div>
+                <span class="link hide">Data Fasilitas</span>
+              </a>
+            </li>
+            <!-- Subbar "Data Tipe" -->
+            <li class="tooltip-element" data-tooltip="9">
+              <a href="/data-tipe" data-active="9">
+                <div class="icon">
+                  <i class='bi bi-list'></i>
+                  <i class='bi bi-list'></i>
+                </div>
+                <span class="link hide">Data Tipe</span>
+              </a>
+            </li>
+          </ul>
+        </li>
         
         <li class="tooltip-element" data-tooltip="2">
           <a href="/kamar" data-active="2">
@@ -118,7 +151,7 @@
             <span class="link hide">Log Out</span>
           </a>
         </li>
-        {{-- <div class="tooltip">
+        <div class="tooltip">
           <span class="show">Dashboard</span>
           <span>Data Kamar</span>
           <span>Data Lokasi</span>
@@ -126,12 +159,13 @@
           <span>Data Transaksi</span>
           <span>Data Data User</span>
           <span>Log Out</span>
-        </div> --}}
+        </div>
       </ul>
     </div>
   </nav>
   {{-- --}}
   <script src="{{ asset('javascript/sidebar.js') }}"></script>
+  <script src="{{ asset('javascript/subMenuSidebar.js') }}"></script>
 
   <main>
     <div class="loading-overlay">
