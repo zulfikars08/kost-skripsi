@@ -149,6 +149,18 @@
               <span class="link hide">Data Pengeluaran</span>
           </a>
       </li>
+      @if (auth()->user()->hasRole('admin'))
+      <li class="tooltip-element" data-tooltip="9">
+          <a href="/tanggal-laporan" data-active="9">
+              <div class="icon">
+                  <i class='bi bi-currency-dollar'></i>
+                  <i class='bi bi-currency-dollar'></i>
+              </div>
+              <span class="link hide">Laporan Keuangan</span>
+          </a>
+      </li>
+      @endif
+
       <li class="tooltip-element" data-tooltip="8">
           <a href="/tanggal-investor" data-active="8">
               <div class="icon">
