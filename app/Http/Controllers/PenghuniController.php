@@ -120,9 +120,22 @@ class PenghuniController extends Controller
      */
     public function edit($id)
     {
-        //
+        // Retrieve the Penghuni record by its ID
+        $penghuni = Penghuni::find($id);
+
+        // Check if the record exists
+        if (!$penghuni) {
+            return redirect()->route('penyewa.penghuni.index')->with('error', 'Penghuni not found.');
+        }
+
+        // You can add any additional logic or data retrieval here
+
+        // Return the view with the Penghuni data
+        return view('penghuni.edit', compact('penghuni'));
     }
 
+
+   
     /**
      * Update the specified resource in storage.
      *
@@ -132,8 +145,39 @@ class PenghuniController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate([
+            'nama' => 'required|string',
+            'tanggal_lahir' => 'date',
+            'jenis_kelamin' => 'required|string',
+            'no_hp' => 'required|string',
+            'pekerjaan' => 'string|nullable',
+            'perusahaan' => 'string|nullable',
+            'martial_status' => 'required|string',
+        ]);
+
+        // Find the Penghuni record by ID
+        $penghuni = Penghuni::findOrFail($id);
+
+        // Simpan penyewa_id untuk penggunaan nanti
+        $penyewaId = $penghuni->penyewa_id;
+
+
+        // Save the changes
+        $penghuni->update([
+            'nama' => $request->nama,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_hp' => $request->no_hp,
+            'pekerjaan' => $request->pekerjaan,
+            'perusahaan' => $request->perusahaan,
+            'martial_status' => $request->martial_status,
+        ]);
+       
+
+        return redirect()->route('penyewa.penghuni.index', ['id' => $penyewaId])->with('success', 'Penghuni updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -141,8 +185,18 @@ class PenghuniController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($penghuniId)
     {
-        //
+        // Temukan penghuni berdasarkan ID
+        $penghuni = Penghuni::findOrFail($penghuniId);
+
+        // Simpan penyewa_id untuk penggunaan nanti
+        $penyewaId = $penghuni->penyewa_id;
+
+        // Hapus penghuni
+        $penghuni->delete();
+
+        return redirect()->route('penyewa.penghuni.index', ['id' => $penyewaId])->with('success', 'Penghuni Destroy successfully.');
     }
+
 }

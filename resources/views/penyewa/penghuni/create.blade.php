@@ -13,14 +13,6 @@
                         <label for="penyewa_id" class="form-label text-start">Penyewa ID</label>
                         <input type="text" class="form-control" id="penyewa_id" value="{{ request()->route('id') }}" disabled>
                     </div>
-                    {{-- <div class="mb-3 custom-form-group">
-                        <label for="penyewa_id">Select Penyewa</label>
-                        <select name="penyewa_id" id="penyewa_id">
-                            @foreach ($penyewaList as $p)
-                                <option value="{{ $p->id }}">{{ $p->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div> --}}
                     <!-- Nama -->
                     <div class="mb-3 custom-form-group">
                         <label for="nama" class="form-label">Nama</label>

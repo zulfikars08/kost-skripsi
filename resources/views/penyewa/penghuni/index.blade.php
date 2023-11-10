@@ -49,44 +49,81 @@
                                     @endif
                                 </td>
                             </tr>
+                            <tr>
+                                <th class="bg-info text-white">Jumlah Penghuni</th>
+                                <td>{{ $jumlahPenghuni }}</td>
+                            </tr>
                         </table>
 
                     <div class="d-flex justify-content-between align-items-left pb-3">
                         <h5 class="mt-4">Daftar Penghuni</h5>
                     </div>
                     <div class="d-flex justify-content-between align-items-left pb-3">
-                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
-                            <i class="fas fa-plus"></i> Tambah Data
-                        </button>
+                        @if ($penyewa->status_penyewa === 'aktif')
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
+                                <i class="fas fa-plus"></i> Tambah Data
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-secondary" disabled>
+                                <i class="fas fa-plus"></i> Tambah Data
+                            </button>
+                            <div class="alert alert-danger mt-2 mx-auto text-center" role="alert">
+                                Tidak dapat menambah data karena Status Penyewa tidak aktif.
+                            </div>
+                        @endif
                         @include('penyewa.penghuni.create')
                     </div>
                     <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nama Penghuni</th>
-                                <th>Tanggal Lahir</th>
-                                <th>Jenis Kelamin</th>
-                                <th>No Hp</th>
-                                <th>Pekerjaan</th>
-                                <th>Perusahaan</th>
-                                <th>Martial Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($penghuniList as $item)
+                        <table class="table table-striped">
+                            <thead>
                                 <tr>
-                                    <td>{{ $item->nama }}</td>
-                                    <td>{{ $item->tanggal_lahir }}</td>
-                                    <td>{{ $item->jenis_kelamin }}</td>
-                                    <td>{{ $item->no_hp }}</td>
-                                    <td>{{ $item->pekerjaan }}</td>
-                                    <td>{{ $item->perusahaan }}</td>
-                                    <td>{{ $item->martial_status }}</td>
+                                    <th>No</th>
+                                    <th>Nama Penghuni</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>No Hp</th>
+                                    <th>Pekerjaan</th>
+                                    <th>Perusahaan</th>
+                                    <th>Martial Status</th>
+                                    <th>Action</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @if ($penghuniList->isEmpty())
+                                    <tr>
+                                        <td colspan="9">Tidak ada data Penghuni</td>
+                                    </tr>
+                                @else
+                                    @foreach ($penghuniList as $item)
+                                        <tr>
+                                            <td>{{ $loop->index + 1 + $penghuniList->perPage() * ($penghuniList->currentPage() - 1) }}</td>
+                                            <td>{{ $item->nama }}</td>
+                                            <td>{{ $item->tanggal_lahir }}</td>
+                                            <td>{{ $item->jenis_kelamin }}</td>
+                                            <td>{{ $item->no_hp }}</td>
+                                            <td>{{ $item->pekerjaan }}</td>
+                                            <td>{{ $item->perusahaan }}</td>
+                                            <td>{{ $item->martial_status }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#editPenghuniModal{{ $item->id }}">
+                                                    <i class="fas fa-edit" style="color: white"></i>
+                                                </button>
+                                                @include('penyewa.penghuni.edit')
+                                                <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
+                                                    action="{{ route('penyewa.penghuni.destroy', ['id' => $item->id]) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" name="submit" class="btn btn-danger btn-sm" onclick="showSuccessToast()">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
                 </div>
                 </div>
             </div>

@@ -72,6 +72,9 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/penghuni', [PenghuniController::class, 'index'])->name('penyewa.penghuni.index');
     Route::get('/penghuni/create', [PenghuniController::class, 'create'])->name('penyewa.penghuni.create');
     Route::post('/penyewa/detail/{id}', [PenghuniController::class, 'store'])->name('penyewa.detail.store');
+    Route::delete('/penghuni/{id}', [PenghuniController::class, 'destroy'])->name('penyewa.penghuni.destroy');
+    Route::get('/penghuni/{id}/edit', [PenghuniController::class, 'edit'])->name('penyewa.penghuni.edit');
+    Route::put('/penghuni/{id}', [PenghuniController::class, 'update'])->name('penghuni.update');
 
     // Route::middleware('role:user')->group(function () {
 

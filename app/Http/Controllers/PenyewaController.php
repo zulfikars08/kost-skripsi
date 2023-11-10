@@ -136,10 +136,6 @@ class PenyewaController extends Controller
         return redirect()->route('penyewa.index')->with('success_add', 'Data penyewa berhasil ditambahkan.');
     }
     
-    
-
-
-
 
     /**
      * Display the specified resource.
@@ -149,16 +145,15 @@ class PenyewaController extends Controller
      */
     public function show($id)
     {
-        // Ambil daftar penghuni terkait dengan penyewa tertentu
-        $penghuniList = Penghuni::where('penyewa_id', $id)->get();
+        // Ambil daftar penghuni terkait dengan penyewa tertentu dengan pagination
+        $penghuniList = Penghuni::where('penyewa_id', $id)->paginate(10); // Sesuaikan jumlah item per halaman (10 di sini)
 
-        // Kirim data penghuni ke view
-       
-        
-        $penyewa = Penyewa::with('penghuni')->find($id); // Replace $penyewaId with the actual ID
+        // Hitung jumlah penghuni
+        $jumlahPenghuni = $penghuniList->total();
 
+        // Kirim data penghuni dan jumlah penghuni ke view
         $penyewa = Penyewa::findOrFail($id);
-        return view('penyewa.penghuni.index', ['penghuniList' => $penghuniList], compact('penyewa'));
+        return view('penyewa.penghuni.index', ['penghuniList' => $penghuniList, 'jumlahPenghuni' => $jumlahPenghuni], compact('penyewa'));
     }
 
     /**
