@@ -9,6 +9,10 @@
                 <div class="modal-body">
                     <!-- Your form for adding data goes here -->
                     <div class="mb-3 custom-form-group">
+                        <label for="nama_investor" class="form-label">Nama Investor</label>
+                        <input type="text" class="form-control" name="nama_investor" id="nama_investor" value="{{ old('nama_investor') }}" required>
+                    </div>
+                    <div class="mb-3 custom-form-group">
                         <label for="no_kamar" class="form-label">No Kamar</label>
                         <input type="text" class="form-control @error('no_kamar') is-invalid @enderror" name="no_kamar" id="no_kamar" value="{{ old('no_kamar') }}" required>
                         @error('no_kamar')
@@ -48,6 +52,8 @@
                             <small class="text-danger">Lokasi Kos tidak tersedia. Harap tambahkan lokasi kos terlebih dahulu.</small>
                         @endif
                     </div>
+                    <!-- Add the field for "nama_investor" -->
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

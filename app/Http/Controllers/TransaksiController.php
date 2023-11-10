@@ -104,8 +104,31 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the form data
+        $validatedData = $request->validate([
+            'tanggal' => 'required|date',
+            'jumlah_tarif' => 'required|numeric',
+            'tipe_pembayaran' => 'required|in:tunai,non-tunai',
+            'kamar_id' => 'required|exists:kamar,id',
+            'lokasi_id' => 'required|exists:lokasi_kos,id',
+        ]);
+    
+        // Create a new transaction
+        $transaksi = new Transaksi;
+        $transaksi->tanggal = $validatedData['tanggal'];
+        $transaksi->jumlah_tarif = $validatedData['jumlah_tarif'];
+        $transaksi->tipe_pembayaran = $validatedData['tipe_pembayaran'];
+        $transaksi->kamar_id = $validatedData['kamar_id'];
+        $transaksi->lokasi_id = $validatedData['lokasi_id'];
+    
+        // Add other fields as needed
+    
+        $transaksi->save();
+    
+        // You can add a success message or redirect to a different page
+        return redirect()->route('transaksi.index')->with('success_add', 'Transaksi added successfully');
     }
+    
 
     /**
      * Display the specified resource.

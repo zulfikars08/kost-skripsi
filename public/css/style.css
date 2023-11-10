@@ -80,7 +80,9 @@ select option {
     margin-left: 30px; 
     margin-bottom: 30px;/* Adjust margin for better spacing */
 }
-
+#totalPemasukanRow, #totalPengeluaranRow {
+    font-weight: bold;
+}
 /* Custom pagination styling */
 /* Custom pagination styling */
 /* Style for pagination container */

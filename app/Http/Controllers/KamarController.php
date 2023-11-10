@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Investor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Kamar;
@@ -66,11 +67,12 @@ class KamarController extends Controller
     {
         $request->validate([
             'no_kamar' => 'required|string',
+            'nama_investor' => 'required|string',
             'harga' => 'required',
             'keterangan' => 'required',
             'fasilitas' => 'required',
-            'status' => 'required|in:belum terisi,sudah terisi', // Ensure the selected status is valid
-            'lokasi_id' => 'required|exists:lokasi_kos,id', // Ensure the selected lokasiKos exists
+            'status' => 'required|in:belum terisi,sudah terisi',
+            'lokasi_id' => 'required|exists:lokasi_kos,id',
         ], [
             'no_kamar.required' => 'Nomor kamar wajib di isi',
             'harga.required' => 'Harga wajib di isi',
@@ -83,6 +85,7 @@ class KamarController extends Controller
         ]);
     
         $data = [
+            'nama_investor' => $request->nama_investor,
             'no_kamar' => $request->no_kamar,
             'harga' => $request->harga,
             'keterangan' => $request->keterangan,
@@ -90,12 +93,35 @@ class KamarController extends Controller
             'status' => $request->status,
             'lokasi_id' => $request->lokasi_id,
         ];
+    
+        // Create a new Kamar record
+        $kamar = Kamar::create($data);
+    
+        // Automatically create an Investor record
+    //     $totalPintu = $kamar = Kamar::where('no_kamar', $request->input('no_kamar'))
+    //     ->where('nama_investor', $kamar->nama_investor)
+    //     ->where('lokasi_id', $kamar->lokasi_id)
+    //     ->firstOrFail();
 
+    // // Find the LokasiKos based on the 'lokasi_id'
+    // $lokasiKos = LokasiKos::find($request->lokasi_id);
 
-  
-    Kamar::create($data);
-    $page = $request->input('page', 1); // Get the current page or default to 1
-    return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar');
+    // if ($kamar) {
+    //     // Create an Investor record with the calculated 'jumlah_pintu'
+    //     Investor::create([
+    //         'nama' => $request->nama_investor,
+    //         'no_kamar' => $request->no_kamar,
+    //         'nama_kos' => $lokasiKos->nama_kos,
+    //         'kamar_id' => $kamar->id,
+    //         'lokasi_id' => $request->lokasi_id,
+    //         'jumlah_pintu' => $totalPintu,
+    //     ]);
+    // } else {
+    //     // Handle the case when the 'Kamar' record is not created.
+    // }
+    
+        $page = $request->input('page', 1);
+        return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar dan investor');
     }
     
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Investor;
 use App\Models\LokasiKos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -59,33 +60,32 @@ class LokasiKostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
-        Session::flash('nama_kos',$request->nama_kos);
-        Session::flash('jumlah_kamar',$request->jumlah_kamar);
-        Session::flash('alamat_kos',$request->alamat_kos);
-        $request->validate([
-            'nama_kos' => 'required|string|unique:lokasi_kos,nama_kos',
-            'jumlah_kamar' => 'required',
-            'alamat_kos' => 'required',
-        ],
-        [
-            'nama_kos.required' => 'nama kos wajib di isi',
-            'nama_kos.unique' => 'nama kos sudah digunakan',
-            'jumlah_kamar.required' => 'jumlah kamar wajib di isi',
-            'alamat_kos.required' => 'alamat wajib di isi',
-        ]     
-    );
-        $data = [
-            'lokasi_id' => $request->lokasi_id,
-            'nama_kos' => $request->nama_kos,
-            'jumlah_kamar' => $request->jumlah_kamar,
-            'alamat_kos' => $request->alamat_kos,
-          
-        ];
-        LokasiKos::create($data);
-        return redirect()->to('lokasi_kos')->with('success_add', 'berhasil menambahkan data');
-    }
+{
+    // Validate the request data
+    $request->validate([
+        'nama_kos' => 'required|string|unique:lokasi_kos,nama_kos',
+        'alamat_kos' => 'required',
+    ], [
+        'nama_kos.required' => 'Nama kos wajib di isi',
+        'nama_kos.unique' => 'Nama kos sudah digunakan',
+        'alamat_kos.required' => 'Alamat wajib di isi',
+    ]);
+
+    // Calculate the total number of kamar based on the sum of jumlah_pintu for the specified nama_kos
+    
+    // Create a new LokasiKos record
+    $data = [
+        'lokasi_id' => $request->lokasi_id,
+        'nama_kos' => $request->nama_kos,
+        'jumlah_kamar' => $request->jumlah_kamar,
+        'alamat_kos' => $request->alamat_kos,
+    ];
+  
+    LokasiKos::create($data);
+
+    return redirect()->to('lokasi_kos')->with('success_add', 'Berhasil menambahkan data');
+}
+
 
     /**
      * Display the specified resource.

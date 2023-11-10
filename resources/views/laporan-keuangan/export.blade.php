@@ -12,7 +12,7 @@
                         <label for="nama_kos">Name of Kos:</label>
                         <select name="nama_kos" id="nama_kos" class="form-control">
                             <option value="">Select Kos</option>
-                            @foreach ($lokasiKosData as $kos)
+                            @foreach ($lokasiKos as $kos)
                                 <option value="{{ $kos->id }}">{{ $kos->nama_kos }}</option>
                             @endforeach
                         </select>

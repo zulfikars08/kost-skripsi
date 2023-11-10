@@ -35,6 +35,7 @@
                                 <th>Harga</th>
                                 <th>Keterangan</th>
                                 <th>Fasilitas</th>
+                                <th>Nama Investor</th> <!-- Add this column header -->
                             </tr>
                         </thead>
                         <tbody>
@@ -49,6 +50,7 @@
                                         <td>Rp{{ number_format($kamar->harga, 2) }}</td>
                                         <td>{{ $kamar->keterangan }}</td>
                                         <td>{{ $kamar->fasilitas }}</td>
+                                        <td>{{ $kamar->nama_investor }}</td> <!-- Display the 'nama_investor' -->
                                     </tr>
                                     @php
                                         $kamarNumbers[] = $kamar->no_kamar; // Add room number to the array
@@ -56,12 +58,11 @@
                                 @endif
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-muted">Tidak ada kamar tersedia.</td>
+                                    <td colspan="5" class="text-muted">Tidak ada kamar tersedia.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
-                    
                 </div>
             </div>
         </div>

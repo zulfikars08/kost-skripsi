@@ -16,6 +16,7 @@ class CreateKamarTable extends Migration
         Schema::create('kamar', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('lokasi_id'); // Foreign key to lokasi_kos table
+            $table->string('nama_investor')->nullable();
             $table->string('no_kamar');
             $table->integer('harga');
             $table->string('fasilitas');

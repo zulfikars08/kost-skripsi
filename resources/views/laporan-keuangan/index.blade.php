@@ -1,52 +1,62 @@
-<!-- resources/views/financial-report.blade.php -->
-
 @extends('layout.template')
 
 @section('content')
-<div class="container">
-    <h3>Financial Report</h3>
-    <p>Generated for: {{ $namaKos }} - {{ $namaBulan }}</p>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>No Kamar</th>
-                <th>Nama</th>
-                <th>Nama Kos</th>
-                <th>Tanggal</th>
-                <th>Jumlah Tarif</th>
-                <th>Tipe Pembayaran</th>
-                <th>Bukti Pembayaran</th>
-                <th>Tanggal Awal Pembayaran</th>
-                <th>Tanggal Akhir Pembayaran</th>
-                <th>Kebersihan</th>
-                <th>Total</th>
-                <th>Pengeluaran</th>
-                <th>Keterangan</th>
-                <th>Status Pembayaran</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($filteredTransaksiData as $item)
-            <tr>
-                <td>{{ $item['No'] }}</td>
-                <td>{{ $item['No Kamar'] }}</td>
-                <td>{{ $item['Nama'] }}</td>
-                <td>{{ $item['Nama Kos'] }}</td>
-                <td>{{ $item['Tanggal'] }}</td>
-                <td>{{ $item['Jumlah Tarif'] }}</td>
-                <td>{{ $item['Tipe Pembayaran'] }}</td>
-                <td>{{ $item['Bukti Pembayaran'] }}</td>
-                <td>{{ $item['Tanggal Awal Pembayaran'] }}</td>
-                <td>{{ $item['Tanggal Akhir Pembayaran'] }}</td>
-                <td>{{ $item['Kebersihan'] }}</td>
-                <td>{{ $item['Total'] }}</td>
-                <td>{{ $item['Pengeluaran'] }}</td>
-                <td>{{ $item['Keterangan'] }}</td>
-                <td>{{ $item['Status Pembayaran'] }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+@include('komponen.pesan')
+<div class="container-fluid">
+    <h3 class="text-start" style="margin: 20px 0;">Tanggal Laporan</h3>
+
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <div class="d-flex justify-content-between align-items-center pb-3">
+            <!-- SEARCH FORM -->
+            {{-- <form class="d-flex" action="{{ route('tanggal-laporan.index') }}" method="get" id="search-form">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="search" placeholder="Cari Nama Kos, Bulan, Tahun"
+                        aria-label="Search" id="search-input">
+                    <button class="btn btn-secondary" type="submit">Cari</button>
+                </div>
+            </form> --}}
+
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
+                <i class="fas fa-plus"></i> Tambah Data Tanggal Laporan
+            </button>            
+            @include('laporan-keuangan.create')
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Kos</th>
+                        <th>Bulan</th>
+                        <th>Tahun</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($tanggalLaporan as $item)
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>
+                               {{ $item->nama_kos
+                            }}
+                            </td>
+                            <td>{{ date('F', mktime(0, 0, 0, $item->bulan, 1) ) }}</td>
+                            <td>{{ $item->tahun }}</td>
+                            <td>
+                                <a href="{{ route('laporan-keuangan.detail.index', [
+                                    'nama_kos' => $item->lokasi_id,
+                                    'bulan' => $item->bulan,
+                                    'tahun' => $item->tahun
+                                ]) }}" class="btn btn-primary btn-sm">
+                                     <i class="fas fa-info-circle" style="color: white"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection

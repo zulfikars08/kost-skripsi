@@ -3,7 +3,7 @@
 @section('content')
 @include('komponen.pesan')
 <div class="container-fluid">
-    <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Transaksi</h3>
+    <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Transaksi Penyewa</h3>
     <!-- TRANSAKSI LIST TABLE -->
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">
@@ -118,7 +118,9 @@
                         <!-- Nama -->
                         <td>
                             @if ($item->penyewa)
-                                {{ $item->penyewa->nama}}
+                                {{ $item->penyewa->nama }}
+                            @else
+                                No Penyewa Found
                             @endif
                         </td>
                         <!-- Nama Kos -->
@@ -171,16 +173,26 @@
                         <!-- Pengeluaran -->
                         {{-- <td>{{ $item->pengeluaran }}</td> --}}
                         <td>
-                            <div class="d-flex">
+                            <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
-                                     <i class="fas fa-edit" style="color: white"></i>
+                                    <i class="fas fa-edit" style="color: white"></i>
                                 </button>
+                        
                                 @include('transaksi.edit')
+
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTransactionModal{{ $item->kamar->id }}-{{ $item->lokasiKos->id }}" style="margin-left: 5px">
+                                    <i class="fas fa-plus" style="color: white"></i>
+                                </button>
+                        
+                                @include('transaksi.create', ['roomId' => $item->kamar->id, 'lokasiId' => $item->lokasiKos->id])
+
                                 <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" name="submit" class="btn btn-danger btn-sm" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm"style="margin-left: 5px"><i class="fas fa-trash" ></i></button>
                                 </form>
+                        
+                               
                             </div>
                         </td>
                     </tr>

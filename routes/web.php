@@ -4,15 +4,19 @@ use App\Exports\TransaksiExport;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\LaporanKeuanganController;
 use App\Http\Controllers\LokasiKostController;
 use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\PemasukanController;
+use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PenghuniController;
 use App\Http\Controllers\PenyewaController;
 use App\Http\Controllers\SesiController;
 use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\TanggalController;
+use App\Http\Controllers\TanggalInvestorController;
 use App\Http\Controllers\TanggalLaporanController;
 use App\Http\Controllers\TransaksiController;
 use App\Models\Kamar;
@@ -75,6 +79,26 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/penghuni/{id}', [PenghuniController::class, 'destroy'])->name('penyewa.penghuni.destroy');
     Route::get('/penghuni/{id}/edit', [PenghuniController::class, 'edit'])->name('penyewa.penghuni.edit');
     Route::put('/penghuni/{id}', [PenghuniController::class, 'update'])->name('penghuni.update');
+
+    Route::get('/investor', [InvestorController::class, 'index'])->name('investor.detail.index');
+    Route::get('/investor/create', [InvestorController::class, 'create'])->name('investor.detail.create');
+    Route::post('/investor', [InvestorController::class, 'store'])->name('investor.store');
+    Route::get('investor/{lokasi_id}/{bulan}/{tahun}', [TanggalInvestorController::class, 'show'])
+        ->name('investor.detail.show');
+    Route::get('/tanggal-investor', [TanggalInvestorController::class, 'index'])->name('investor.index');
+    Route::get('/tanggal-investor/create', [TanggalInvestorController::class, 'create'])->name('investor.create');
+    Route::post('/tanggal-investor', [TanggalInvestorController::class, 'store'])->name('tanggal-investor.store');
+
+    Route::get('/pemasukan', [PemasukanController::class, 'index'])->name('pemasukan.index');
+    Route::get('/pemasukan/create', [PemasukanController::class, 'create'])->name('pemasukan.create');
+    Route::post('/pemasukan', [PemasukanController::class, 'store'])->name('pemasukan.store');
+    Route::get('/pemasukan/{id}/edit', [PemasukanController::class, 'edit'])->name('pemasukan.edit');
+    Route::put('/pemasukan/{id}', [PemasukanController::class, 'update'])->name('pemasukan.update');
+   
+
+    Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::get('/pengeluaran/create', [PengeluaranController::class, 'create'])->name('pengeluaran.create');
+    Route::post('/pengeluaran', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
 
     // Route::middleware('role:user')->group(function () {
 

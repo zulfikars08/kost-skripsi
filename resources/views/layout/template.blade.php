@@ -131,6 +131,34 @@
           </a>
         </li>
         @endif
+        <li class="tooltip-element" data-tooltip="7">
+          <a href="/pemasukan" data-active="7">
+              <div class="icon">
+                  <i class='bi bi-people'></i>
+                  <i class='bi bi-people'></i>
+              </div>
+              <span class="link hide">Data Pemasukan</span>
+          </a>
+      </li>
+      <li class="tooltip-element" data-tooltip="7">
+          <a href="/pengeluaran" data-active="7">
+              <div class="icon">
+                  <i class='bi bi-people'></i>
+                  <i class='bi bi-people'></i>
+              </div>
+              <span class="link hide">Data Pengeluaran</span>
+          </a>
+      </li>
+      <li class="tooltip-element" data-tooltip="8">
+          <a href="/tanggal-investor" data-active="8">
+              <div class="icon">
+                  <i class='bi bi-people'></i>
+                  <i class='bi bi-people'></i>
+              </div>
+              <span class="link hide">Data Investor</span>
+          </a>
+      </li>
+
         @if (auth()->user()->hasRole('admin'))
         <li class="tooltip-element" data-tooltip="5">
           <a href="/manage-users" data-active="5">

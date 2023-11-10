@@ -18,7 +18,6 @@ class LokasiKos extends Model
         'alamat_kos'
     ];
 
-    // Kamar.php (Kamar model)
     public function kamars()
     {
         return $this->hasMany(Kamar::class, 'lokasi_id');
@@ -28,8 +27,20 @@ class LokasiKos extends Model
     {
         return $this->hasManyThrough(Penyewa::class, Kamar::class, 'lokasi_id', 'kamar_id');
     }
+
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class, 'lokasi_id');
     }
+    // LokasiKos.php (LokasiKos model)
+// public function totalJumlahPintu($namaKos)
+// {
+//     return $this->investors()
+//         ->where('nama_kos', $namaKos)
+//         ->sum('jumlah_pintu');
+// }
+public function investors()
+{
+    return $this->hasMany(Investor::class, 'lokasi_id', 'id');
+}
 }

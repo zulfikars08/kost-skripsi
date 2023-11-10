@@ -15,34 +15,26 @@ class Kamar extends Model
     protected $fillable = [
         'lokasi_id',
         'no_kamar',
+        'investor_id',
+        'nama_investor',
         'harga',
         'keterangan',
         'fasilitas',
         'status'
     ];
 
-    // Define the reverse relationship to LokasiKos
     public function lokasiKos()
     {
-        return $this->belongsTo(LokasiKos::class, 'lokasi_id'); // Assuming 'kost_id' is the foreign key column
+        return $this->belongsTo(LokasiKos::class, 'lokasi_id');
     }
-    public function kamar()
-{
-    return $this->belongsTo(Kamar::class);
-}
 
- public function penyewa()
+    public function penyewa()
     {
         return $this->hasMany(Penyewa::class, 'kamar_id');
     }
+
+    public function investor()
+    {
+        return $this->belongsTo(Investor::class, 'investor_id');
+    }
 }
-
-
-
-
-
-
-
-
-
-
