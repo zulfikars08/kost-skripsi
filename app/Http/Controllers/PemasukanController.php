@@ -86,8 +86,26 @@ class PemasukanController extends Controller
             'jumlah' => 'required|numeric',
             'keterangan' => 'required|string',
             // Add other validation rules as needed
+        ], [
+            'kamar_id.required' => 'Nomor kamar wajib di isi',
+            'kamar_id.exists' => 'Nomor kamar tidak valid',
+            'lokasi_id.required' => 'Lokasi kos wajib dipilih',
+            'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
+            'tanggal.required' => 'Tanggal wajib di isi',
+            'tanggal.date' => 'Format tanggal tidak valid',
+            'tipe_pembayaran.required' => 'Tipe pembayaran wajib di isi',
+            'tipe_pembayaran.in' => 'Tipe pembayaran harus salah satu dari "tunai" atau "non-tunai"',
+            'bukti_pembayaran.required_if' => 'Bukti pembayaran wajib di isi jika tipe pembayaran non-tunai',
+            'bukti_pembayaran.image' => 'Bukti pembayaran harus berupa gambar',
+            'bukti_pembayaran.mimes' => 'Format bukti pembayaran tidak valid. Gunakan format jpeg, png, jpg, gif, atau svg',
+            'bukti_pembayaran.max' => 'Ukuran bukti pembayaran tidak boleh melebihi 2048 kilobita',
+            'jumlah.required' => 'Jumlah wajib di isi',
+            'jumlah.numeric' => 'Jumlah harus berupa angka',
+            'keterangan.required' => 'Keterangan wajib di isi',
+            'keterangan.string' => 'Keterangan harus berupa teks',
+            // Add other custom error messages as needed
         ]);
-
+        
         // Create a new Pengeluaran instance
         $pemasukan = new Pemasukan([
             'kamar_id' => $request->input('kamar_id'),
@@ -155,12 +173,35 @@ class PemasukanController extends Controller
 
         // Create a new LaporanKeuangan instance
         $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
+        $existingLaporan = TanggalLaporan::where('nama_kos', $nama_kos)
+        ->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->first();
+
+    $existingInvestor = TanggalInvestor::where('nama_kos', $nama_kos)
+        ->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->first();
+
+    if ($existingLaporan) {
+        // Update existing entry
+        $existingLaporan->update($tanggalLaporanAtributes);
+    } else {
+        // Create a new entry
         $tanggalLaporan = new TanggalLaporan($tanggalLaporanAtributes);
-        $tanggalInvestor = new TanggalInvestor($tanggalInvestorAttributes );
+        $tanggalLaporan->save();
+    }
+
+    if ($existingInvestor) {
+        // Update existing entry
+        $existingInvestor->update($tanggalInvestorAttributes);
+    } else {
+        // Create a new entry
+        $tanggalInvestor = new TanggalInvestor($tanggalInvestorAttributes);
+        $tanggalInvestor->save();
+    }
         // Save the new LaporanKeuangan instance
         $laporanKeuangan->save();
-        $tanggalLaporan->save();
-        $tanggalInvestor->save();
         return redirect()->route('pemasukan.index')->with('success_add', 'Data pemasukan berhasil ditambahkan.');
     }
 

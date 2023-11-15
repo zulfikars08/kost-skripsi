@@ -6,6 +6,8 @@ use App\Models\Kamar;
 use App\Models\LaporanKeuangan;
 use App\Models\LokasiKos;
 use App\Models\Pengeluaran;
+use App\Models\TanggalInvestor;
+use App\Models\TanggalLaporan;
 use Illuminate\Http\Request;
 
 class PengeluaranController extends Controller
@@ -70,24 +72,55 @@ class PengeluaranController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kamar_id' => 'required|string',
-            'lokasi_id' => 'required|string',
+            'kamar_id' => 'required|exists:kamar,id',
+            'lokasi_id' => 'required|exists:lokasi_kos,id',
             'tanggal' => 'required|date',
+            'tipe_pembayaran' => 'required|in:tunai,non-tunai', // Adjust the 'in' rule based on your options
+            'bukti_pembayaran' => 'required_if:tipe_pembayaran,non-tunai|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'jumlah' => 'required|numeric',
             'keterangan' => 'required|string',
             // Add other validation rules as needed
+        ], [
+            'kamar_id.required' => 'Nomor kamar wajib di isi',
+            'kamar_id.exists' => 'Nomor kamar tidak valid',
+            'lokasi_id.required' => 'Lokasi kos wajib dipilih',
+            'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
+            'tanggal.required' => 'Tanggal wajib di isi',
+            'tanggal.date' => 'Format tanggal tidak valid',
+            'tipe_pembayaran.required' => 'Tipe pembayaran wajib di isi',
+            'tipe_pembayaran.in' => 'Tipe pembayaran harus salah satu dari "tunai" atau "non-tunai"',
+            'bukti_pembayaran.required_if' => 'Bukti pembayaran wajib di isi jika tipe pembayaran non-tunai',
+            'bukti_pembayaran.image' => 'Bukti pembayaran harus berupa gambar',
+            'bukti_pembayaran.mimes' => 'Format bukti pembayaran tidak valid. Gunakan format jpeg, png, jpg, gif, atau svg',
+            'bukti_pembayaran.max' => 'Ukuran bukti pembayaran tidak boleh melebihi 2048 kilobita',
+            'jumlah.required' => 'Jumlah wajib di isi',
+            'jumlah.numeric' => 'Jumlah harus berupa angka',
+            'keterangan.required' => 'Keterangan wajib di isi',
+            'keterangan.string' => 'Keterangan harus berupa teks',
+            // Add other custom error messages as needed
         ]);
-
+        
         // Create a new Pengeluaran instance
         $pengeluaran = new Pengeluaran([
             'kamar_id' => $request->input('kamar_id'),
             'lokasi_id' => $request->input('lokasi_id'),
             'tanggal' => $request->input('tanggal'),
+            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+            'bukti_pembayaran' => $request->input('bukti_pembayaran'),         
             'jumlah' => $request->input('jumlah'),
             'keterangan' => $request->input('keterangan'),
             // Add other fields as needed
         ]);
         $nama_kos = $pengeluaran->lokasiKos->nama_kos;
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $fileName = time() . '_' . $file->getClientOriginalName(); // Appending timestamp to ensure uniqueness
+            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+            // Change the directory name here
+            $pengeluaran->bukti_pembayaran = $filePath; // Use -> instead of array notation
+        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+            $pengeluaran->bukti_pembayaran = 'Cash Payment'; // Use -> instead of array notation
+        }
         // Save the Pengeluaran
         $pengeluaran->save();
 
@@ -105,6 +138,8 @@ class PengeluaranController extends Controller
             'kode_pengeluaran' => $pengeluaran->kode_pengeluaran,
             'jenis' => 'pengeluaran',
             'nama_kos' => $nama_kos,
+            'tipe_pembayaran' => $pengeluaran->tipe_pembayaran,
+            'bukti_pembayaran' => $pengeluaran->bukti_pembayaran,
             'bulan' => $bulan,
             'tahun' => $tahun,
             'pengeluaran' => $pengeluaran->jumlah,
@@ -120,7 +155,56 @@ class PengeluaranController extends Controller
 
         // Create a new LaporanKeuangan instance
         $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
+        $tanggalLaporanAtributes = [
+            'nama_kos' => $nama_kos,
+            'kamar_id' => $pengeluaran->kamar_id,
+            'lokasi_id' => $pengeluaran->lokasi_id, // Assign the penyewa_id
+            // Set the default value or adjust as needed
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+           // Set to '-' for string columns
+            'tanggal' => $pengeluaran->tanggal,
+        ];
+        
+        $tanggalInvestorAttributes = [
+            'nama_kos' => $nama_kos,
+            'lokasi_id' => $pengeluaran->lokasi_id, // Assign the penyewa_id
+            // Set the default value or adjust as needed
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+           // Set to '-' for string columns
+            'tanggal' => $pengeluaran->tanggal,
+        ];
 
+        // Create a new LaporanKeuangan instance
+        $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
+        $existingLaporan = TanggalLaporan::where('nama_kos', $nama_kos)
+        ->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->first();
+
+         $existingInvestor = TanggalInvestor::where('nama_kos', $nama_kos)
+        ->where('bulan', $bulan)
+        ->where('tahun', $tahun)
+        ->first();
+
+        if ($existingLaporan) {
+        // Update existing entry
+        $existingLaporan->update($tanggalLaporanAtributes);
+        } else {
+        // Create a new entry
+        $tanggalLaporan = new TanggalLaporan($tanggalLaporanAtributes);
+        $tanggalLaporan->save();
+        }
+
+        if ($existingInvestor) {
+        // Update existing entry
+        $existingInvestor->update($tanggalInvestorAttributes);
+        } else {
+        // Create a new entry
+        $tanggalInvestor = new TanggalInvestor($tanggalInvestorAttributes);
+        $tanggalInvestor->save();
+        }
         // Save the new LaporanKeuangan instance
         $laporanKeuangan->save();
 
@@ -174,6 +258,19 @@ class PengeluaranController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            // Find the Pemasukan item by ID
+            $pengeluaran = Pengeluaran::findOrFail($id);
+
+            // Implement your logic for deleting the item (e.g., database deletion)
+            $pengeluaran->delete();
+
+            // Optionally, you can send a success message back
+            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pemasukan berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Handle any exceptions or errors that may occur during deletion
+            // Log the error or return an error response
+            return response()->json(['error' => 'Failed to delete item'], 500);
+        }
     }
 }

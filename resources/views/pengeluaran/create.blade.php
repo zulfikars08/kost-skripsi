@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body">
                 <!-- Add your form fields here -->
-                <form action="{{ route('pengeluaran.store') }}" method="post">
+                <form action="{{ route('pengeluaran.store') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3 custom-form-group">
                         <label for="tanggal" class="form-label">Tanggal</label>
@@ -35,6 +35,17 @@
                                 }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="mb-3 custom-form-group">
+                        <label for="tipe_pembayaran" class="form-label">Tipe Pembayaran</label>
+                        <select class="form-select" name="tipe_pembayaran" id="tipe_pembayaran">
+                            <option value="tunai">Tunai</option>
+                            <option value="non-tunai">Non-Tunai</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 custom-form-group" id="bukti_pembayaran_field" style="display: none;">
+                        <label for="bukti_pembayaran" class="form-label">Bukti Pembayaran</label>
+                        <input type="file" class="form-control" name="bukti_pembayaran" id="bukti_pembayaran">
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="jumlah" class="form-label">Jumlah</label>
@@ -86,4 +97,25 @@
             }
         });
     });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Add event listeners to tipe_pembayaran and status_pembayaran
+        document.getElementById('tipe_pembayaran').addEventListener('change', toggleBuktiPembayaranField);
+        document.getElementById('status_pembayaran').addEventListener('change', toggleTanggalPembayaranFields);
+    });
+
+    function toggleBuktiPembayaranField() {
+        const tipePembayaran = document.getElementById('tipe_pembayaran').value;
+        const buktiPembayaranField = document.getElementById('bukti_pembayaran_field');
+
+        buktiPembayaranField.style.display = (tipePembayaran === 'non-tunai') ? 'block' : 'none';
+    }
+
+    function toggleTanggalPembayaranFields() {
+        const statusPembayaran = document.getElementById('status_pembayaran').value;
+        const tanggalPembayaranFields = document.getElementById('tanggal_pembayaran_fields');
+
+        tanggalPembayaranFields.style.display = (statusPembayaran === 'cicil') ? 'block' : 'none';
+    }
 </script>

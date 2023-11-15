@@ -10,23 +10,25 @@
                 @csrf
                 <div class="modal-body">
                     <!-- Nama Kos (Kost name) Dropdown -->
-                    <div class="mb-3 custom-form-group">
+                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id" class="form-label">Nama Kos</label>
                         <select class="form-select" id="lokasi_id" name="lokasi_id" required>
-                            <option value="" disabled selected>Select Nama Kos</option>
-                            @foreach ($lokasiKos as $kos)
-                                <option value="{{ $kos->id }}">{{ $kos->nama_kos }}</option>
+                            <option value="" selected disabled>Pilih Nama Kos</option>
+                            @foreach($lokasiKos as $lokasi)
+                            <option value="{{ $lokasi->id }}">{{ $lokasi->nama_kos }}</option>
                             @endforeach
                         </select>
                     </div>
-
-                    <!-- No. Kamar (Room number) -->
-                    <div class="mb-3 custom-form-group">
-                        <label for="no_kamar" class="form-label">No. Kamar</label>
-                        <input type="text" class="form-control" name="no_kamar" id="no_kamar" value="{{ old('no_kamar') }}" required>
-                        @error('no_kamar')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <!-- Tambahkan ID ke elemen div yang mengelilingi select "Nomor Kamar" -->
+                    <div class="mb-3 custom-form-group" id="kamarSelectContainer">
+                        <label for="kamar_id" class="form-label">Nomor Kamar</label>
+                        <select class="form-select" id="kamar_id" name="kamar_id" required>
+                            <option value="" selected disabled>Pilih Nomor Kamar</option>
+                            @foreach($kamars as $kamar)
+                            <option value="{{ $kamar->id }}" data-lokasi="{{ $kamar->lokasi_id }}">{{ $kamar->no_kamar
+                                }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     
                     <!-- Nama -->
@@ -57,3 +59,43 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Ambil elemen select "Nama Kos" dan "Nomor Kamar"
+    const lokasiSelect = document.getElementById("lokasi_id");
+    const kamarSelect = document.getElementById("kamar_id");
+    const kamarSelectContainer = document.getElementById("kamarSelectContainer");
+
+    // Simpan semua opsi nomor kamar ke dalam sebuah objek JavaScript
+    const kamarOptions = {!! json_encode($kamars->keyBy('id')->map->only('lokasi_id', 'no_kamar')) !!};
+
+    // Tambahkan event listener ketika pemilihan "Nama Kos" berubah
+    lokasiSelect.addEventListener("change", function () {
+        const selectedLokasiId = lokasiSelect.value;
+
+        // Kosongkan opsi nomor kamar terlebih dahulu
+        kamarSelect.innerHTML = '<option value="" selected disabled>Pilih Nomor Kamar</option>';
+
+        // Tampilkan hanya opsi nomor kamar yang sesuai dengan "Nama Kos" yang dipilih
+        Object.keys(kamarOptions).forEach((kamarId) => {
+            if (kamarOptions[kamarId].lokasi_id == selectedLokasiId) {
+                const option = document.createElement("option");
+                option.value = kamarId;
+                option.textContent = kamarOptions[kamarId].no_kamar;
+                kamarSelect.appendChild(option);
+            }
+        });
+
+        // Tampilkan atau sembunyikan select "Nomor Kamar" berdasarkan pilihan "Nama Kos"
+        if (selectedLokasiId) {
+            kamarSelectContainer.style.display = "block";
+        } else {
+            kamarSelectContainer.style.display = "none";
+        }
+    });
+
+    // Trigger the change event initially to populate "Nomor Kamar" based on default selection
+    lokasiSelect.dispatchEvent(new Event('change'));
+});
+
+</script>

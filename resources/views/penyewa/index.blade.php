@@ -32,8 +32,8 @@
                         <th>No</th>
                         <th>ID</th> <!-- Add the ID column -->
                         <th>Nama</th>
-                        <th>Lokasi Kos</th>
                         <th>No Kamar</th>
+                        <th>Lokasi Kos</th>
                         <th>Status Penyewa</th>
                         <th>Action</th>
                     </tr>

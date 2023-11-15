@@ -33,11 +33,11 @@ class PenyewaController extends Controller
              $penyewas = Penyewa::where('nama', 'like', '%' . $katakunci . '%')
                  ->paginate(5); // You can adjust the number of records per page for search results
          }
-         
+         $kamars = Kamar::all();
          $lokasiKos = LokasiKos::all();
          
          // Load the view and pass the data to it
-         return view('penyewa.index', compact('penyewas', 'lokasiKos'));
+         return view('penyewa.index', compact('penyewas', 'lokasiKos','kamars'));
      }
      
     
@@ -56,13 +56,13 @@ class PenyewaController extends Controller
     {
         $request->validate([
             'nama' => 'required|string',
-            'no_kamar' => 'required|string',
+            // 'no_kamar' => 'nullable|string',
             'penghuni_id' => 'nullable|exists:penghuni,id',
             'lokasi_id' => 'nullable|exists:lokasi_kos,id',
             'kamar_id' => 'nullable|exists:kamar,id',
             'status_penyewa' => 'required|in:aktif,tidak_aktif',
         ]);
-    
+        
         // Get the latest penyewa_id
         $latestPenyewa = Penyewa::latest('kode_penyewa')->first();
     
@@ -72,29 +72,28 @@ class PenyewaController extends Controller
         // Format penyewa_id with 'PY' prefix and leading zeros
         $penyewaId = 'PY' . str_pad($penyewaIdNumeric, 3, '0', STR_PAD_LEFT);
 
-        $existingKamar = Kamar::where('no_kamar', $request->input('no_kamar'))
-        ->where('lokasi_id', $request->input('lokasi_id'))
-        ->first();
+        // $existingKamar = Kamar::where('no_kamar', $request->input('no_kamar'))
+        // ->where('lokasi_id', $request->input('lokasi_id'))
+        // ->first();
 
-        if (!$existingKamar) {
-        return redirect()->back()->with('error', 'No Kamar tidak ditemukan.');
-        }
+        // if (!$existingKamar) {
+        // return redirect()->back()->with('error', 'No Kamar tidak ditemukan.');
+        // }
     
         // Prepare the data for creating a new Penyewa record
         $data = [
             'kode_penyewa' => $penyewaId, // Assign the unique penyewa_id
             'nama' => $request->input('nama'),
-            'no_kamar' => $request->input('no_kamar'),
-            'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos,
-            'kamar_id' => Kamar::where('no_kamar', $request->input('no_kamar'))->firstOrFail()->id,
+            // 'no_kamar' => $request->input('no_kamar'),
+            // 'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos,
+            'kamar_id' => $request->input('kamar_id'),
             'lokasi_id' => $request->input('lokasi_id'),
             'status_penyewa' => $request->input('status_penyewa'),
         ];
-    
         // Check if the 'status_penyewa' is "aktif"
         if ($data['status_penyewa'] === 'aktif') {
             // Check if there is a Penyewa record with the same 'no_kamar' and 'lokasi_id' and an active status ('aktif')
-            $existingActivePenyewa = Penyewa::where('no_kamar', $data['no_kamar'])
+            $existingActivePenyewa = Penyewa::where('kamar_id', $data['kamar_id'])
                 ->where('lokasi_id', $data['lokasi_id'])
                 ->where('status_penyewa', 'aktif')
                 ->first();
@@ -106,9 +105,10 @@ class PenyewaController extends Controller
             }
     
             // Update the Kamar status to "sudah terisi" based on the provided 'no_kamar' and 'lokasi_id'
-            Kamar::where('no_kamar', $data['no_kamar'])
-                ->where('lokasi_id', $data['lokasi_id'])
-                ->update(['status' => 'sudah terisi']);
+            Kamar::where('id', $data['kamar_id']) // Assuming 'id' is the primary key column in the 'kamar' table
+    ->where('lokasi_id', $data['lokasi_id'])
+    ->update(['status' => 'sudah terisi']);
+
         }
     
         // Create the Penyewa record
@@ -120,10 +120,12 @@ class PenyewaController extends Controller
             'kamar_id' => $penyewa->kamar_id,
             'lokasi_id' => $penyewa->lokasi_id,
             'penyewa_id' => $penyewa->id, // Assign the penyewa_id
-            'tipe_pembayaran' => null, // Set the default value or adjust as needed
-            'jumlah_tarif' => 0, // Set to 0 for integer columns
-            'bukti_pembayaran' => null, // Set to '-' for string columns
+            // Set the default value or adjust as needed
+            'jumlah_tarif' => 0,
+           // Set to '-' for string columns
             'tanggal' => null,
+            'tipe_pembayaran' => null, // Set to 0 for integer columns
+            'bukti_pembayaran' => null,
             'tanggal_pembayaran_awal' => null, // Set to the current date or adjust as needed
             'tanggal_pembayaran_akhir' => null, // Set to the current date or adjust as needed
             'status_pembayaran' => null, // Set the default value or adjust as needed

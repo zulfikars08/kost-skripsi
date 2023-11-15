@@ -20,6 +20,8 @@ class Pengeluaran extends Model
         'tahun',
         'tanggal',
         'nama_kos',
+        'tipe_pembayaran',
+        'bukti_pembayaran',
         'kode_pengeluaran',
         'kategori',
         'jumlah',

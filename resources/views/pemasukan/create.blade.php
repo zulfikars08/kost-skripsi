@@ -18,22 +18,32 @@
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id" class="form-label">Nama Kos</label>
-                        <select class="form-select" id="lokasi_id" name="lokasi_id" required>
+                        <select class="form-select  @error('lokasi_id') is-invalid @enderror" id="lokasi_id" name="lokasi_id" value="{{ old('lokasi_id') }}" required>
                             <option value="" selected disabled>Pilih Nama Kos</option>
                             @foreach($lokasiKos as $lokasi)
                             <option value="{{ $lokasi->id }}">{{ $lokasi->nama_kos }}</option>
                             @endforeach
                         </select>
+                        @error('lokasi_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <!-- Tambahkan ID ke elemen div yang mengelilingi select "Nomor Kamar" -->
                     <div class="mb-3 custom-form-group" id="kamarSelectContainer">
                         <label for="kamar_id" class="form-label">Nomor Kamar</label>
-                        <select class="form-select" id="kamar_id" name="kamar_id" required>
+                        <select class="form-select" id="kamar_id" name="kamar_id"  required >
                             <option value="" selected disabled>Pilih Nomor Kamar</option>
                             @foreach($kamars as $kamar)
                             <option value="{{ $kamar->id }}" data-lokasi="{{ $kamar->lokasi_id }}">{{ $kamar->no_kamar
                                 }}</option>
                             @endforeach
+                            @error('kamar_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </select>
                     </div>
                     <div class="mb-3 custom-form-group">

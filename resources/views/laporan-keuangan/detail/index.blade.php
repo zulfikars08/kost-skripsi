@@ -122,17 +122,17 @@
                 <tfoot>
                     <!-- ... -->
                     <tr id="totalPemasukanRow">
-                        <td colspan="11" class="text-end"><strong style="text">Total Pemasukan:</strong></td>
+                        <td colspan="13" class="text-end"><strong style="text">Total Pemasukan:</strong></td>
                         <td><span id="totalPemasukan">0.00</span></td>
                         <td></td>
                     </tr>
                     <tr id="totalPengeluaranRow">
-                        <td colspan="11" class="text-end"><strong>Total Pengeluaran:</strong></td>
+                        <td colspan="13" class="text-end"><strong>Total Pengeluaran:</strong></td>
                         <td></td>
                         <td><span id="totalPengeluaran">0.00</span></td>
                     </tr>
                     <tr>
-                        <td colspan="11" class="text-end"><strong>Pendapatan Bersih:</strong></td>
+                        <td colspan="13" class="text-end"><strong>Pendapatan Bersih:</strong></td>
                         <td></td>
                         <td><span id="pendapatanBersih">0.00</span></td>
                     </tr>
@@ -151,8 +151,8 @@
 
                         rows.forEach(row => {
                             const jenis = row.cells[6].textContent; // Kolom jenis (indeks 4)
-                            const pemasukan = parseFloat(row.cells[11].textContent); // Kolom pemasukan (indeks 6)
-                            const pengeluaran = parseFloat(row.cells[12].textContent); // Kolom pengeluaran (indeks 7)
+                            const pemasukan = parseFloat(row.cells[13].textContent); // Kolom pemasukan (indeks 6)
+                            const pengeluaran = parseFloat(row.cells[14].textContent); // Kolom pengeluaran (indeks 7)
 
                             if (!isNaN(pemasukan)) {
                                 totalPemasukan += pemasukan;
