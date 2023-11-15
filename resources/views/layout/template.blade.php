@@ -51,6 +51,7 @@
     <div class="sidebar-links">
       <ul>
         <div class="active-tab"></div>
+         @if (auth()->user()->hasRole('admin'))
         <li class="tooltip-element" data-tooltip="0">
           <a href="/dashboard" data-active="0">
             <div class="icon">
@@ -60,7 +61,8 @@
             <span class="link hide">Dashboard</span>
           </a>
         </li>
-        @if (auth()->user()->hasRole('admin'))
+         @endif
+        {{-- @if (auth()->user()->hasRole('admin')) --}}
         <li class="tooltip-element" data-tooltip="1">
           <a href="/lokasi_kos" data-active="1">
             <div class="icon">
@@ -70,7 +72,7 @@
             <span class="link hide">Data Lokasi</span>
           </a>
         </li>
-        @endif
+        {{-- @endif --}}
 
         <li class="tooltip-element" data-tooltip="2">
           <a href="/kamar" data-active="2">

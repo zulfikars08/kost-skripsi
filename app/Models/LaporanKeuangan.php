@@ -25,6 +25,8 @@ class LaporanKeuangan extends Model
         'bulan',
         'tahun',
         'pemasukan',
+        'kode_pengeluaran',
+        'kode_pemasukan',
         'pengeluaran',
         'pendapatan_bersih',
         'nama_kos',

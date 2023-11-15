@@ -94,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pemasukan', [PemasukanController::class, 'store'])->name('pemasukan.store');
     Route::get('/pemasukan/{id}/edit', [PemasukanController::class, 'edit'])->name('pemasukan.edit');
     Route::put('/pemasukan/{id}', [PemasukanController::class, 'update'])->name('pemasukan.update');
-   
+    Route::delete('/pemasukan/{id}', [PemasukanController::class, 'destroy'])->name('pemasukan.destroy');
 
     Route::get('/pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
     Route::get('/pengeluaran/create', [PengeluaranController::class, 'create'])->name('pengeluaran.create');

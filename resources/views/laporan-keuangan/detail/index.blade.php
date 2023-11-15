@@ -42,6 +42,8 @@
                     <tr>
                         <th>No</th>
                         <th style="white-space: nowrap;">Kode Laporan</th>
+                        <th style="white-space: nowrap;">Kode Pemasukan</th>
+                        <th style="white-space: nowrap;">Kode Pengeluaran</th>
                         <th>Tanggal</th>
                         <th style="white-space: nowrap;">No Kamar</th>
                         <th style="white-space: nowrap;">Nama Kos</th>
@@ -62,6 +64,8 @@
                     <tr>
                         <td>{{$loop->index + 1 }}</td>
                         <td>{{$item->kode_laporan}}</td>
+                        <td>{{$item->kode_pemasukan}}</td>
+                        <td>{{$item->kode_pengeluaran}}</td>
                         <td>{{ $item->tanggal }}</td>
                         <td>{{ $item->kamar->no_kamar }}</td>
                         <td>{{ $item->lokasiKos->nama_kos }}</td>

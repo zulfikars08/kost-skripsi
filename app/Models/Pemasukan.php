@@ -22,7 +22,7 @@ class Pemasukan extends Model
         'tahun',
         'tanggal',
         'nama_kos',
-        'kode_pengeluaran',
+        'kode_pemasukan',
         'kategori',
         'jumlah',
         'created_by',
@@ -47,10 +47,10 @@ class Pemasukan extends Model
         parent::boot();
 
         // Generate kode_pengeluaran before saving a new Pengeluaran
-        static::creating(function ($pengeluaran) {
-            $latestPengeluaran = self::latest()->first();
-            $latestNumber = $latestPengeluaran ? (int)substr($latestPengeluaran->kode_pengeluaran, 3) : 0;
-            $pengeluaran->kode_pengeluaran = 'PMK' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
+        static::creating(function ($pemasukan) {
+            $latestPemasukan = self::latest()->first();
+            $latestNumber = $latestPemasukan ? (int)substr($latestPemasukan->kode_pemasukan, 3) : 0;
+            $pemasukan->kode_pemasukan = 'PMK' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
         });
     }
 }

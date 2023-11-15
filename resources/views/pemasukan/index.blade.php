@@ -35,13 +35,14 @@
                     <th style="white-space: nowrap;">Bukti Pembayaran</th>
                     <th>Jumlah</th>
                     <th>Keterangan</th>
+                    <th>Action</th>
                     {{-- <th>Actions</th> --}}
                 </tr>
             </thead>
             <tbody>
                 @foreach($pemasukan as $item)
                     <tr>
-                        <td>{{ $item->kode_pengeluaran }}</td>
+                        <td>{{ $item->kode_pemasukan }}</td>
                         <td>{{ $item->kamar->no_kamar }}</td>
                         <td>{{ $item->lokasiKos->nama_kos }}</td>
                         <td>{{ $item->tanggal }}</td>
@@ -60,11 +61,12 @@
                         </td>
                         <td>{{ $item->jumlah }}</td>
                         <td>{{ $item->keterangan }}</td>
-                        {{-- <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}" onclick="openEditModal('{{ $item->id }}')">
-                                <i class="fas fa-edit" style="color: white"></i>
+                        <td>
+                            <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px">
+                                <i class="fas fa-trash" style="color: white"></i>
                             </button>
-                        </td> --}}
+                            @include('pemasukan.delete') 
+                        </td>
                     </tr>
                     {{-- @include('pemasukan.edit', ['item' => $item, 'modalId' => "editModal{$item->id}"]) --}}
                 @endforeach

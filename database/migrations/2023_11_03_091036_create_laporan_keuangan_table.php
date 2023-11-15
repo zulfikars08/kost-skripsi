@@ -31,6 +31,8 @@ class CreateLaporanKeuanganTable extends Migration
             $table->string('bulan')->nullable();
             $table->string('tahun')->nullable();
             $table->integer('total_pendapatan')->nullable();
+            $table->string('kode_pemasukan')->nullable();
+            $table->string('kode_pengeluaran')->nullable();
             $table->integer('pemasukan')->nullable();
             $table->integer('pengeluaran')->nullable();
             $table->enum('jenis', ['pemasukan', 'pengeluaran'])->nullable()->default(null);

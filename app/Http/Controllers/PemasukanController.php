@@ -7,6 +7,8 @@ use App\Models\LaporanKeuangan;
 use App\Models\LokasiKos;
 use App\Models\Pemasukan;
 use App\Models\Pengeluaran;
+use App\Models\TanggalInvestor;
+use App\Models\TanggalLaporan;
 use Illuminate\Http\Request;
 
 class PemasukanController extends Controller
@@ -121,6 +123,7 @@ class PemasukanController extends Controller
             'pemasukan_id' => $pemasukan->id,
             'jenis' => 'pemasukan',
             'nama_kos' => $nama_kos,
+            'kode_pemasukan' => $pemasukan->kode_pemasukan,
             'tipe_pembayaran' => $pemasukan->tipe_pembayaran,
             'bukti_pembayaran' => $pemasukan->bukti_pembayaran,
             'bulan' => $bulan,
@@ -129,12 +132,35 @@ class PemasukanController extends Controller
             'keterangan' => $pemasukan->keterangan,
         ];
 
+        $tanggalLaporanAtributes = [
+            'nama_kos' => $nama_kos,
+            'kamar_id' => $pemasukan->kamar_id,
+            'lokasi_id' => $pemasukan->lokasi_id, // Assign the penyewa_id
+            // Set the default value or adjust as needed
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+           // Set to '-' for string columns
+            'tanggal' => $pemasukan->tanggal,
+        ];
+        
+        $tanggalInvestorAttributes = [
+            'nama_kos' => $nama_kos,
+            'lokasi_id' => $pemasukan->lokasi_id, // Assign the penyewa_id
+            // Set the default value or adjust as needed
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+           // Set to '-' for string columns
+            'tanggal' => $pemasukan->tanggal,
+        ];
+
         // Create a new LaporanKeuangan instance
         $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
-        
+        $tanggalLaporan = new TanggalLaporan($tanggalLaporanAtributes);
+        $tanggalInvestor = new TanggalInvestor($tanggalInvestorAttributes );
         // Save the new LaporanKeuangan instance
         $laporanKeuangan->save();
-
+        $tanggalLaporan->save();
+        $tanggalInvestor->save();
         return redirect()->route('pemasukan.index')->with('success_add', 'Data pemasukan berhasil ditambahkan.');
     }
 
@@ -227,6 +253,20 @@ class PemasukanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            // Find the Pemasukan item by ID
+            $pemasukan = Pemasukan::findOrFail($id);
+
+            // Implement your logic for deleting the item (e.g., database deletion)
+            $pemasukan->delete();
+
+            // Optionally, you can send a success message back
+            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pemasukan berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Handle any exceptions or errors that may occur during deletion
+            // Log the error or return an error response
+            return response()->json(['error' => 'Failed to delete item'], 500);
+        }
     }
+
 }

@@ -102,6 +102,7 @@ class PengeluaranController extends Controller
             'kamar_id' => $pengeluaran->kamar_id,
             'lokasi_id' => $pengeluaran->lokasi_id,
             'pengeluaran_id' => $pengeluaran->id,
+            'kode_pengeluaran' => $pengeluaran->kode_pengeluaran,
             'jenis' => 'pengeluaran',
             'nama_kos' => $nama_kos,
             'bulan' => $bulan,

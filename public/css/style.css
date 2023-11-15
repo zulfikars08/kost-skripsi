@@ -63,24 +63,49 @@ select option {
 
 /* Customize main content area */
 /* Custom CSS for main content area */
+/* Default styles for normal screens */
 .centered-content {
     display: flex;
     position: absolute;
     flex-direction: column;
     align-items: center;
-    min-height: 90vh; /* Use viewport height for minimum height */
-    max-width: 80%; /* Use max-width instead of fixed width */
-    width: 100%; /* Set width to 100% for responsiveness */
-    padding: 2%; /* Increase padding for better spacing */
+    min-height: 70vh;
+    max-width: 60%;
+    width: 100%;
+    padding: 2%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background-color: white;
-    font-size: 14px;
-    margin: 5vh 0;
-    margin-left: 30px; 
-    margin-bottom: 30px;/* Adjust margin for better spacing */
+    font-size: 16px;
+    margin: 3vh 0;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
+
+/* Media query for screens larger than 32 inches */
+@media screen and (min-width: 2000px) {
+    .centered-content {
+        font-size: 20px; /* Adjust font size for larger screens */
+    }
+}
+
+/* Media query for screens between 32 inches and 14 inches */
+@media screen and (max-width: 2000px) and (min-width: 768px) {
+    .centered-content {
+        max-width: 80%; /* Adjust max-width for medium-sized screens */
+    }
+}
+
+/* Media query for screens smaller than 14 inches */
+@media screen and (max-width: 768px) {
+    .centered-content {
+        max-width: 100%; /* Set max-width to 100% for small screens */
+        font-size: 14px; /* Adjust font size for small screens */
+    }
+}
+
+
 #totalPemasukanRow, #totalPengeluaranRow {
     font-weight: bold;
 }
