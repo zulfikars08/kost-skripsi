@@ -1,17 +1,27 @@
-$(document).ready(function () {
-    // Sembunyikan semua sub menu secara default
-    $('.subbar').removeClass('show');
+document.addEventListener("DOMContentLoaded", function(){
+  document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
     
-    // Tambahkan class 'show' pada sub menu yang aktif
-    var activeSubMenu = $('[data-active="7"]').parent().find('.subbar');
-    activeSubMenu.addClass('show');
-    
-    // Atur tindakan ketika link "Data Master" diklik
-    $('[data-active="7"]').click(function () {
-      // Ambil sub menu
-      var subMenu = $(this).parent().find('.subbar');
-      
-      // Toggle class 'show' pada sub menu
-      subMenu.toggleClass('show');
-    });
-  });
+    element.addEventListener('click', function (e) {
+
+      let nextEl = element.nextElementSibling;
+      let parentEl  = element.parentElement;	
+
+        if(nextEl) {
+            e.preventDefault();	
+            let mycollapse = new bootstrap.Collapse(nextEl);
+            
+            if(nextEl.classList.contains('show')){
+              mycollapse.hide();
+            } else {
+                mycollapse.show();
+                // find other submenus with class=show
+                var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+                // if it exists, then close all of them
+                if(opened_submenu){
+                  new bootstrap.Collapse(opened_submenu);
+                }
+            }
+        }
+    }); // addEventListener
+  }) // forEach
+}); 

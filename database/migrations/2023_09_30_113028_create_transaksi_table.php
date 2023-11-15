@@ -18,9 +18,9 @@ class CreateTransaksiTable extends Migration
             $table->unsignedBigInteger('kamar_id')->nullable();
             $table->unsignedBigInteger('lokasi_id')->nullable(); //
             $table->unsignedBigInteger('penyewa_id')->nullable();
-            $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
             $table->integer('jumlah_tarif')->nullable()->default(0);
             $table->date('tanggal')->nullable();
+            $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
             $table->binary('bukti_pembayaran')->nullable()->default(null);
             $table->date('tanggal_pembayaran_awal')->nullable()->default(null);
             $table->date('tanggal_pembayaran_akhir')->nullable()->default(null);

@@ -180,11 +180,11 @@
                         
                                 @include('transaksi.edit')
 
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTransactionModal{{ $item->kamar->id }}-{{ $item->lokasiKos->id }}" style="margin-left: 5px">
+                                {{-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTransactionModal{{ $item->kamar->id }}-{{ $item->lokasiKos->id }}" style="margin-left: 5px">
                                     <i class="fas fa-plus" style="color: white"></i>
                                 </button>
                         
-                                @include('transaksi.create', ['roomId' => $item->kamar->id, 'lokasiId' => $item->lokasiKos->id])
+                                @include('transaksi.create', ['roomId' => $item->kamar->id, 'lokasiId' => $item->lokasiKos->id]) --}}
 
                                 <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
                                     @csrf
@@ -208,7 +208,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+{{-- <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -230,6 +230,6 @@
         // Open the modal
         $('#imageModal').modal('show');
     }
-</script>
+</script> --}}
 
 @endsection

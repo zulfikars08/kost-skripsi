@@ -23,6 +23,9 @@ class CreatePengeluaranTable extends Migration
             $table->date('tanggal')->nullable();
             $table->string('kode_pengeluaran')->nullable();
             $table->string('kategori')->nullable();
+            $table->string('nama_kos')->nullable();
+            $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
+            $table->binary('bukti_pembayaran')->nullable()->default(null);
             $table->integer('jumlah')->nullable()->default(0);
             $table->string('keterangan')->nullable();
             $table->timestamps();

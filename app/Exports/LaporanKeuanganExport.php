@@ -33,8 +33,8 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles
                 $item->lokasi->nama_kos,
                 $item->jenis,
                 $item->keterangan,
-                $item->jenis === 'pemasukan' ? $item->jumlah : 0,
-                $item->jenis === 'pengeluaran' ? $item->jumlah : 0,
+                $item->pemasukan,
+                $item->pengeluaran,
             ];
         });
 

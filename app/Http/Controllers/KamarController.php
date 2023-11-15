@@ -70,10 +70,12 @@ class KamarController extends Controller
             'nama_investor' => 'required|string',
             'harga' => 'required',
             'keterangan' => 'required',
-            'fasilitas' => 'required',
+            'fasilitas' => 'required|array', // Update validation rule to 'array'
+            'fasilitas.*' => 'in:AC,Lemari,Kasur,TV', // Validate each checkbox value
             'status' => 'required|in:belum terisi,sudah terisi',
             'lokasi_id' => 'required|exists:lokasi_kos,id',
         ], [
+            // Custom error messages...
             'no_kamar.required' => 'Nomor kamar wajib di isi',
             'harga.required' => 'Harga wajib di isi',
             'keterangan.required' => 'Keterangan wajib di isi',
@@ -84,45 +86,27 @@ class KamarController extends Controller
             'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
         ]);
     
+        // Convert array to string
+        $fasilitas = implode(',', $request->input('fasilitas'));
+    
+        // Use the validated data
         $data = [
             'nama_investor' => $request->nama_investor,
             'no_kamar' => $request->no_kamar,
             'harga' => $request->harga,
             'keterangan' => $request->keterangan,
-            'fasilitas' => $request->fasilitas,
+            'fasilitas' => $fasilitas,
             'status' => $request->status,
             'lokasi_id' => $request->lokasi_id,
         ];
     
         // Create a new Kamar record
-        $kamar = Kamar::create($data);
-    
-        // Automatically create an Investor record
-    //     $totalPintu = $kamar = Kamar::where('no_kamar', $request->input('no_kamar'))
-    //     ->where('nama_investor', $kamar->nama_investor)
-    //     ->where('lokasi_id', $kamar->lokasi_id)
-    //     ->firstOrFail();
-
-    // // Find the LokasiKos based on the 'lokasi_id'
-    // $lokasiKos = LokasiKos::find($request->lokasi_id);
-
-    // if ($kamar) {
-    //     // Create an Investor record with the calculated 'jumlah_pintu'
-    //     Investor::create([
-    //         'nama' => $request->nama_investor,
-    //         'no_kamar' => $request->no_kamar,
-    //         'nama_kos' => $lokasiKos->nama_kos,
-    //         'kamar_id' => $kamar->id,
-    //         'lokasi_id' => $request->lokasi_id,
-    //         'jumlah_pintu' => $totalPintu,
-    //     ]);
-    // } else {
-    //     // Handle the case when the 'Kamar' record is not created.
-    // }
+        Kamar::create($data);
     
         $page = $request->input('page', 1);
         return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar dan investor');
     }
+    
     
 
     // ... Other methods ...

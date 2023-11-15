@@ -16,6 +16,8 @@ class Pemasukan extends Model
         'lokasi_id',
         'transaksi_id',
         'keterangan',
+        'tipe_pembayaran',
+        'bukti_pembayaran',
         'bulan',
         'tahun',
         'tanggal',
@@ -40,15 +42,15 @@ class Pemasukan extends Model
     }
     
     // Automatically generate kode_pengeluaran before saving
-    // public static function boot()
-    // {
-    //     parent::boot();
+    public static function boot()
+    {
+        parent::boot();
 
-    //     // Generate kode_pengeluaran before saving a new Pengeluaran
-    //     static::creating(function ($pengeluaran) {
-    //         $latestPengeluaran = self::latest()->first();
-    //         $latestNumber = $latestPengeluaran ? (int)substr($latestPengeluaran->kode_pengeluaran, 3) : 0;
-    //         $pengeluaran->kode_pengeluaran = 'PLR' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
-    //     });
-    // }
+        // Generate kode_pengeluaran before saving a new Pengeluaran
+        static::creating(function ($pengeluaran) {
+            $latestPengeluaran = self::latest()->first();
+            $latestNumber = $latestPengeluaran ? (int)substr($latestPengeluaran->kode_pengeluaran, 3) : 0;
+            $pengeluaran->kode_pengeluaran = 'PMK' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
+        });
+    }
 }

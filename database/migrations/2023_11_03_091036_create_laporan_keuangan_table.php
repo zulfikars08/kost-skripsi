@@ -21,6 +21,11 @@ class CreateLaporanKeuanganTable extends Migration
             $table->unsignedBigInteger('penyewa_id')->nullable(); 
             $table->unsignedBigInteger('kategori_id')->nullable();
             $table->string('kode_laporan')->nullable();
+            $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
+            $table->binary('bukti_pembayaran')->nullable()->default(null);
+            $table->date('tanggal_pembayaran_awal')->nullable()->default(null);
+            $table->date('tanggal_pembayaran_akhir')->nullable()->default(null);
+            $table->enum('status_pembayaran', ['lunas', 'belum_lunas', 'cicil'])->nullable()->default(null);
             $table->string('nama_kos')->nullable();
             $table->date('tanggal')->nullable();
             $table->string('bulan')->nullable();

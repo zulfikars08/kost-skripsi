@@ -96,26 +96,17 @@ class PengeluaranController extends Controller
         $tahun = date('Y', strtotime($tanggal));
 
         // Set the attributes for the new LaporanKeuangan instance
-        $lastPendapatanBersih = LaporanKeuangan::where('lokasi_id', $pengeluaran->lokasi_id)
-            ->orderBy('tanggal', 'desc')
-            ->value('pendapatan_bersih');
-
-        // If there's no previous record, set it to 0
-        $lastPendapatanBersih = $lastPendapatanBersih ?? 0;
-
-        // Calculate the new pendapatan_bersih
-        $pendapatanBersih = $lastPendapatanBersih - $pengeluaran->jumlah;
 
         $laporanKeuanganAttributes = [
             'tanggal' => $tanggal,
             'kamar_id' => $pengeluaran->kamar_id,
             'lokasi_id' => $pengeluaran->lokasi_id,
+            'pengeluaran_id' => $pengeluaran->id,
             'jenis' => 'pengeluaran',
             'nama_kos' => $nama_kos,
             'bulan' => $bulan,
             'tahun' => $tahun,
             'pengeluaran' => $pengeluaran->jumlah,
-            'pendapatan_bersih' => $pendapatanBersih,
             'keterangan' => $pengeluaran->keterangan,
         ];
 

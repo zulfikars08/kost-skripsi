@@ -12,10 +12,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- Bootstrap JS (including Popper.js) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+    integrity="sha256-oP6HI/tTQaU5KGKz4L1P5fB2sUjMs6AJMi6a6KLt21k=" crossorigin="anonymous"></script> --}}
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
@@ -68,39 +72,6 @@
         </li>
         @endif
 
-        <!-- Sidebar "Data Master" -->
-        <li class="tooltip-element" data-tooltip="7">
-          <a href="#" data-toggle="collapse" data-target="#dataMasterSubMenu" aria-expanded="false" data-active="7">
-            <div class="icon">
-              <i class='bi bi-database'></i>
-              <i class='bi bi-database'></i>
-            </div>
-            <span class="link hide">Data Master</span>
-          </a>
-          <!-- Subbar "Data Fasilitas" -->
-          <ul class="subbar collapse" id="dataMasterSubMenu">
-            <li class="tooltip-element" data-tooltip="8">
-              <a href="/data-fasilitas" data-active="8">
-                <div class="icon">
-                  <i class='bi bi-gear'></i>
-                  <i class='bi bi-gear'></i>
-                </div>
-                <span class="link hide">Data Fasilitas</span>
-              </a>
-            </li>
-            <!-- Subbar "Data Tipe" -->
-            <li class="tooltip-element" data-tooltip="9">
-              <a href="/data-tipe" data-active="9">
-                <div class="icon">
-                  <i class='bi bi-list'></i>
-                  <i class='bi bi-list'></i>
-                </div>
-                <span class="link hide">Data Tipe</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        
         <li class="tooltip-element" data-tooltip="2">
           <a href="/kamar" data-active="2">
             <div class="icon">
@@ -122,6 +93,17 @@
         </li>
         @if (auth()->user()->hasRole('admin'))
         <li class="tooltip-element" data-tooltip="4">
+          <a href="/tanggal-investor" data-active="4">
+            <div class="icon">
+              <i class='bi bi-people'></i>
+              <i class='bi bi-people'></i>
+            </div>
+            <span class="link hide">Data Investor</span>
+          </a>
+        </li>
+        @endif
+        @if (auth()->user()->hasRole('admin'))
+        <li class="tooltip-element" data-tooltip="4">
           <a href="/transaksi" data-active="4">
             <div class="icon">
               <i class='bi bi-file-earmark-text'></i>
@@ -131,49 +113,50 @@
           </a>
         </li>
         @endif
-        <li class="tooltip-element" data-tooltip="7">
-          <a href="/pemasukan" data-active="7">
-              <div class="icon">
-                  <i class='bi bi-people'></i>
-                  <i class='bi bi-people'></i>
-              </div>
-              <span class="link hide">Data Pemasukan</span>
-          </a>
-      </li>
-      <li class="tooltip-element" data-tooltip="7">
-          <a href="/pengeluaran" data-active="7">
-              <div class="icon">
-                  <i class='bi bi-people'></i>
-                  <i class='bi bi-people'></i>
-              </div>
-              <span class="link hide">Data Pengeluaran</span>
-          </a>
-      </li>
-      @if (auth()->user()->hasRole('admin'))
-      <li class="tooltip-element" data-tooltip="9">
-          <a href="/tanggal-laporan" data-active="9">
-              <div class="icon">
-                  <i class='bi bi-currency-dollar'></i>
-                  <i class='bi bi-currency-dollar'></i>
-              </div>
-              <span class="link hide">Laporan Keuangan</span>
-          </a>
-      </li>
-      @endif
-
-      <li class="tooltip-element" data-tooltip="8">
-          <a href="/tanggal-investor" data-active="8">
-              <div class="icon">
-                  <i class='bi bi-people'></i>
-                  <i class='bi bi-people'></i>
-              </div>
-              <span class="link hide">Data Investor</span>
-          </a>
-      </li>
-
+        <!-- Updated HTML -->
         @if (auth()->user()->hasRole('admin'))
         <li class="tooltip-element" data-tooltip="5">
-          <a href="/manage-users" data-active="5">
+          <a class="nav-link" href="#" data-active="5">
+            <div class="icon">
+              <i class='bi bi-cash'></i>
+              <i class='bi bi-cash'></i>
+            </div>
+            <span class="link hide">Data Keuangan</span>
+          </a>
+          <ul class="submenu collapse">
+            <li>
+              <a class="dropdown-item" href="/pemasukan">
+                <div class="icon">
+                  <i class='bi bi-arrow-right'></i>
+                  <i class='bi bi-arrow-right'></i>
+                </div>
+                <span class="link hide">Data Pemasukan</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/pengeluaran">
+                <div class="icon">
+                  <i class='bi bi-arrow-left'></i>
+                  <i class='bi bi-arrow-left'></i>
+                </div>
+                <span class="link hide">Data Pengeluaran</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/tanggal-laporan">
+                <div class="icon">
+                  <i class='bi bi-file-text'></i>
+                  <i class='bi bi-file-text'></i>
+                </div>
+                <span class="link hide">Data Laporan Keuangan</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        @endif
+        @if (auth()->user()->hasRole('admin'))
+        <li class="tooltip-element" data-tooltip="6">
+          <a href="/manage-users" data-active="6">
             <div class="icon">
               <i class='bi bi-person-plus'></i>
               <i class='bi bi-person-plus'></i>
@@ -182,8 +165,8 @@
           </a>
         </li>
         @endif
-        <li class="tooltip-element" data-tooltip="6">
-          <a href="/logout" data-active="6">
+        <li class="tooltip-element" data-tooltip="7">
+          <a href="/logout" data-active="7">
             <div class="icon">
               <i class='bi bi-box-arrow-right'></i>
               <i class='bi bi-box-arrow-right'></i>
@@ -196,8 +179,10 @@
           <span>Data Kamar</span>
           <span>Data Lokasi</span>
           <span>Data Penyewa</span>
-          <span>Data Transaksi</span>
-          <span>Data Data User</span>
+          <span>Data Investor</span>
+          <span>Data Keuangan</span>
+          {{-- <span>Data Transaksi</span> --}}
+          <span>Manage Users</span>
           <span>Log Out</span>
         </div>
       </ul>
@@ -206,6 +191,8 @@
   {{-- --}}
   <script src="{{ asset('javascript/sidebar.js') }}"></script>
   <script src="{{ asset('javascript/subMenuSidebar.js') }}"></script>
+ 
+  <script src="{{ asset('javascript/dropdown.js') }}"></script>
 
   <main>
     <div class="loading-overlay">
@@ -215,10 +202,10 @@
       @yield('content')
     </div>
   </main>
-
-
+  <script src="{{ asset('javascript/chart.js') }}"></script>
+  <script src="{{ asset('javascript/autoHarga.js') }}"></script>
 
 </body>
 
 </html>
-<script src="{{ asset('javascript/autoHarga.js') }}"></script>
+

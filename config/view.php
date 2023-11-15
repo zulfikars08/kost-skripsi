@@ -17,6 +17,11 @@ return [
         resource_path('views'),
     ],
 
+    'cache' => [
+        'enabled' => true,
+        'path' => storage_path('framework/views'), // Ensure this path exists
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Compiled View Path

@@ -79,6 +79,8 @@ class PemasukanController extends Controller
             'kamar_id' => 'required|exists:kamar,id',
             'lokasi_id' => 'required|exists:lokasi_kos,id',
             'tanggal' => 'required|date',
+            'tipe_pembayaran' => 'required|in:tunai,non-tunai', // Adjust the 'in' rule based on your options
+            'bukti_pembayaran' => 'required_if:tipe_pembayaran,non-tunai|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'jumlah' => 'required|numeric',
             'keterangan' => 'required|string',
             // Add other validation rules as needed
@@ -89,11 +91,22 @@ class PemasukanController extends Controller
             'kamar_id' => $request->input('kamar_id'),
             'lokasi_id' => $request->input('lokasi_id'),
             'tanggal' => $request->input('tanggal'),
+            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+            'bukti_pembayaran' => $request->input('bukti_pembayaran'),         
             'jumlah' => $request->input('jumlah'),
             'keterangan' => $request->input('keterangan'),
             // Add other fields as needed
         ]);
         $nama_kos = $pemasukan->lokasiKos->nama_kos;
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $fileName = time() . '_' . $file->getClientOriginalName(); // Appending timestamp to ensure uniqueness
+            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+            // Change the directory name here
+            $pemasukan->bukti_pembayaran = $filePath; // Use -> instead of array notation
+        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+            $pemasukan->bukti_pembayaran = 'Cash Payment'; // Use -> instead of array notation
+        }
         // Save the Pengeluaran
         $pemasukan->save();
 
@@ -101,37 +114,28 @@ class PemasukanController extends Controller
         $bulan = date('m', strtotime($tanggal));
         $tahun = date('Y', strtotime($tanggal));
 
-        // Set the attributes for the new LaporanKeuangan instance
-        $lastPendapatanBersih = LaporanKeuangan::where('lokasi_id', $pemasukan->lokasi_id)
-            ->orderBy('tanggal', 'desc')
-            ->value('pendapatan_bersih');
-
-        // If there's no previous record, set it to 0
-        $lastPendapatanBersih = $lastPendapatanBersih ?? 0;
-
-        // Calculate the new pendapatan_bersih
-        $pendapatanBersih = $lastPendapatanBersih + $pemasukan->jumlah;
-
         $laporanKeuanganAttributes = [
             'tanggal' => $tanggal,
             'kamar_id' => $pemasukan->kamar_id,
             'lokasi_id' => $pemasukan->lokasi_id,
+            'pemasukan_id' => $pemasukan->id,
             'jenis' => 'pemasukan',
             'nama_kos' => $nama_kos,
+            'tipe_pembayaran' => $pemasukan->tipe_pembayaran,
+            'bukti_pembayaran' => $pemasukan->bukti_pembayaran,
             'bulan' => $bulan,
             'tahun' => $tahun,
             'pemasukan' => $pemasukan->jumlah,
-            'pendapatan_bersih' => $pendapatanBersih,
             'keterangan' => $pemasukan->keterangan,
         ];
 
         // Create a new LaporanKeuangan instance
         $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
-
+        
         // Save the new LaporanKeuangan instance
         $laporanKeuangan->save();
 
-        return redirect()->route('pemasukan.index')->with('success', 'Data pemasukan berhasil ditambahkan.');
+        return redirect()->route('pemasukan.index')->with('success_add', 'Data pemasukan berhasil ditambahkan.');
     }
 
     /**
@@ -173,61 +177,46 @@ class PemasukanController extends Controller
             'kamar_id' => 'required|exists:kamar,id',
             'lokasi_id' => 'required|exists:lokasi_kos,id',
             'tanggal' => 'required|date',
+            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+            'bukti_pembayaran' => $request->input('bukti_pembayaran'),  
             'jumlah' => 'required|numeric',
             'keterangan' => 'required|string',
             // Add other validation rules as needed
         ]);
     
         $pemasukan = Pemasukan::findOrFail($id);
-        $nama_kos = $pemasukan->lokasiKos->nama_kos;
-    
-        // Store the previous pemasukan amount for deducting later
-        $previousPemasukanAmount = $pemasukan->jumlah;
-    
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $fileName = time() . '_' . $file->getClientOriginalName(); // Appending timestamp to ensure uniqueness
+            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+            // Change the directory name here
+            $pemasukan->bukti_pembayaran = $filePath; // Use -> instead of array notation
+        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+            $pemasukan->bukti_pembayaran = 'Cash Payment'; // Use -> instead of array notation
+        }
+        
         $pemasukan->update([
             'kamar_id' => $request->input('kamar_id'),
             'lokasi_id' => $request->input('lokasi_id'),
             'tanggal' => $request->input('tanggal'),
+            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+            'bukti_pembayaran' => $request->input('bukti_pembayaran'), 
             'jumlah' => $request->input('jumlah'),
             'keterangan' => $request->input('keterangan'),
             // Add other fields as needed
         ]);
+
+        
     
-        $tanggal = $pemasukan->tanggal;
-        $bulan = date('m', strtotime($tanggal));
-        $tahun = date('Y', strtotime($tanggal));
-    
-        // Update the attributes for the related LaporanKeuangan instance
-        $lastPendapatanBersih = LaporanKeuangan::where('lokasi_id', $pemasukan->lokasi_id)
-            ->orderBy('tanggal', 'desc')
-            ->value('pendapatan_bersih');
-    
-        $lastPendapatanBersih = $lastPendapatanBersih ?? 0;
-    
-        // Deduct the previous pemasukan amount
-        $pendapatanBersih = $lastPendapatanBersih - $previousPemasukanAmount + $pemasukan->jumlah;
-    
-        $laporanKeuangan = LaporanKeuangan::where([
-            'kamar_id' => $pemasukan->kamar_id,
-            'lokasi_id' => $pemasukan->lokasi_id,
-            'bulan' => $bulan,
-            'tahun' => $tahun,
-        ])->first();
-    
-        if ($laporanKeuangan) {
-            $laporanKeuangan->update([
-                'tanggal' => $tanggal,
-                'jenis' => 'pemasukan',
-                'nama_kos' => $nama_kos,
-                'pemasukan' => $pemasukan->jumlah,
-                'pendapatan_bersih' => $pendapatanBersih,
-                'keterangan' => $pemasukan->keterangan,
-            ]);
-        }
-    
-        return redirect()->route('pemasukan.index')->with('success', 'Data pemasukan berhasil diupdate.');
+        return redirect()->route('pemasukan.index')->with('success_update', 'Data pemasukan berhasil diupdate.');
     }
     
+    
+
+
+    
+
+
 
     
     /**

@@ -133,16 +133,19 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.detail.index');
         Route::get('/laporan-keuangan/create', [LaporanKeuanganController::class, 'create'])->name('laporan-keuangan.create');
         Route::post('/laporan-keuangan', [LaporanKeuanganController::class, 'store'])->name('laporan-keuangan.store');
+        Route::get('/laporan-keuangan/{id}/edit', [LaporanKeuanganController::class, 'edit'])->name('laporan-keuangan.edit');
+        Route::put('/laporan-keuangan/{id}', [LaporanKeuanganController::class, 'update'])->name('laporan-keuangan.update');
         Route::get('laporan-keuangan/detail/{lokasi_id}/{bulan}/{tahun}', [TanggalLaporanController::class, 'showDetail'])
             ->name('laporan-keuangan.detail.show');
         Route::get('/export-laporan-keuangan', [LaporanKeuanganController::class, 'export'])->name('laporan-keuangan.export');
         Route::get('/generate-report', [LaporanKeuanganController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
         Route::post('/generate-report', [LaporanKeuanganController::class, 'generateFinancialReport'])->name('generate-financial-report');
-
+        Route::delete('/laporan-keuangan/{id}', [LaporanKeuanganController::class, 'destroy'])->name('laporan-keuangan.detail.destroy');
         //tanggal laporan route
         Route::get('/tanggal-laporan', [TanggalLaporanController::class, 'index'])->name('laporan-keuangan.index');
         Route::get('/tanggal-laporan/create', [TanggalLaporanController::class, 'create'])->name('laporan-keuangan.create');
         Route::post('/tanggal-laporan', [TanggalLaporanController::class, 'store'])->name('tanggal-laporan.store');
+
 
     });
 });

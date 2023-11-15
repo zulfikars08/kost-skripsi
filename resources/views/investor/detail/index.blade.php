@@ -49,7 +49,7 @@
             <tr>
                 <td>{{ $loop->index + 1 + $investors->perPage() * ($investors->currentPage() - 1) }}</td>
                 <td>{{ $investor->nama }}</td>
-                <td>{{$investor->bulan}}</td>
+                <td>{{ $months[$investor->bulan] }}</td>
                 <td>{{$investor->tahun}}</td>
                 <td>{{ $investor->jumlah_pintu }}</td>
                 <td>

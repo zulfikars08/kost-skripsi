@@ -16,9 +16,10 @@ class Investor extends Model
         'nama_kos', 
         'jumlah_pintu',
         'lokasi_id',
+        'laporan_id',
         'bulan',
         'tahun',
-        // 'pendapatan_bersih'
+        'pendapatan_bersih'
     ];
 
     public function lokasiKos()
