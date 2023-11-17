@@ -12,10 +12,10 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id" id="investor_id">
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="jumlah_investor">Jumlah investor</label>
                         <input type="number" class="form-control" id="jumlah_investor" name="jumlah_investor" required>
-                    </div>
+                    </div> --}}
                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id">Lokasi Kos:</label>
                         <select class="form-control" id="lokasi_id" name="lokasi_id" required>

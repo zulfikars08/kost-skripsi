@@ -26,6 +26,12 @@ class Investor extends Model
     {
         return $this->belongsTo(LokasiKos::class, 'lokasi_id');
     }
+    public function tanggalInvestor()
+    {
+        return $this->belongsTo(TanggalInvestor::class, 'lokasi_id', 'lokasi_id')
+            ->where('bulan', $this->bulan)
+            ->where('tahun', $this->tahun);
+    }
 
     public function kamar()
     {

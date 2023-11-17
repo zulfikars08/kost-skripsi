@@ -18,10 +18,10 @@ class TanggalInvestor extends Model
     }
 
     public function investor()
-{
-    return $this->hasMany(Investor::class, 'lokasi_id', 'lokasi_id')
-        ->whereYear('bulan', $this->bulan)
-        ->whereMonth('tahun', $this->tahun);
-}
+    {
+        return $this->hasMany(Investor::class, 'lokasi_id', 'lokasi_id')
+            ->where('bulan', $this->bulan)
+            ->where('tahun', $this->tahun);
+    }
 
 }

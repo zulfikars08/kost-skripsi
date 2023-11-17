@@ -75,16 +75,14 @@ class TanggalInvestorController extends Controller
      */
     public function store(Request $request)
     {
-        
         $request->validate([
-            'jumlah_investor' => 'required|integer',
             'lokasi_id' => 'required|exists:lokasi_kos,id',
-            'bulan' => 'required|date_format:m', // Validate 'bulan' as a two-digit month format 'mm'
-            'tahun' => 'required|date_format:Y', // Validate 'tahun' as a four-digit year format 'YYYY'
+            'bulan' => 'required|date_format:m',
+            'tahun' => 'required|date_format:Y',
         ]);
     
         $lokasiKos = LokasiKos::findOrFail($request->input('lokasi_id'));
-        
+    
         // Check if a record with the same 'nama_kos', 'bulan', and 'tahun' already exists
         $existingRecord = TanggalInvestor::where('nama_kos', $lokasiKos->nama_kos)
             ->where('bulan', $request->input('bulan'))
@@ -92,70 +90,22 @@ class TanggalInvestorController extends Controller
             ->first();
     
         if ($existingRecord) {
-            // A record with the same 'nama_kos', 'bulan', and 'tahun' already exists
             return redirect()->route('investor.index')->with('error', 'Data Tanggal Laporan sudah ada.');
         }
-        
-        // Create a new Investor instance
+    
+        // Count the number of investors for the given LokasiKos
+    
+        // Create a new TanggalInvestor instance
         $tanggalInvestor = new TanggalInvestor;
         $tanggalInvestor->lokasi_id = $lokasiKos->id;
         $tanggalInvestor->tahun = $request->input('tahun');
         $tanggalInvestor->bulan = $request->input('bulan');
-        $tanggalInvestor->jumlah_investor = $request->input('jumlah_investor');
         $tanggalInvestor->nama_kos = $lokasiKos->nama_kos;
     
         // Save the TanggalInvestor record to the database
         $tanggalInvestor->save();
     
         return redirect()->route('investor.index')->with('success_add', 'Data Tanggal Laporan berhasil disimpan.');
-    }
-    
-    
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($lokasi_id, $bulan, $tahun) {
-        // Get all available Lokasi Kos
-        $lokasiKos = LokasiKos::all();
-    
-        $months = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT);
-            $monthName = date("F", mktime(0, 0, 0, $i, 1));
-            $months[$monthValue] = $monthName;
-        }
-        $currentYear = date('Y');
-        $years = range($currentYear, $currentYear - 10);
-        // Retrieve the TanggalLaporan record based on the given lokasi_id, bulan, and tahun
-        $tanggalInvestor = TanggalInvestor::where('lokasi_id', $lokasi_id)
-            ->where('bulan', $bulan)
-            ->where('tahun', $tahun)
-            ->first();
-    
-        if (!$tanggalInvestor) {
-            // Handle the case where no matching TanggalLaporan record is found
-            return abort(404); // You can customize this as needed
-        }
-    
-        // Use the relationship to retrieve related LaporanKeuangan data
-        $investors = $tanggalInvestor->investor;
-    
-        // Convert the collection to a paginator
-        $page = request('page', 1);
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
-        $investors = new LengthAwarePaginator(
-            $investors->slice($offset, $perPage), // Sliced results for the current page
-            $investors->count(), // Total count of results
-            $perPage, // Results per page
-            $page, // Current page
-            ['path' => request()->url(), 'query' => request()->query()]
-        );
-    
-        return view('investor.detail.index', compact('investors', 'lokasiKos', 'years', 'months'));
     }
     
     

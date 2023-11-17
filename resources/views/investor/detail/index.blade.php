@@ -3,6 +3,9 @@
 @section('content')
 @include('komponen.pesan')
 <div class="container-fluid">
+    <button type="button" style="display: flex; align-items: center; background-color: rgb(64, 174, 207); color: #fff; border: none; padding: 5px; border-radius: 5px;" onclick="window.location.href='{{ route('investor.index') }}'">
+        <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
+    </button>
     <h3 class="text-start"
         style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
         Data Investor

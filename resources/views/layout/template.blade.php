@@ -95,17 +95,6 @@
         </li>
         @if (auth()->user()->hasRole('admin'))
         <li class="tooltip-element" data-tooltip="4">
-          <a href="/tanggal-investor" data-active="4">
-            <div class="icon">
-              <i class='bi bi-people'></i>
-              <i class='bi bi-people'></i>
-            </div>
-            <span class="link hide">Data Investor</span>
-          </a>
-        </li>
-        @endif
-        @if (auth()->user()->hasRole('admin'))
-        <li class="tooltip-element" data-tooltip="4">
           <a href="/transaksi" data-active="4">
             <div class="icon">
               <i class='bi bi-file-earmark-text'></i>
@@ -153,8 +142,18 @@
                 <span class="link hide">Data Laporan Keuangan</span>
               </a>
             </li>
+            <li>
+              <a class="dropdown-item" href="/tanggal-investor">
+                <div class="icon">
+                  <i class='bi bi-file-text'></i>
+                  <i class='bi bi-file-text'></i>
+                </div>
+                <span class="link hide">Data Laporan Investor</span>
+              </a>
+            </li>
           </ul>
         </li>
+        
         @endif
         @if (auth()->user()->hasRole('admin'))
         <li class="tooltip-element" data-tooltip="6">
@@ -181,7 +180,7 @@
           <span>Data Kamar</span>
           <span>Data Lokasi</span>
           <span>Data Penyewa</span>
-          <span>Data Investor</span>
+          <span>Data Transaksi</span>
           <span>Data Keuangan</span>
           {{-- <span>Data Transaksi</span> --}}
           <span>Manage Users</span>

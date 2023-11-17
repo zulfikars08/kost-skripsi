@@ -95,6 +95,7 @@ class InvestorController extends Controller
     {
         $bulan = date('m', strtotime($request->input('bulan')));
         $tahun = date('Y', strtotime($request->input('tahun')));
+        
         $request->validate([
             'nama' => 'required|string',
             'jumlah_pintu' => 'required|integer',
@@ -102,7 +103,7 @@ class InvestorController extends Controller
             'bulan' => 'required|date_format:m', // 'm' represents the month format 'mm'
             'tahun' => 'required|date_format:Y',
         ]);
-
+    
         // Create a new investor record
         $investor = new Investor();
         $investor->nama = $request->input('nama');
@@ -110,27 +111,39 @@ class InvestorController extends Controller
         $investor->bulan = $request->input('bulan');
         $investor->tahun = $request->input('tahun');
         $investor->lokasi_id = $request->input('lokasi_id');
-
-        // Set the 'nama_kos' column with the value of 'lokasi_id'
-        $lokasiKos = LokasiKos::find($request->input('lokasi_id'));
-        if ($lokasiKos) {
-            $investor->nama_kos = $lokasiKos->nama_kos;
-        }
-
-        // Find the last "pendapatan_bersih" from "laporan_keuangan" for the same "nama_kos," "bulan," and "tahun"
-        $lastPendapatanBersih = LaporanKeuangan::where('nama_kos', $investor->nama_kos)
+    
+        // Count the number of investors for the same 'lokasi_id'
+        $jumlahInvestor = Investor::where('lokasi_id', $investor->lokasi_id)
             ->where('bulan', $bulan)
             ->where('tahun', $tahun)
-            ->orderBy('tanggal', 'desc')  // Order by the 'tanggal' column in descending order
-            ->value('pendapatan_bersih');
+            ->count();
+    
+        // Assign the total number of investors to the 'jumlah_investor' field
+        $investor->jumlah_investor = $jumlahInvestor;
+        $lokasiKos = LokasiKos::findOrFail($request->input('lokasi_id'));
 
-        // Assign the last "pendapatan_bersih" value to the investor record
-        $investor->pendapatan_bersih = $lastPendapatanBersih;
+        $jumlahInvestor = Investor::where('lokasi_id', $lokasiKos->id)
+        ->where('bulan', $request->input('bulan'))
+        ->where('tahun', $request->input('tahun'))
+        ->count();
 
+    // Update the 'jumlah_investor' field in the existing TanggalInvestor record
+    TanggalInvestor::updateOrCreate(
+        [
+            'nama_kos' => $lokasiKos->nama_kos,
+            'bulan' => $request->input('bulan'),
+            'tahun' => $request->input('tahun'),
+        ],
+        [
+            'lokasi_id' => $lokasiKos->id,
+            'jumlah_investor' => $jumlahInvestor,
+        ]
+    );
+        // Save the investor record
         if ($investor->save()) {
             // Redirect with success message to a dynamic route
             return redirect()->route('investor.detail.index', [
-                'lokasi_id' => $lokasiKos->id,
+                'lokasi_id' => $investor->lokasi_id,
                 'bulan' => $investor->bulan,
                 'tahun' => $investor->tahun,
             ])->with('success_add', 'Berhasil menambahkan data');
@@ -138,8 +151,9 @@ class InvestorController extends Controller
             // Redirect with an error message
             return redirect()->back()->with('error', 'Gagal menambahkan data');
         }
-        return redirect()->route('investor.detail.index')->with('success_add', 'Investor added successfully');
     }
+    
+    
 
     public function show($lokasi_id, $bulan, $tahun)
     {
