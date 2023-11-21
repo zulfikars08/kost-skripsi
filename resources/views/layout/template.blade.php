@@ -205,6 +205,7 @@
   </main>
   <script src="{{ asset('javascript/chart.js') }}"></script>
   <script src="{{ asset('javascript/autoHarga.js') }}"></script>
+  <script src="{{ asset('javascript/autoHargaEdit.js') }}"></script>
 
 </body>
 

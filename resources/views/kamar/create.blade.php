@@ -10,10 +10,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <!-- Left column for labels -->
-                            <div class="mb-3 custom-form-group">
+                            {{-- <div class="mb-3 custom-form-group">
                                 <label for="nama_investor" class="form-label">Nama Investor</label>
                                 <input type="text" class="form-control" name="nama_investor" id="nama_investor" value="{{ old('nama_investor') }}" required>
-                            </div>
+                            </div> --}}
                             <div class="mb-3 custom-form-group">
                                 <label for="no_kamar" class="form-label">No Kamar</label>
                                 <input type="text" class="form-control @error('no_kamar') is-invalid @enderror" name="no_kamar" id="no_kamar" value="{{ old('no_kamar') }}" required>
@@ -25,7 +25,10 @@
                             </div>
                             <div class="mb-3 custom-form-group">
                                 <label for="harga" class="form-label">Harga</label>
-                                <input type="text" class="form-control" name="harga" id="harga" required>
+                                <input type="text" class="form-control" name="harga" id="harga" oninput="formatAndSetIntegerValue(this)" required>
+                            </div>
+                            <div class="mb-3 custom-form-group">
+                                <input type="hidden" name="hargaInteger" id="hargaInteger">
                             </div>
                         </div>
                         <div class="col-md-6">

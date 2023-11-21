@@ -14,13 +14,14 @@
                 <div class="modal-body">
                     <!-- Your form fields for editing -->
                     <div class="mb-3 custom-form-group">
-                        <label for="harga" class="form-label">Harga</label>
-                        <input type="text" class="form-control" name="harga" id="harga" value="{{ $item->harga }}" required>
+                        <label for="modalHarga" class="form-label">Harga</label>
+                        <input type="text" class="form-control" name="modalHarga" id="modalHarga" value="{{ number_format($item->harga, 0, ',', ',') }}" oninput="formatAndSetDecimalValue(this, 'modalHargaDecimal')" required>
+                        <input type="hidden" name="modalHargaDecimal" id="modalHargaDecimal" value="{{ $item->harga }}">
+                        <input type="hidden" name="modalHarga" id="modalHarga" value="{{ $item->harga }}">
                     </div>
-                    <div class="mb-3 custom-form-group">
-                        <label for="keterangan" class="form-label">Keterangan</label>
-                        <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ $item->keterangan }}" required>
-                    </div>
+                    {{-- <div class="mb-3 custom-form-group">
+                        <input type="hidden" name="modalHargaDecimal" id="modalHargaDecimal">
+                    </div> --}}
                     <div class="mb-3 custom-form-group">
                         <label class="form-label">Fasilitas</label>
                         <div class="form-check">
@@ -30,6 +31,14 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="fasilitas[]" id="lemari" value="Lemari" {{ in_array('Lemari', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
                             <label class="form-check-label" for="lemari">Lemari</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="fasilitas[]" id="kasur" value="Kasur" {{ in_array('Kasur', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="kasur">Kasur</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="fasilitas[]" id="tv" value="TV" {{ in_array('TV', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="tv">TV</label>
                         </div>
                     </div>
                     <div class="mb-3 custom-form-group">
@@ -41,7 +50,7 @@
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="keterangan" class="form-label">Tipe Kamar</label>
-                        <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ old('keterangan') }}" required>
+                        <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ $item->keterangan }}" required>
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id" class="form-label">Lokasi Kos</label>

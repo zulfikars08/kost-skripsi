@@ -1,13 +1,21 @@
- // Ambil elemen input harga
- var inputHarga = document.getElementById('harga');
+function formatAndSetIntegerValue(input) {
+    // Menghilangkan karakter selain digit
+    let formattedValue = input.value.replace(/\D/g, '');
 
- // Tambahkan event listener untuk setiap perubahan nilai
- inputHarga.addEventListener('input', function () {
-     var nilaiInput = this.value;
+    // Menambahkan separator ribuan
+    formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-     // Hapus semua karakter selain angka
-     var nilaiBersih = nilaiInput.replace(/\D/g, '');
+    // Setel nilai input dengan nilai yang sudah diformat
+    input.value = formattedValue;
 
-     // Setel nilai yang telah dibersihkan ke input
-     this.value = nilaiBersih;
- });
+    // Mengonversi nilai ke tipe data Integer
+    let hargaInteger = parseInt(formattedValue.replace(/[.,]/g, ''), 10);
+
+    // Jika hargaInteger adalah NaN (Not a Number), atur nilai menjadi 0
+    if (isNaN(hargaInteger)) {
+        hargaInteger = 0;
+    }
+
+    // Simpan nilai hargaInteger dalam hidden input atau kirim ke server
+    document.getElementById('hargaInteger').value = hargaInteger;
+}

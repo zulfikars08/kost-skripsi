@@ -76,7 +76,7 @@ public function store(Request $request)
         ->first();
 
     if ($existingKamar) {
-        return redirect()->back()->with('error', 'Nomor kamar sudah digunakan untuk lokasi kos ini.');
+        return redirect()->back()->with('errorNoKamar', 'Nomor kamar sudah digunakan untuk lokasi kos ini.');
     }
 
     $request->validate([
@@ -88,7 +88,7 @@ public function store(Request $request)
                     ->where('lokasi_id', $request->lokasi_id);
             }),
         ],
-        'nama_investor' => 'required|string',
+        // 'nama_investor' => 'required|string',
         'harga' => 'required',
         'keterangan' => 'required',
         'fasilitas' => 'required|array',
@@ -113,9 +113,9 @@ public function store(Request $request)
 
     // Use the validated data
     $data = [
-        'nama_investor' => $request->nama_investor,
+        // 'nama_investor' => $request->nama_investor,
         'no_kamar' => $request->no_kamar,
-        'harga' => $request->harga,
+        'harga' => $request->hargaInteger,
         'keterangan' => $request->keterangan,
         'fasilitas' => $fasilitas,
         'status' => $request->status,
@@ -160,6 +160,7 @@ public function update(Request $request, $id)
         'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
         'lokasi_id.required' => 'Lokasi Kos wajib di isi',
     ]);
+    
 
     // Check if the status is "belum terisi"
     if ($request->status === 'belum terisi') {
@@ -177,14 +178,21 @@ public function update(Request $request, $id)
             $penyewa->delete();
         }
     }
+   
+    // Periksa apakah ada pembaruan pada harga
+    $harga = $request->filled('modalHargaDecimal') ? intval(str_replace(',', '', $request->modalHargaDecimal)) : intval(str_replace(',', '', $request->modalHarga));
+
+    // dd($harga);
+
 
     $data = [
-        'harga' => $request->harga,
+        'harga' => $harga,
         'keterangan' => $request->keterangan,
         'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
         'status' => $request->status,
         'lokasi_id' => $request->lokasi_id,
     ];
+
 
     Kamar::where('id', $id)->update($data);
 

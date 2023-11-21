@@ -75,5 +75,26 @@
 </script>
 @endif
 
+@if (Session::has('errorNoKamar'))
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+    <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto text-white">Error</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-white">
+            Nomor kamar sudah digunakan untuk lokasi kos ini.
+            @foreach ($errors->all() as $errorNoKamar)
+                <div class="text-danger">{{ $errorNoKamar }}</div>
+            @endforeach
+        </div>
+    </div>
+</div>
+<script>
+    var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+    errorToast.show();
+</script>
+@endif
+
 </body>
 </html>
