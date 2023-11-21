@@ -5,6 +5,17 @@
     <h3 class="text-start" style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; color: #333;">Dashboard</h3>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="row">
+
+            <div class="col-md-4 col-xl-3">
+                <div class="card bg-success text-white order-card mb-4">
+                    <div class="card-body">
+                        <h6 class="m-b-20">Total Lokasi Kos</h6>
+                        <h2 class="text-right"><i class="fas fa-map-marked-alt"></i><span class="ml-2">{{ $totalLokasiKos }}</span></h2>
+                        <p class="m-b-0">Lokasi Kos</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-4 col-xl-3">
                 <div class="card bg-primary text-white order-card mb-4">
                     <div class="card-body">
@@ -15,22 +26,23 @@
                 </div>
             </div>
     
-            <div class="col-md-4 col-xl-3">
-                <div class="card bg-success text-white order-card mb-4">
-                    <div class="card-body">
-                        <h6 class="m-b-20">Total Lokasi Kos</h6>
-                        <h2 class="text-right"><i class="fas fa-map-marked-alt"></i><span class="ml-2">{{ $totalLokasiKos }}</span></h2>
-                        <p class="m-b-0">Lokasi Kos</p>
-                    </div>
-                </div>
-            </div>
-    
-            <div class="col-md-4 col-xl-3">
+            
+            {{-- <div class="col-md-4 col-xl-3">
                 <div class="card bg-warning order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Penyewa</h6>
                         <h2 class="text-right"><i class="fas fa-users"></i><span class="ml-2">{{ $totalPenyewa }}</span></h2>
                         <p class="m-b-0">Penyewa</p>
+                    </div>
+                </div>
+            </div> --}}
+
+            <div class="col-md-4 col-xl-3">
+                <div class="card bg-primary order-card mb-4">
+                    <div class="card-body">
+                        <h6 class="m-b-20">Total Penyewa Aktif</h6>
+                        <h2 class="text-right"><i class="fas fa-users"></i><span class="ml-2">{{ $totalPenyewaAktif }}</span></h2>
+                        <p class="m-b-0">Penyewa Aktif</p>
                     </div>
                 </div>
             </div>

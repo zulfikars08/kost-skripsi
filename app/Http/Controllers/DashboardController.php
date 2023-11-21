@@ -25,6 +25,7 @@ class DashboardController extends Controller
         $totalKamarBelumTerisi = Kamar::where('status', 'Belum Terisi')->count();
         $totalTransaksi = Transaksi::count();
         $totalPenyewa = Penyewa::count();
+        $totalPenyewaAktif = Penyewa::where('status_penyewa', 'aktif')->count();
     
         // Filter data for the current month
         $currentMonth = now()->format('m');
@@ -69,6 +70,7 @@ class DashboardController extends Controller
             'totalPemasukan',
             'totalPengeluaran',
             'totalPenyewa',
+            'totalPenyewaAktif',
             'totalTransaksi',
             'pemasukanData',
             'pengeluaranData',
