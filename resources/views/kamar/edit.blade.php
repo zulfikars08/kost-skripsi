@@ -15,7 +15,7 @@
                     <!-- Your form fields for editing -->
                     <div class="mb-3 custom-form-group">
                         <label for="modalHarga" class="form-label">Harga</label>
-                        <input type="text" class="form-control" name="modalHarga" id="modalHarga" value="{{ number_format($item->harga, 0, ',', ',') }}" oninput="formatAndSetDecimalValue(this, 'modalHargaDecimal')" required>
+                        <input type="text" class="form-control" name="harga" id="modalHarga" value="{{ number_format($item->harga, 0, ',', ',') }}" oninput="formatAndSetDecimalValue(this, 'modalHargaDecimal')" required>
                         <input type="hidden" name="modalHargaDecimal" id="modalHargaDecimal" value="{{ $item->harga }}">
                         <input type="hidden" name="modalHarga" id="modalHarga" value="{{ $item->harga }}">
                     </div>
