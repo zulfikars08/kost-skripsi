@@ -83,8 +83,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/investor', [InvestorController::class, 'index'])->name('investor.detail.index');
     Route::get('/investor/create', [InvestorController::class, 'create'])->name('investor.detail.create');
     Route::post('/investor', [InvestorController::class, 'store'])->name('investor.store');
+    // routes/web.php
+
+    Route::get('investorr/{id}/edit',[InvestorController::class, 'edit'])->name('investor.edit');
+    Route::put('investorr/{id}', [InvestorController::class, 'update'])->name('investor.update');
+
     Route::get('investor/{lokasi_id}/{bulan}/{tahun}', [TanggalInvestorController::class, 'show'])
         ->name('investor.detail.show');
+    // Example: InvestorController routes
+    Route::get('/generate-investor-report', [InvestorController::class, 'showGenerateFinancialReportView'])->name('show-generate-investor-report-view');
+    Route::post('/generate-investor-report', [InvestorController::class, 'generateFinancialReport'])->name('generate-investor-report');
+    Route::delete('/investors/{id}', [InvestorController::class, 'destroy'])->name('investor.destroy');
+
     Route::get('/tanggal-investor', [TanggalInvestorController::class, 'index'])->name('investor.index');
     Route::get('/tanggal-investor/create', [TanggalInvestorController::class, 'create'])->name('investor.create');
     Route::post('/tanggal-investor', [TanggalInvestorController::class, 'store'])->name('tanggal-investor.store');
@@ -105,7 +115,7 @@ Route::middleware(['auth'])->group(function () {
     // });
 
     Route::middleware('role:admin')->group(function () {
-         // lokasi routes
+        // lokasi routes
         Route::get('/lokasi_kos', [LokasiKostController::class, 'index'])->name('lokasi_kos.index');
         Route::get('/lokasi_kos/create', [LokasiKostController::class, 'create'])->name('lokasi_kos.create');
         Route::post('/lokasi_kos', [LokasiKostController::class, 'store'])->name('lokasi_kos.store');
@@ -145,7 +155,5 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tanggal-laporan', [TanggalLaporanController::class, 'index'])->name('laporan-keuangan.index');
         Route::get('/tanggal-laporan/create', [TanggalLaporanController::class, 'create'])->name('laporan-keuangan.create');
         Route::post('/tanggal-laporan', [TanggalLaporanController::class, 'store'])->name('tanggal-laporan.store');
-
-
     });
 });

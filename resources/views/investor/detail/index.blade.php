@@ -3,7 +3,9 @@
 @section('content')
 @include('komponen.pesan')
 <div class="container-fluid">
-    <button type="button" style="display: flex; align-items: center; background-color: rgb(64, 174, 207); color: #fff; border: none; padding: 5px; border-radius: 5px;" onclick="window.location.href='{{ route('investor.index') }}'">
+    <button type="button"
+        style="display: flex; align-items: center; background-color: rgb(64, 174, 207); color: #fff; border: none; padding: 5px; border-radius: 5px;"
+        onclick="window.location.href='{{ route('investor.index') }}'">
         <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
     </button>
     <h3 class="text-start"
@@ -16,119 +18,121 @@
             <!-- SEARCH FORM -->
             <form class="d-flex" action="{{ route('investor.detail.index') }}" method="get" id="search-form">
                 <div class="input-group">
-                    <input class="form-control" type="search" name="nama" placeholder="Masukkan nama" aria-label="Search" id="search-input">
+                    <input class="form-control" type="search" name="nama" placeholder="Masukkan nama"
+                        aria-label="Search" id="search-input">
                     <button class="btn btn-secondary" type="submit">Cari</button>
                 </div>
             </form>
-            
 
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
-                <i class="fas fa-plus"></i> Tambah Data Investor
-            </button>
-            @include('investor.detail.create')
+
+
+            <div class="d-flex justify-content-between mb-3">
+                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                    data-bs-target="#tambahDataModal">
+                    <i class="fas fa-plus"></i> Tambah Data Investor
+                </button>
+                @include('investor.detail.create')
+                <button type="button"
+                    style="display: flex; align-items: center; background-color: rgb(34, 206, 134); color: #fff; border: none; padding: 5px; border-radius: 5px;margin-left: 10px"
+                    data-bs-toggle="modal" data-bs-target="#generateReportModals">
+                    Excel
+                </button>
+                @include('investor.export')
+            </div>
             <!-- Include the modal partial -->
         </div>
 
-<!-- INVESTOR LIST TABLE -->
-<!-- INVESTOR LIST TABLE -->
-<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-    <table class="table table-striped" style="width: 100%;">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Bulan</th>
-                <th>Tahun</th>
-                <th>Jumlah Pintu</th>
-                <th>Lokasi</th>
-                <th>Total Kamar</th>
-                <th>Pendapatan Bersih</th>
-                <th>Total Pendapatan</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($investors as $investor)
-            <tr>
-                <td>{{ $loop->index + 1 + $investors->perPage() * ($investors->currentPage() - 1) }}</td>
-                <td>{{ $investor->nama }}</td>
-                <td>{{ $months[$investor->bulan] }}</td>
-                <td>{{$investor->tahun}}</td>
-                <td>{{ $investor->jumlah_pintu }}</td>
-                <td>
-                    {{ $investor->lokasiKos->nama_kos }}
-                </td>
-                <td>
-                    @if ($investor->lokasi_id)
-                    <?php
+        <!-- INVESTOR LIST TABLE -->
+        <!-- INVESTOR LIST TABLE -->
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-striped" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Bulan</th>
+                        <th>Tahun</th>
+                        <th>Jumlah Pintu</th>
+                        <th>Lokasi</th>
+                        <th>Total Kamar</th>
+                        <th>Pendapatan Bersih</th>
+                        <th>Total Pendapatan</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($investors as $investor)
+                    <tr>
+                        <td>{{ $loop->index + 1 + $investors->perPage() * ($investors->currentPage() - 1) }}</td>
+                        <td>{{ $investor->nama }}</td>
+                        <td>{{ $months[$investor->bulan] }}</td>
+                        <td>{{$investor->tahun}}</td>
+                        <td>{{ $investor->jumlah_pintu }}</td>
+                        <td>
+                            {{ $investor->lokasiKos->nama_kos }}
+                        </td>
+                        <td>
+                            @if ($investor->lokasi_id)
+                            <?php
                         $lokasiKos = \App\Models\LokasiKos::find($investor->lokasi_id);
                     ?>
-                    @if ($lokasiKos)
-                    {{ $lokasiKos->jumlah_kamar }} <!-- Display the total kamar -->
-                    @else
-                    No Lokasi Kos
-                    @endif
-                    @else
-                    No Lokasi
-                    @endif
-                </td>
-                <td>
-                    @php
-                    $lastPendapatanBersih = \App\Models\LaporanKeuangan::where('nama_kos', $investor->nama_kos)
-                        ->where('bulan', $investor->bulan)
-                        ->where('tahun', $investor->tahun)
-                        ->orderBy('id', 'desc')
-                        ->value('pendapatan_bersih');
-                    @endphp
-                    {{ $lastPendapatanBersih }}
-                </td>
-                
-                <td>
-                    @php
-                    $laporanKeuangan = \App\Models\LaporanKeuangan::where('nama_kos', $investor->nama_kos)
-                        ->where('bulan', $investor->bulan)
-                        ->where('tahun', $investor->tahun)
-                        ->orderBy('id', 'desc')
-                        ->first();
-                    
-                    $totalPendapatan = ($laporanKeuangan) ? ($investor->jumlah_pintu / max(1, $lokasiKos->jumlah_kamar)) * $laporanKeuangan->pendapatan_bersih : 0;
-                    @endphp
-                
-                    {{ $totalPendapatan }} <!-- Display the total pendapatan -->
-                </td>
-                
-                <td>
-                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#editModal{{$investor->id}}">
-                        <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
-                    </button>
-                    {{-- @include('kamar.edit', ['item' => $item]) --}}
-                    {{-- <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
-                        action="{{ route('kamar.destroy', $item->id) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" name="submit" class="btn btn-danger btn-sm"
-                            onclick="showSuccessToast()">
-                            <i class="fas fa-trash"></i>
+                            @if ($lokasiKos)
+                            {{ $lokasiKos->jumlah_kamar }}
+                            <!-- Display the total kamar -->
+                            @else
+                            No Lokasi Kos
+                            @endif
+                            @else
+                            No Lokasi
+                            @endif
+                        </td>
+                        <td>
+                            @php
+                            $lastPendapatanBersih = \App\Models\LaporanKeuangan::where('nama_kos', $investor->nama_kos)
+                            ->where('bulan', $investor->bulan)
+                            ->where('tahun', $investor->tahun)
+                            ->orderBy('id', 'desc')
+                            ->value('pendapatan_bersih');
+                            @endphp
+                            {{ $lastPendapatanBersih }}
+                        </td>
+
+                        <td>
+                            @php
+                            $laporanKeuangan = \App\Models\LaporanKeuangan::where('nama_kos', $investor->nama_kos)
+                            ->where('bulan', $investor->bulan)
+                            ->where('tahun', $investor->tahun)
+                            ->orderBy('id', 'desc')
+                            ->first();
+
+                            $totalPendapatan = ($laporanKeuangan) ? ($investor->jumlah_pintu / max(1,
+                            $lokasiKos->jumlah_kamar)) * $laporanKeuangan->pendapatan_bersih : 0;
+                            @endphp
+
+                            {{ $totalPendapatan }}
+                            <!-- Display the total pendapatan -->
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#editModal{{ $investor->id }}">
+                            <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
                         </button>
-                    </form> --}}
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="10">Tidak ada data investor.</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-
-
+                            @include('investor.detail.edit')
+                            <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px">
+                                <i class="fas fa-trash" style="color: white"></i>
+                            </button>
+                            @include('investor.detail.delete')                      
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="10">Tidak ada data investor.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

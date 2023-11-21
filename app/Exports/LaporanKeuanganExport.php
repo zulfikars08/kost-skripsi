@@ -22,50 +22,69 @@ class LaporanKeuanganExport implements FromCollection, WithHeadings, WithStyles
         $this->namaKos = $namaKos;
         $this->namaBulan = $namaBulan;
     }
-
     public function collection()
     {
-        // Transform your $this->data into a collection
+        // Transform your $this->laporanKeuangan into a collection
         $data = $this->laporanKeuangan->map(function ($item) {
             return [
+                $item->id,
+                $item->kode_laporan,
+                $item->kode_pemasukan,
+                $item->kode_pengeluaran,
                 $item->tanggal,
                 $item->kamar->no_kamar,
-                $item->lokasi->nama_kos,
+                $item->lokasiKos->nama_kos,
+                $item->tipe_pembayaran ? $item->tipe_pembayaran : '-',
                 $item->jenis,
+                $item->bukti_pembayaran ? $item->bukti_pembayaran : '-',
+                $item->tanggal_pembayaran_awal ? $item->tanggal_pembayaran_awal : '-',
+                $item->tanggal_pembayaran_akhir ? $item->tanggal_pembayaran_akhir : '-',
+                $item->status_pembayaran,
+                $item->jenis === 'pemasukan' ? $item->pemasukan : 0,
+                $item->jenis === 'pengeluaran' ? $item->pengeluaran : 0,
                 $item->keterangan,
-                $item->pemasukan,
-                $item->pengeluaran,
             ];
         });
 
         // Calculate the total pemasukan, total pengeluaran, and total pendapatan
         $totalPemasukan = $data->sum(function ($row) {
-            return $row[5]; // Column index of Jumlah Pemasukan
+            return $row[13]; // Column index of Jumlah Pemasukan
         });
 
         $totalPengeluaran = $data->sum(function ($row) {
-            return $row[6]; // Column index of Jumlah Pengeluaran
+            return $row[14]; // Column index of Jumlah Pengeluaran
         });
 
         $totalPendapatan = $totalPemasukan - $totalPengeluaran;
 
         // Add totals to the data
-        $data->push(['', '', '', '', '', $totalPemasukan, $totalPengeluaran]);
-        $data->push(['', '', '', '', '', 'Total Pendapatan:', $totalPendapatan]);
+        $data->push(['', '', '', '', '', '', '', '', '', '', '', '', 'Total Pemasukan:', $totalPemasukan, '']);
+        $data->push(['', '', '', '', '', '', '', '', '', '', '', '', 'Total Pengeluaran:', '', $totalPengeluaran]);
+        $data->push(['', '', '', '', '', '', '', '', '', '', '', '', 'Pendapatan Bersih:', '', $totalPendapatan]);
 
         return $data;
     }
 
     public function headings(): array
     {
+        // Adjust the column headings as needed
         return [
+            'No',
+            'Kode Laporan',
+            'Kode Pemasukan',
+            'Kode Pengeluaran',
             'Tanggal',
             'No Kamar',
             'Nama Kos',
+            'Tipe Pembayaran',
             'Jenis',
-            'Keterangan',
+            'Bukti Pembayaran',
+            'Tanggal Pembayaran Awal',
+            'Tanggal Pembayaran Akhir',
+            'Status Pembayaran',
             'Jumlah Pemasukan',
             'Jumlah Pengeluaran',
+            'Keterangan',
         ];
     }
 
