@@ -55,13 +55,16 @@
                             <div class="mb-3 custom-form-group">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-control" name="status" id="status" required>
-                                    <option value="belum terisi" @if(old('status') === 'belum terisi') selected @endif>Belum Terisi</option>
-                                    <option value="sudah terisi" @if(old('status') === 'sudah terisi') selected @endif>Sudah Terisi</option>
+                                    <option value="Belum Terisi" @if(old('status') === 'Belum Terisi') selected @endif>Belum Terisi</option>
+                                    <option value="Sudah Terisi" @if(old('status') === 'Sudah Terisi') selected @endif>Sudah Terisi</option>
                                 </select>
                             </div>
                             <div class="mb-3 custom-form-group">
-                                <label for="keterangan" class="form-label">Tipe Kamar</label>
-                                <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ old('keterangan') }}" required>
+                                <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
+                                <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
+                                    <option value="AC" @if(old('tipe_kamar') === 'AC') selected @endif>AC</option>
+                                    <option value="Non AC" @if(old('tipe_kamar') === 'Non AC') selected @endif>Non AC</option>
+                                </select>
                             </div>
                             <div class="mb-3 custom-form-group">
                                 <label for="lokasi_id" class="form-label">Lokasi Kos</label>

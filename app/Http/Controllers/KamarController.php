@@ -90,20 +90,20 @@ public function store(Request $request)
         ],
         // 'nama_investor' => 'required|string',
         'harga' => 'required',
-        'keterangan' => 'required',
+        'tipe_kamar' => 'required|in:AC,Non AC',
         'fasilitas' => 'required|array',
         'fasilitas.*' => 'in:AC,Lemari,Kasur,TV',
-        'status' => 'required|in:belum terisi,sudah terisi',
+        'status' => 'required|in:Belum Terisi,Sudah Terisi',
         'lokasi_id' => 'required|exists:lokasi_kos,id',
     ], [
         // Custom error messages...
         'no_kamar.required' => 'Nomor kamar wajib di isi',
         'no_kamar.unique' => 'Nomor kamar sudah digunakan untuk lokasi kos ini',
         'harga.required' => 'Harga wajib di isi',
-        'keterangan.required' => 'Keterangan wajib di isi',
+        'tipe_kamar.required' => 'Tipe kamar wajib di isi',
         'fasilitas.required' => 'Fasilitas wajib di isi',
         'status.required' => 'Status wajib di isi',
-        'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
+        'status.in' => 'Status harus salah satu dari "Belum Terisi" atau "Sudah Terisi"',
         'lokasi_id.required' => 'Lokasi kos wajib dipilih',
         'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
     ]);
@@ -116,11 +116,12 @@ public function store(Request $request)
         // 'nama_investor' => $request->nama_investor,
         'no_kamar' => $request->no_kamar,
         'harga' => $request->harga,
-        'keterangan' => $request->keterangan,
+        'tipe_kamar' => $request->tipe_kamar,
         'fasilitas' => $fasilitas,
         'status' => $request->status,
         'lokasi_id' => $request->lokasi_id,
     ];
+    // dd($data);
 
     // Create a new Kamar record
     Kamar::create($data);
@@ -148,13 +149,13 @@ public function update(Request $request, $id)
 {
     $request->validate([
         'harga' => 'required',
-        'keterangan' => 'required',
+        'tipe_kamar' => 'required|in:AC,Non AC',
         'fasilitas' => 'required',
-        'status' => 'required|in:belum terisi,sudah terisi',
+        'status' => 'required|in:Belum Terisi,Sudah Terisi',
         'lokasi_id' => 'required',
     ], [
         'harga.required' => 'Harga wajib di isi',
-        'keterangan.required' => 'Keterangan wajib di isi',
+        'tipe_kamar.required' => 'Tipe kamar wajib di isi',
         'fasilitas.required' => 'Fasilitas wajib di isi',
         'status.required' => 'Status wajib di isi',
         'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
@@ -162,7 +163,7 @@ public function update(Request $request, $id)
     ]);
     
     // Check if the status is "belum terisi"
-    if ($request->status === 'belum terisi') {
+    if ($request->status === 'Belum Terisi') {
         // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
         $kamar = Kamar::findOrFail($id);
         $lokasiId = $kamar->lokasi_id;
@@ -189,7 +190,7 @@ public function update(Request $request, $id)
 
     $data = [
         'harga' => $harga,
-        'keterangan' => $request->keterangan,
+        'tipe_kamar' => $request->tipe_kamar,
         'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
         'status' => $request->status,
         'lokasi_id' => $request->lokasi_id,

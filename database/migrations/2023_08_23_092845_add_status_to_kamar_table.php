@@ -15,7 +15,7 @@ class AddStatusToKamarTable extends Migration
     {
         Schema::table('kamar', function (Blueprint $table) {
             //
-            $table->string('status')->after('fasilitas')->defaulth('belum terisi');
+            $table->string('status')->after('fasilitas')->defaulth('Belum Terisi');
         });
     }
 

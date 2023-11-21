@@ -36,7 +36,7 @@
                     <th>No Kamar</th>
                     <th>Harga</th>
                     <th>Fasilitas</th>
-                    <th>Keterangan</th>
+                    <th>Tipe Kamar</th>
                     <th>
                         <!-- Filter by Lokasi Kos dropdown here -->
                         <div class="dropdown">
@@ -74,9 +74,9 @@
                                     <div class="form-group px-2">
                                         <select class="form-control" name="filter_by_status" id="filterByStatus">
                                             <option value="">Semua Status</option>
-                                            <option value="belum terisi" {{ request('filter_by_status')==='belum terisi'
+                                            <option value="Belum Terisi" {{ request('filter_by_status')==='Belum Terisi'
                                                 ? 'selected' : '' }}>Belum Terisi</option>
-                                            <option value="sudah terisi" {{ request('filter_by_status')==='sudah terisi'
+                                            <option value="Sudah Terisi" {{ request('filter_by_status')==='Sudah Terisi'
                                                 ? 'selected' : '' }}>Sudah Terisi</option>
                                         </select>
                                     </div>
@@ -99,10 +99,10 @@
                     <td>{{ $item->no_kamar }}</td>
                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                     <td>{{ $item->fasilitas }}</td>
-                    <td>{{ $item->keterangan }}</td>
+                    <td>{{ $item->tipe_kamar }}</td>
                     <td>{{ $item->lokasiKos->nama_kos }}</td>
                     <td>
-                        @if ($item->status === 'belum terisi' || $item->status == NULL)
+                        @if ($item->status === 'Belum Terisi' || $item->status == NULL)
                         <button class="btn btn-status btn-danger">{{ $item->status }}</button>
                         @else
                         <button class="btn btn-status btn-success">{{ $item->status }}</button>

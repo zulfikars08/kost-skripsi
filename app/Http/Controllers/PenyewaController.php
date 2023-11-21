@@ -107,7 +107,7 @@ class PenyewaController extends Controller
             // Update the Kamar status to "sudah terisi" based on the provided 'no_kamar' and 'lokasi_id'
             Kamar::where('id', $data['kamar_id']) // Assuming 'id' is the primary key column in the 'kamar' table
     ->where('lokasi_id', $data['lokasi_id'])
-    ->update(['status' => 'sudah terisi']);
+    ->update(['status' => 'Sudah Terisi']);
 
         }
     
@@ -192,12 +192,12 @@ class PenyewaController extends Controller
             // Restore the Kamar status to "belum terisi" based on the provided 'no_kamar' and 'lokasi_id'
             Kamar::where('no_kamar', $penyewa->no_kamar)
                 ->where('lokasi_id', $penyewa->lokasi_id)
-                ->update(['status' => 'belum terisi']);
+                ->update(['status' => 'Belum Terisi']);
         } elseif ($request->status_penyewa === 'aktif' && $penyewa->status_penyewa === 'tidak_aktif') {
             // Update the Kamar status to "sudah terisi" based on the provided 'no_kamar' and 'lokasi_id'
             Kamar::where('no_kamar', $penyewa->no_kamar)
                 ->where('lokasi_id', $penyewa->lokasi_id)
-                ->update(['status' => 'sudah terisi']);
+                ->update(['status' => 'Sudah Terisi']);
         }
     
         // Update the penyewa status

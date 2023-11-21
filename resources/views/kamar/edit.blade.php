@@ -41,16 +41,19 @@
                             <label class="form-check-label" for="tv">TV</label>
                         </div>
                     </div>
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="status" class="form-label">Status</label>
                         <select class="form-control" name="status" id="status" required>
                             <option value="belum terisi" {{ $item->status === 'belum terisi' ? 'selected' : '' }}>Belum Terisi</option>
                             <option value="sudah terisi" {{ $item->status === 'sudah terisi' ? 'selected' : '' }}>Sudah Terisi</option>
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="mb-3 custom-form-group">
-                        <label for="keterangan" class="form-label">Tipe Kamar</label>
-                        <input type="text" class="form-control" name="keterangan" id="keterangan" value="{{ $item->keterangan }}" required>
+                        <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
+                        <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
+                            <option value="AC" {{ $item->tipe_kamar === 'AC' ? 'selected' : '' }}>AC</option>
+                            <option value="Non AC" {{ $item->tipe_kamar === 'Non AC' ? 'selected' : '' }}>Non AC</option>
+                        </select>
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id" class="form-label">Lokasi Kos</label>

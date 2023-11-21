@@ -21,8 +21,8 @@ class DashboardController extends Controller
         $totalKamar = Kamar::count();
         $totalLokasiKos = LokasiKos::count();
     
-        $totalKamarSudahTerisi = Kamar::where('status', 'sudah terisi')->count();
-        $totalKamarBelumTerisi = Kamar::where('status', 'belum terisi')->count();
+        $totalKamarSudahTerisi = Kamar::where('status', 'Sudah Terisi')->count();
+        $totalKamarBelumTerisi = Kamar::where('status', 'Belum Terisi')->count();
         $totalTransaksi = Transaksi::count();
         $totalPenyewa = Penyewa::count();
     

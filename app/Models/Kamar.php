@@ -18,7 +18,7 @@ class Kamar extends Model
         'investor_id',
         'nama_investor',
         'harga',
-        'keterangan',
+        'tipe_kamar',
         'fasilitas',
         'status'
     ];
