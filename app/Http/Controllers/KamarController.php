@@ -161,7 +161,6 @@ public function update(Request $request, $id)
         'lokasi_id.required' => 'Lokasi Kos wajib di isi',
     ]);
     
-
     // Check if the status is "belum terisi"
     if ($request->status === 'belum terisi') {
         // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
@@ -180,8 +179,11 @@ public function update(Request $request, $id)
     }
    
     // Periksa apakah ada pembaruan pada harga
-    $harga = $request->filled('modalHargaDecimal') ? intval(str_replace(',', '', $request->modalHargaDecimal)) : intval(str_replace(',', '', $request->modalHarga));
+    // Periksa apakah ada pembaruan pada harga
+    $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
 
+  
+    
     // dd($harga);
 
 
@@ -195,6 +197,7 @@ public function update(Request $request, $id)
 
 
     Kamar::where('id', $id)->update($data);
+    
 
     return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
 }
