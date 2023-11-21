@@ -14,10 +14,10 @@ class CreateKategoriTable extends Migration
     public function up()
     {
         Schema::create('kategori', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('transaksi_id')->nullable();
-            $table->unsignedBigInteger('lokasi_id')->nullable();
-            $table->unsignedBigInteger('penyewa_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->uuid('transaksi_id')->nullable();
+            $table->uuid('lokasi_id')->nullable();
+            $table->uuid('penyewa_id')->nullable();
             $table->string('kategori')->nullable();
             $table->string('jumlah')->nullable();
             $table->integer('total_pendapatan')->nullable();

@@ -14,8 +14,8 @@ class CreateTanggalLaporanTable extends Migration
     public function up()
     {
         Schema::create('tanggal_laporan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('lokasi_id')->nullable(); 
+            $table->uuid('id')->primary();
+            $table->uuid('lokasi_id')->nullable(); 
             $table->string('nama_kos')->nullable(); 
             $table->string('tahun')->nullable(); 
             $table->string('bulan')->nullable(); 

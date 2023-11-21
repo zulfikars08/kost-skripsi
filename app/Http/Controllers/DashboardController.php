@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Investor;
 use App\Models\Kamar;
 use App\Models\LaporanKeuangan;
 use App\Models\LokasiKos;
@@ -30,6 +31,7 @@ class DashboardController extends Controller
         // Filter data for the current month
         $currentMonth = now()->format('m');
         $currentYear = now()->format('Y');
+        $totalInvestor = Investor::count();
         $totalPemasukan = LaporanKeuangan::whereMonth('tanggal', $currentMonth)->whereYear('tanggal', $currentYear)->sum('pemasukan');
         $totalPengeluaran= LaporanKeuangan::whereMonth('tanggal', $currentMonth)->whereYear('tanggal', $currentYear)->sum('pengeluaran');
         $pemasukanData = LaporanKeuangan::whereMonth('tanggal', $currentMonth)->whereYear('tanggal', $currentYear)->get();
@@ -73,6 +75,7 @@ class DashboardController extends Controller
             'totalPenyewaAktif',
             'totalTransaksi',
             'pemasukanData',
+            'totalInvestor',
             'pengeluaranData',
             'pendapatanBersih',
             'months',

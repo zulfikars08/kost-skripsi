@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class Pengeluaran extends Model
 {
     use HasFactory;
 
     protected $table = 'pengeluaran';
-
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'kamar_id',
         'lokasi_id',
@@ -40,11 +42,15 @@ class Pengeluaran extends Model
     {
         return $this->belongsTo(LokasiKos::class, 'lokasi_id', 'id');
     }
-    
+   
     // Automatically generate kode_pengeluaran before saving
     public static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+        });
 
         // Generate kode_pengeluaran before saving a new Pengeluaran
         static::creating(function ($pengeluaran) {

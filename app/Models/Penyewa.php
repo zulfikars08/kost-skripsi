@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Str;
 class Penyewa extends Model
 {
     use HasFactory;
@@ -13,8 +13,9 @@ class Penyewa extends Model
 
     protected $table = 'penyewa'; // Name of the table in the database
     protected $dates = ['deleted_at'];
-    protected $primaryKey = 'id'; // Primary key field name
-    public $incrementing = true; // Set to true if your primary key is auto-incrementing
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     // Fillable fields in the database
     protected $fillable = [
@@ -33,6 +34,14 @@ class Penyewa extends Model
 
     // Define relationships if needed
   // Penyewa.php
+  protected static function boot()
+  {
+      parent::boot();
+
+      static::creating(function ($model) {
+          $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+      });
+  }
   public function kamar()
   {
       return $this->belongsTo(Kamar::class, 'kamar_id');

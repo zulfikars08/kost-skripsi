@@ -15,7 +15,7 @@ class AddColumnPengeluaranToLaporanKeuanganTable extends Migration
     {
         Schema::table('laporan_keuangan', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('pengeluaran_id')->after('pemasukan_id')->nullable();
+            $table->uuid('pengeluaran_id')->after('pemasukan_id')->nullable();
             
             $table->foreign('pengeluaran_id')->references('id')->on('pengeluaran') 
             ->onUpdate('cascade')->onDelete('cascade');

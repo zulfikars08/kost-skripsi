@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Kategori;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class LaporanKeuangan extends Model
 {
     protected $table = 'laporan_keuangan';
-
+    
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'lokasi_id',
         'kamar_id',
@@ -65,6 +68,10 @@ class LaporanKeuangan extends Model
     protected static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+        });
 
         // Event listener for created event
         static::created(function ($model) {

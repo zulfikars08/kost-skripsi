@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class LokasiKos extends Model
 {
     use HasFactory;
@@ -12,11 +12,21 @@ class LokasiKos extends Model
     protected $table = 'lokasi_kos';
     protected $primaryKey = 'id';
     public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'nama_kos',
         'jumlah_kamar',
         'alamat_kos'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+        });
+    }
 
     public function kamars()
     {

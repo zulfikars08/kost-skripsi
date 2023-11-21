@@ -14,13 +14,14 @@ class CreatePenyewaTable extends Migration
     public function up()
     {
         Schema::create('penyewa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            // $table->index('id');
             $table->string('kode_penyewa')->nullable();
             $table->string('nama')->nullable();
             $table->string('nama_kos')->nullable();
             $table->string('no_kamar')->nullable();
-            $table->unsignedBigInteger('kamar_id')->nullable();
-            $table->unsignedBigInteger('lokasi_id')->nullable(); // Added lokasi_id column
+            $table->uuid('kamar_id')->nullable();
+            $table->uuid('lokasi_id')->nullable(); // Added lokasi_id column
             $table->enum('status_penyewa',['aktif','tidak_aktif']);
             $table->timestamps();
             $table->integer('created_by')->nullable()->default(null);

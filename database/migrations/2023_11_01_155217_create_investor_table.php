@@ -14,10 +14,10 @@ class CreateInvestorTable extends Migration
     public function up()
     {
         Schema::create('investor', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('nama')->nullable();
-            $table->unsignedBigInteger('kamar_id')->nullable();
-            $table->unsignedBigInteger('lokasi_id')->nullable();
+            $table->uuid('kamar_id')->nullable();
+            $table->uuid('lokasi_id')->nullable();
             $table->integer('jumlah_pintu')->nullable();
             $table->integer('jumlah_investor')->nullable();
             $table->string('bulan')->nullable();

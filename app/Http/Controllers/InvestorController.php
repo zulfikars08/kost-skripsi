@@ -144,10 +144,10 @@ class InvestorController extends Controller
         $investor->pendapatan_bersih = $lastPendapatanBersih;
 
         // Count the number of investors for the same 'lokasi_id', 'bulan', and 'tahun'
-        $jumlahInvestor = Investor::where('lokasi_id', $lokasiKos->id)
-            ->where('bulan', $request->input('bulan'))
-            ->where('tahun', $request->input('tahun'))
-            ->count();
+        // $jumlahInvestor = Investor::where('lokasi_id', $lokasiKos->id)
+        //     ->where('bulan', $request->input('bulan'))
+        //     ->where('tahun', $request->input('tahun'))
+        //     ->count();
 
         // Update or create the 'jumlah_investor' field in the existing TanggalInvestor record
         TanggalInvestor::updateOrCreate(

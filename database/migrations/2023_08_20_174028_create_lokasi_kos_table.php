@@ -14,7 +14,7 @@ class CreateLokasiKosTable extends Migration
     public function up()
     {
         Schema::create('lokasi_kos', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('nama_kos');
             $table->integer('jumlah_kamar');
             $table->string('alamat_kos');

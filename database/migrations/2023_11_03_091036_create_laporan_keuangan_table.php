@@ -14,12 +14,12 @@ class CreateLaporanKeuanganTable extends Migration
     public function up()
     {
         Schema::create('laporan_keuangan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('lokasi_id')->nullable(); 
-            $table->unsignedBigInteger('kamar_id')->nullable(); 
-            $table->unsignedBigInteger('transaksi_id')->nullable(); 
-            $table->unsignedBigInteger('penyewa_id')->nullable(); 
-            $table->unsignedBigInteger('kategori_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->uuid('lokasi_id')->nullable(); 
+            $table->uuid('kamar_id')->nullable(); 
+            $table->uuid('transaksi_id')->nullable(); 
+            $table->uuid('penyewa_id')->nullable(); 
+            $table->uuid('kategori_id')->nullable();
             $table->string('kode_laporan')->nullable();
             $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
             $table->binary('bukti_pembayaran')->nullable()->default(null);

@@ -14,10 +14,10 @@ class CreateTanggalTransaksiTable extends Migration
     public function up()
     {
         Schema::create('tanggal_transaksi', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('bulan'); // Menggunakan huruf kecil
             $table->string('tahun');
-            $table->unsignedBigInteger('transaksi_id')->nullable(); 
+            $table->uuid('transaksi_id')->nullable(); 
             $table->timestamps();
             $table->unique(['bulan', 'tahun']);
             $table->integer('created_by')->nullable()->default(null);

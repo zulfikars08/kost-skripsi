@@ -14,8 +14,8 @@ class CreatePenghuniTable extends Migration
     public function up()
     {
         Schema::create('penghuni', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('penyewa_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->uuid('penyewa_id')->nullable();
             $table->string('nama')->nullable();
             $table->string('jenis_kelamin')->nullable();
             $table->string('no_hp')->nullable();

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class Kamar extends Model
 {
     use HasFactory;
@@ -12,16 +12,25 @@ class Kamar extends Model
     protected $table = 'kamar';
     protected $primaryKey = 'id';
     public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'lokasi_id',
         'no_kamar',
         'investor_id',
-        'nama_investor',
         'harga',
         'tipe_kamar',
         'fasilitas',
         'status'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+        });
+    }
 
     public function lokasiKos()
     {
@@ -36,5 +45,9 @@ class Kamar extends Model
     public function investor()
     {
         return $this->belongsTo(Investor::class, 'investor_id');
+    }
+    public function tipeKamar()
+    {
+        return $this->hasOne(TipeKamar::class, 'kamar_id');
     }
 }

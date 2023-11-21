@@ -15,7 +15,7 @@ class AddLaporanIdToInvestorTable extends Migration
     {
         Schema::table('investor', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('laporan_id')->after('lokasi_id')->nullable();
+            $table->uuid('laporan_id')->after('lokasi_id')->nullable();
 
             $table->foreign('laporan_id')->references('id')->on('laporan_keuangan')
             ->onUpdate('cascade')->onDelete('cascade');

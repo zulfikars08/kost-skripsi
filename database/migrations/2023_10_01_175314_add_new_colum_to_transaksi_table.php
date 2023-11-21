@@ -15,7 +15,7 @@ class AddNewColumToTransaksiTable extends Migration
     {
         Schema::table('transaksi', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('tanggal_transaksi_id')->nullable();
+            $table->uuid('tanggal_transaksi_id')->nullable();
             $table->foreign('tanggal_transaksi_id')->references('id')->on('tanggal_transaksi')
                 ->onUpdate('cascade')->onDelete('cascade');
         });

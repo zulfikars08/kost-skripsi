@@ -14,10 +14,10 @@ class CreatePemasukanTable extends Migration
     public function up()
     {
         Schema::create('pemasukan', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('kamar_id')->nullable();
-            $table->unsignedBigInteger('lokasi_id')->nullable(); 
-            $table->unsignedBigInteger('transaksi_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->uuid('kamar_id')->nullable();
+            $table->uuid('lokasi_id')->nullable(); 
+            $table->uuid('transaksi_id')->nullable();
             $table->date('bulan')->nullable();
             $table->string('tahun')->nullable();
             $table->date('tanggal')->nullable();

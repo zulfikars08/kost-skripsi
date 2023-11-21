@@ -15,7 +15,7 @@ class AddInvestorIdToKamarTable extends Migration
     {
         Schema::table('kamar', function (Blueprint $table) {
             //
-            $table->unsignedBigInteger('investor_id')->after('lokasi_id')->nullable();
+            $table->uuid('investor_id')->after('lokasi_id')->nullable();
 
             $table->foreign('investor_id')->references('id')->on('investor')
             ->onUpdate('cascade')->onDelete('cascade');

@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class Transaksi extends Model
 {
     protected $table = 'transaksi'; // Specify the table name if it's different from the model name
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         // 'nama_kos',
         'tanggal',
@@ -24,7 +27,14 @@ class Transaksi extends Model
         'penyewa_id',
         'tanggal_transaksi_id'
     ];
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($model) {
+            $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+        });
+    }
     public function penyewa()
     {
         return $this->belongsTo(Penyewa::class, 'penyewa_id');

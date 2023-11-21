@@ -14,10 +14,10 @@ class CreateTransaksiTable extends Migration
     public function up()
     {
         Schema::create('transaksi', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('kamar_id')->nullable();
-            $table->unsignedBigInteger('lokasi_id')->nullable(); //
-            $table->unsignedBigInteger('penyewa_id')->nullable();
+            $table->uuid('id')->primary();
+            $table->uuid('kamar_id')->nullable();
+            $table->uuid('lokasi_id')->nullable(); //
+            $table->uuid('penyewa_id')->nullable();
             $table->integer('jumlah_tarif')->nullable()->default(0);
             $table->date('tanggal')->nullable();
             $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);

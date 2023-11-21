@@ -6,11 +6,12 @@ use App\Models\LokasiKos;
 use App\Models\Penyewa;
 use App\Models\Transaksi;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Str;
 class Kategori extends Model
 {
     protected $table = 'kategori';
-
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'transaksi_id',
         'lokasi_id',
@@ -19,6 +20,15 @@ class Kategori extends Model
         'jumlah',
         'total_pendapatan',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = Str::uuid(); // Automatically set UUID when creating a new record
+        });
+    }
 
     public function transaksi()
     {

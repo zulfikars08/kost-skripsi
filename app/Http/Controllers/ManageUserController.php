@@ -38,7 +38,7 @@ class ManageUserController extends Controller
 
         $user->save();
 
-        return redirect()->route('manage-users.index');
+        return redirect()->to('manage-users')->with('success_add', 'Berhasil menambahkan data');
     }
 
     /**

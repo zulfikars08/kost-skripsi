@@ -45,8 +45,8 @@
                 @foreach($expenditures as $item)
                     <tr>
                         <td>{{ $item->kode_pengeluaran }}</td>
-                        <td>{{ $item->kamar_id }}</td>
-                        <td>{{ $item->lokasi_id }}</td>
+                        <td>{{ $item->kamar->no_kamar }}</td>
+                        <td>{{ $item->lokasiKos->nama_kos }}</td>
                         <td>{{ $item->tanggal }}</td>
                         <td>{{ $item->tipe_pembayaran ? $item->tipe_pembayaran : '-' }}</td>
                         <td>
