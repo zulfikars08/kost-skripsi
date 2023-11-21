@@ -56,7 +56,7 @@ class PenyewaController extends Controller
     {
         $request->validate([
             'nama' => 'required|string',
-            // 'no_kamar' => 'nullable|string',
+            'no_kamar' => 'nullable|string',
             'penghuni_id' => 'nullable|exists:penghuni,id',
             'lokasi_id' => 'nullable|exists:lokasi_kos,id',
             'kamar_id' => 'nullable|exists:kamar,id',
@@ -84,8 +84,8 @@ class PenyewaController extends Controller
         $data = [
             'kode_penyewa' => $penyewaId, // Assign the unique penyewa_id
             'nama' => $request->input('nama'),
-            // 'no_kamar' => $request->input('no_kamar'),
-            // 'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos,
+            'no_kamar' => Kamar::findOrFail($request->input('kamar_id'))->no_kamar,
+            'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos,
             'kamar_id' => $request->input('kamar_id'),
             'lokasi_id' => $request->input('lokasi_id'),
             'status_penyewa' => $request->input('status_penyewa'),
