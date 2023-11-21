@@ -9,13 +9,13 @@ function formatAndSetIntegerValue(input) {
     input.value = formattedValue;
 
     // Mengonversi nilai ke tipe data Integer
-    let harga = parseInt(formattedValue.replace(/[.,]/g, ''), 10);
+    let hargaInteger = parseInt(formattedValue.replace(/[.,]/g, ''), 10);
 
     // Jika hargaInteger adalah NaN (Not a Number), atur nilai menjadi 0
-    if (isNaN(harga)) {
-        harga = 0;
+    if (isNaN(hargaInteger)) {
+        hargaInteger = 0;
     }
 
     // Simpan nilai hargaInteger dalam hidden input atau kirim ke server
-    document.getElementById('harga').value = harga;
+    document.getElementById('hargaInteger').value = hargaInteger;
 }

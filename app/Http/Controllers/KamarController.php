@@ -115,7 +115,7 @@ public function store(Request $request)
     $data = [
         // 'nama_investor' => $request->nama_investor,
         'no_kamar' => $request->no_kamar,
-        'harga' => $request->hargaInteger,
+        'harga' => $request->harga,
         'keterangan' => $request->keterangan,
         'fasilitas' => $fasilitas,
         'status' => $request->status,

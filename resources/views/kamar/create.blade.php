@@ -28,7 +28,7 @@
                                 <input type="text" class="form-control" name="harga" id="harga" oninput="formatAndSetIntegerValue(this)" required>
                             </div>
                             <div class="mb-3 custom-form-group">
-                                <input type="hidden" name="harga" id="harga">
+                                <input type="hidden" name="harga" id="hargaInteger">
                             </div>
                         </div>
                         <div class="col-md-6">
