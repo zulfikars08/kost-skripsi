@@ -17,6 +17,7 @@ class KamarController extends Controller
     public function index(Request $request)
     {
         $katakunci = $request->input('katakunci');
+        $filter_by_tipe_kamar = $request->input('filter_by_tipe_kamar');
         $filter_by_lokasi = $request->input('filter_by_lokasi');
         $filter_by_status = $request->input('filter_by_status');
 
@@ -30,6 +31,9 @@ class KamarController extends Controller
             })
             ->when($filter_by_status, function ($query) use ($filter_by_status) {
                 $query->where('status', $filter_by_status);
+            })
+            ->when($filter_by_tipe_kamar, function ($query) use ($filter_by_tipe_kamar) {
+                $query->where('tipe_kamar', $filter_by_tipe_kamar);
             })
             ->with('lokasiKos')
             ->paginate(5);
@@ -115,6 +119,8 @@ class KamarController extends Controller
             'status' => $request->status,
             'lokasi_id' => $request->lokasi_id,
         ];
+
+        // dd($data);
     
         // Create a new Kamar record
         $kamar = Kamar::create($data);

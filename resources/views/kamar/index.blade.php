@@ -16,8 +16,10 @@
                     <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
                         aria-label="Search" id="search-input">
                     <button class="btn btn-secondary" type="submit">Cari</button>
+                    <button class="btn btn-secondary" type="submit">Reset Filter</button>
                 </div>
             </form>
+            
 
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
                 <i class="fas fa-plus"></i> Tambah Data
@@ -36,7 +38,32 @@
                     <th>No Kamar</th>
                     <th>Harga</th>
                     <th>Fasilitas</th>
-                    <th>Tipe Kamar</th>
+                    {{-- <th>Tipe Kamar</th> --}}
+                    <th>
+                        <!-- Filter by Lokasi Kos dropdown here -->
+                        <div class="dropdown">
+                            <a class="filter-icon dropdown-toggle" href="#" role="button" id="tipeKamarDropdown"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Tipe Kamar
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="tipeKamarDropdown">
+                                <form action="{{ route('kamar.index') }}" method="get">
+                                    <div class="form-group px-2">
+                                        <select class="form-control" name="filter_by_tipe_kamar" id="filterByTipeKamar">
+                                            <option value="">Semua Status</option>
+                                            <option value="AC" {{ request('filter_by_tipe_kamar')==='AC'
+                                                ? 'selected' : '' }}>AC</option>
+                                            <option value="Non AC" {{ request('filter_by_tipe_kamar')==='Non AC'
+                                                ? 'selected' : '' }}>Non AC</option>
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer px-2">
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </th>
                     <th>
                         <!-- Filter by Lokasi Kos dropdown here -->
                         <div class="dropdown">
