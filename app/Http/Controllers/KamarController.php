@@ -42,8 +42,6 @@ class KamarController extends Controller
     }
 
 
-
-
     // ... Other methods in your controller ...
 
 
@@ -53,9 +51,6 @@ class KamarController extends Controller
 
         return view('kamar.index', compact('kamarData'));
     }
-
-
-
 
 
     // Other controller methods such as create, store, edit, update, and destroy...
@@ -116,7 +111,7 @@ class KamarController extends Controller
             'no_kamar' => $request->no_kamar,
             'harga' => $request->harga,
             'tipe_kamar' => $request->tipe_kamar,
-            'fasilitas' => $fasilitas,
+            'fasilitas' =>  $fasilitas,
             'status' => $request->status,
             'lokasi_id' => $request->lokasi_id,
         ];
@@ -136,12 +131,6 @@ class KamarController extends Controller
     }
     
 
-
-
-
-    // ... Other methods ...
-
-
     // Show the form for editing the specified resource
     public function edit($id)
     {
@@ -149,7 +138,7 @@ class KamarController extends Controller
         return view('kamar.edit', compact('kamars'));
     }
 
-    // Update the specified resource in storage.
+
     // Update the specified resource in storage.
 public function update(Request $request, $id)
 {
@@ -157,17 +146,16 @@ public function update(Request $request, $id)
         'harga' => 'required',
         'tipe_kamar' => 'required|in:AC,Non AC',
         'fasilitas' => 'required',
-        'status' => 'required|in:Belum Terisi,Sudah Terisi',
+        // 'status' => 'required|in:Belum Terisi,Sudah Terisi',
         'lokasi_id' => 'required',
     ], [
         'harga.required' => 'Harga wajib di isi',
         'tipe_kamar.required' => 'Tipe kamar wajib di isi',
         'fasilitas.required' => 'Fasilitas wajib di isi',
-        'status.required' => 'Status wajib di isi',
-        'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
+        // 'status.required' => 'Status wajib di isi',
+        // 'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
         'lokasi_id.required' => 'Lokasi Kos wajib di isi',
     ]);
-    
     // Check if the status is "belum terisi"
     if ($request->status === 'Belum Terisi') {
         // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
@@ -184,35 +172,20 @@ public function update(Request $request, $id)
             $penyewa->delete();
         }
     }
-   
-    // Periksa apakah ada pembaruan pada harga
     // Periksa apakah ada pembaruan pada harga
     $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
-
-  
-    
-    // dd($harga);
-
 
     $data = [
         'harga' => $harga,
         'tipe_kamar' => $request->tipe_kamar,
         'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
-        'status' => $request->status,
+        // 'status' => $request->status,
         'lokasi_id' => $request->lokasi_id,
     ];
-
-
     Kamar::where('id', $id)->update($data);
-    
-
     return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
 }
-
-
-
     // routes/web.php
-
 
     // Remove the specified resource from storage.
     public function destroy($id)

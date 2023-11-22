@@ -58,7 +58,7 @@
                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id" class="form-label">Lokasi Kos</label>
                         <select class="form-control" name="lokasi_id" id="lokasi_id" required>
-                            <option value="">Pilih Lokasi Kos</option>
+                            {{-- <option value="">Pilih Lokasi Kos</option> --}}
                             @foreach ($lokasiKosOptions as $lokasiKosOption)
                                 <option value="{{ $lokasiKosOption->id }}">{{ $lokasiKosOption->nama_kos }}</option>
                             @endforeach

@@ -37,11 +37,19 @@
                             <div class="mb-3 custom-form-group">
                                 <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
                                 <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
+                                    <option value="">Pilih Tipe Kamar</option>
+                                    <option value="AC" @if(old('tipe_kamar')==='AC' ) selected @endif>AC</option>
+                                    <option value="Non AC" @if(old('tipe_kamar')==='Non AC' ) selected @endif>Non AC</option>
+                                </select>
+                            </div>
+                            {{-- <div class="mb-3 custom-form-group">
+                                <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
+                                <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
                                     <option value="AC" @if(old('tipe_kamar')==='AC' ) selected @endif>AC</option>
                                     <option value="Non AC" @if(old('tipe_kamar')==='Non AC' ) selected @endif>Non AC
                                     </option>
                                 </select>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <!-- Right column for "Fasilitas" and "Status" -->
@@ -72,12 +80,22 @@
                             <div class="mb-3 custom-form-group">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-control" name="status" id="status" required>
+                                    <option value="">Pilih Status Kamar</option>
                                     <option value="Belum Terisi" @if(old('status')==='Belum Terisi' ) selected @endif>
                                         Belum Terisi</option>
                                     <option value="Sudah Terisi" @if(old('status')==='Sudah Terisi' ) selected @endif>
                                         Sudah Terisi</option>
                                 </select>
                             </div>
+                            {{-- <div class="mb-3 custom-form-group">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-control" name="status" id="status" required>
+                                    <option value="Belum Terisi" @if(old('status')==='Belum Terisi' ) selected @endif>
+                                        Belum Terisi</option>
+                                    <option value="Sudah Terisi" @if(old('status')==='Sudah Terisi' ) selected @endif>
+                                        Sudah Terisi</option>
+                                </select>
+                            </div> --}}
                             <div class="mb-3 custom-form-group">
                                 <label for="harga" class="form-label">Harga</label>
                                 <input type="text" class="form-control" name="harga" id="harga"
