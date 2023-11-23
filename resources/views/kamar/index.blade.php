@@ -141,15 +141,11 @@
                             <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
                         </button>
                         @include('kamar.edit', ['item' => $item])
-                        <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
-                            action="{{ route('kamar.destroy', $item->id) }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" name="submit" class="btn btn-danger btn-sm"
-                                onclick="showSuccessToast()">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
+                        data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px">
+                        <i class="fas fa-trash" style="color: white"></i>
+                    </button>
+                    @include('kamar.delete')
                     </td>
                 </tr>
                 @empty

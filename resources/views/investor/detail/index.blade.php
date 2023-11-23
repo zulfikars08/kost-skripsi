@@ -32,9 +32,8 @@
                     <i class="fas fa-plus"></i> Tambah Data Investor
                 </button>
                 @include('investor.detail.create')
-                <button type="button"
-                    style="display: flex; align-items: center; background-color: rgb(34, 206, 134); color: #fff; border: none; padding: 5px; border-radius: 5px;margin-left: 10px"
-                    data-bs-toggle="modal" data-bs-target="#generateReportModals">
+                <button type="button" class="btn btn-success" style="margin-left: 3px" data-bs-toggle="modal"
+                    data-bs-target="#generateReportModals">
                     Excel
                 </button>
                 @include('investor.export')
@@ -115,14 +114,15 @@
 
                         <td>
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#editModal{{ $investor->id }}">
-                            <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
-                        </button>
+                                data-bs-target="#editModal{{ $investor->id }}">
+                                <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
+                            </button>
                             @include('investor.detail.edit')
-                            <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px">
+                            <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px">
                                 <i class="fas fa-trash" style="color: white"></i>
                             </button>
-                            @include('investor.detail.delete')                      
+                            @include('investor.detail.delete')
                         </td>
                     </tr>
                     @empty

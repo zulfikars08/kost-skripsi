@@ -115,15 +115,15 @@ class InvestorController extends Controller
         $investor->bulan = $request->input('bulan');
         $investor->tahun = $request->input('tahun');
         $investor->lokasi_id = $request->input('lokasi_id');
-
+        
         // Count the number of investors for the same 'lokasi_id'
         $jumlahInvestor = Investor::where('lokasi_id', $investor->lokasi_id)
             ->where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->count();
-
+        $jumlahInvestor += 1;
         // Assign the total number of investors to the 'jumlah_investor' field
-        $investor->jumlah_investor = $jumlahInvestor;
+        // $investor->jumlah_investor = $jumlahInvestor;
 
         // Retrieve LokasiKos based on 'lokasi_id'
         $lokasiKos = LokasiKos::findOrFail($request->input('lokasi_id'));

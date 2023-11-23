@@ -11,9 +11,9 @@
             <!-- SEARCH FORM -->
             <form class="d-flex" action="{{ route('lokasi_kos.index') }}" method="get" id="search-form">
                 <div class="input-group">
-                    {{-- <label class="input-group-text search-input" for="search-input">Search</label> --}}
                     <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
                         aria-label="Search" id="search-input">
+                    <div id="search-suggestions"></div>
                     <button class="btn btn-secondary" type="submit">Cari</button>
                 </div>
             </form>

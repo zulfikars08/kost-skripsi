@@ -45,7 +45,7 @@
                         <td>{{ $penyewa->kode_penyewa }}</td> <!-- Display the ID -->
                         <td>{{ $penyewa->nama }}</td>
                         <td>{{ $penyewa->kamar->no_kamar }}</td>
-                        <td>{{ $penyewa->lokasi->nama_kos }}</td>
+                        <td>{{ $penyewa->lokasiKos->nama_kos }}</td>
                         <td>
                             @if ($penyewa->status_penyewa === 'aktif')
                             <button class="btn btn-success btn-sm">Aktif</button>

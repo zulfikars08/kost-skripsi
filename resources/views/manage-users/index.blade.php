@@ -1,6 +1,7 @@
 @extends('layout.template')
 
 @section('content')
+@include('komponen.pesan')
 <div class="container-fluid">
     <h3 class="text-start"
         style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">

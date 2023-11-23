@@ -19,7 +19,7 @@ class CreateTanggalInvestorTable extends Migration
             $table->string('nama_kos')->nullable(); 
             $table->string('tahun')->nullable(); 
             $table->string('bulan')->nullable();
-            $table->string('jumlah_investor')->nullable();
+            $table->string('jumlah_investor')->nullable()->default(0);
             $table->date('tanggal')->nullable(); 
             $table->timestamps();
 

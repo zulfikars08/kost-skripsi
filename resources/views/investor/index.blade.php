@@ -10,10 +10,10 @@
     
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">
-        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
+        {{-- <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
             <i class="fas fa-plus"></i> Tambah Data Lokasi
         </button>
-        @include('investor.create')
+        @include('investor.create') --}}
         </div>
         <!-- INVESTOR DETAIL TABLE (BASED ON nama_kos) -->
         <div class="table-responsive">

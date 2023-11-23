@@ -16,10 +16,10 @@
                 </div>
             </form>
 
-            <button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#tambahDataModal" >
+            {{-- <button type="button" class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#tambahDataModal" >
                 <i class="fas fa-plus"></i> Tambah Tanggal
             </button>            
-            @include('laporan-keuangan.create')
+            @include('laporan-keuangan.create') --}}
         </div>
 
         <div class="table-responsive">

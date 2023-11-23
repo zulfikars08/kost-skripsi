@@ -47,7 +47,7 @@ class Penyewa extends Model
       return $this->belongsTo(Kamar::class, 'kamar_id');
   }
 
-  public function lokasi()
+  public function lokasiKos()
   {
       return $this->belongsTo(LokasiKos::class, 'lokasi_id');
   }

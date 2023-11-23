@@ -43,14 +43,11 @@
                     <td>{{ $item->jumlah_kamar }}</td>
                     <td>{{ $item->alamat_kos }}</td>
                     <td>
-                        <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
-                            action="{{ route('lokasi_kos.destroy', $item->id)}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" name="submit" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
+                        <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left: 10px" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ $item->id }}">
+                                    <i class="fas fa-trash" style="color: white"></i>
+                                </button>
+                        @include('lokasi_kos.delete')
                         <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-primary btn-sm"> 
                             <i class="fas fa-info-circle" style="color: white"></i></a>
                     </td>

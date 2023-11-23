@@ -28,16 +28,26 @@ class ManageUserController extends Controller
      */
     public function create(Request $request)
     {
-        //
+        // Validate the request data
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email', // Ensure email is unique in the 'users' table
+            'password' => 'required|min:6',
+            'role' => 'required|in:user,admin',
+        ]);
+    
+        // Create a new user instance
         $user = new User();
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->password = bcrypt($request->input('password'));
         $user->role = $request->input('role');
-        // $user->permissions = explode(',', $request->input('permissions'));
-
+        // Add other fields as needed
+    
+        // Save the user
         $user->save();
-
+    
+        // Redirect with success message
         return redirect()->to('manage-users')->with('success_add', 'Berhasil menambahkan data');
     }
 
