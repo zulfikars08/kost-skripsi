@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LokasiKos;
 use App\Models\Penghuni;
 use App\Models\Pengungsi;
 use App\Models\Penyewa;

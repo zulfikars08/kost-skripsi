@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
   <title>Nur Residence</title>
   <link rel="shortcut icon" href="images/logo.png" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,6 +29,7 @@
   <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/search.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('css/loading.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" type="text/css">
 
 
@@ -36,6 +38,9 @@
 </head>
 
 <body>
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
   <nav class="sidebar">
     <h5 class="hide" style="display: flex; align-items: center; justify-content: center;" id="admin">
       <!-- Second icon -->
@@ -206,7 +211,7 @@
   <script src="{{ asset('javascript/chart.js') }}"></script>
   <script src="{{ asset('javascript/autoHarga.js') }}"></script>
   <script src="{{ asset('javascript/autoHargaEdit.js') }}"></script>
-
+  <script src="{{ asset('javascript/loading.js') }}"></script>
 </body>
 
 </html>

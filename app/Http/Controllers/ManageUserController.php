@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class ManageUserController extends Controller
 {
     /**
@@ -28,27 +28,41 @@ class ManageUserController extends Controller
      */
     public function create(Request $request)
     {
-        // Validate the request data
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email', // Ensure email is unique in the 'users' table
-            'password' => 'required|min:6',
-            'role' => 'required|in:user,admin',
-        ]);
+        try {
+            // Begin a database transaction
+            DB::beginTransaction();
     
-        // Create a new user instance
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
-        $user->role = $request->input('role');
-        // Add other fields as needed
+            // Validate the request data
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email', // Ensure email is unique in the 'users' table
+                'password' => 'required|min:6',
+                'role' => 'required|in:user,admin',
+            ]);
     
-        // Save the user
-        $user->save();
+            // Create a new user instance
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->password = bcrypt($request->input('password'));
+            $user->role = $request->input('role');
+            // Add other fields as needed
     
-        // Redirect with success message
-        return redirect()->to('manage-users')->with('success_add', 'Berhasil menambahkan data');
+            // Save the user
+            $user->save();
+    
+            // Commit the database transaction
+            DB::commit();
+    
+            // Redirect with success message
+            return redirect()->to('manage-users')->with('success_add', 'Berhasil menambahkan data');
+        } catch (\Exception $e) {
+            // Rollback the database transaction in case of an exception
+            DB::rollBack();
+    
+            // Log or handle the exception as needed
+            return redirect()->back()->with('error', 'Gagal menambahkan data. ' . $e->getMessage());
+        }
     }
 
     /**
@@ -99,26 +113,46 @@ class ManageUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
     public function update(Request $request, $id)
     {
-        //
-        $user = User::find($id);
-
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'role' => 'required|in:user,admin', // You can define your role values here
-        ]);
-
-        $user->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'role' => $request->input('role'),
-        ]);
-
-        return redirect()->route('manage-users.index')
-            ->with('success', 'User updated successfully');
+        try {
+            // Begin a database transaction
+            DB::beginTransaction();
+    
+            // Find the user by ID
+            $user = User::find($id);
+    
+            // Validate the request data
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+                'role' => 'required|in:user,admin', // You can define your role values here
+            ]);
+    
+            // Update the user data
+            $user->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'role' => $request->input('role'),
+            ]);
+    
+            // Commit the database transaction
+            DB::commit();
+    
+            // Redirect with success message
+            return redirect()->route('manage-users.index')
+                ->with('success', 'User updated successfully');
+        } catch (\Exception $e) {
+            // Rollback the database transaction in case of an exception
+            DB::rollBack();
+    
+            // Log or handle the exception as needed
+            return redirect()->back()->with('error', 'Failed to update user. ' . $e->getMessage());
+        }
     }
+    
 
     /**
      * Remove the specified resource from storage.

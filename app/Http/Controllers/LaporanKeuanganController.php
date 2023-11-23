@@ -12,7 +12,8 @@ use App\Models\TanggalLaporan;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 class LaporanKeuanganController extends Controller
 {
     /**
@@ -108,100 +109,124 @@ class LaporanKeuanganController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        // Validate input form fields (already implemented in your code)
-
-        // Capture the selected values from the form
-        $tanggal = date('Y-m-d', strtotime($request->input('tanggal')));
-        $bulan = date('m', strtotime($tanggal));
-        $tahun = date('Y', strtotime($tanggal));
-
-        $kamar = Kamar::findOrFail($request->input('kamar_id'));
-
-        $lokasiKos = LokasiKos::findOrFail($request->input('lokasi_id'));
-        $nama_kos = $lokasiKos->nama_kos;
-
-        $tanggalInvestor = TanggalLaporan::where('nama_kos', $nama_kos)
-            ->where('bulan', $bulan)
-            ->where('tahun', $tahun)
-            ->first();
-
-        if (!$tanggalInvestor) {
-            // Redirect with an error message
-            return redirect()->back()->with('error', 'Data TanggalInvestor belum tersedia untuk nama_kos, bulan, dan tahun ini');
-        }
-        // Initialize pemasukan and pengeluaran
-        $prevPendapatanBersih = LaporanKeuangan::where('lokasi_id', $lokasiKos->id)
-            ->where('bulan', $bulan)
-            ->where('tahun', $tahun)
-            ->orderBy('id', 'desc')
-            ->first();
-
-        // Initialize pemasukan and pengeluaran
-        $jenis = $request->input('jenis');
-        $pemasukan = ($jenis === 'pemasukan') ? $request->input('pemasukan') : 0;
-        $pengeluaran = ($jenis === 'pengeluaran') ? $request->input('pengeluaran') : 0;
-
-        // Calculate pendapatanBersih
-        if ($prevPendapatanBersih) {
-            $pendapatanBersih = $prevPendapatanBersih->pendapatan_bersih + $pemasukan - $pengeluaran;
-        } else {
-            $pendapatanBersih = $pemasukan - $pengeluaran;
-        }
-
-        // Create a new LaporanKeuangan instance
-        $laporanKeuangan = new LaporanKeuangan;
-
-        // Fill in the required columns
-        $laporanKeuangan->tanggal = $tanggal;
-        $laporanKeuangan->bulan = $bulan;
-        $laporanKeuangan->tahun = $tahun;
-        $laporanKeuangan->kamar_id = $kamar->id;
-        $laporanKeuangan->lokasi_id = $lokasiKos->id;
-        $laporanKeuangan->jenis = $jenis;
-        $laporanKeuangan->tipe_pembayaran = $request->input('tipe_pembayaran');
-        $laporanKeuangan->bukti_pembayaran = $request->input('bukti_pembayaran');
-        $laporanKeuangan->tanggal_pembayaran_awal = $request->input('tanggal_pembayaran_awal');
-        $laporanKeuangan->tanggal_pembayaran_akhir = $request->input('tanggal_pembayaran_akhir');
-        $laporanKeuangan->status_pembayaran = $request->input('status_pembayaran');
-        $laporanKeuangan->keterangan = $request->input('keterangan');
-        $laporanKeuangan->nama_kos = $nama_kos;
-
-        // Assign pemasukan and pengeluaran directly to the database columns
-        $laporanKeuangan->pemasukan = $pemasukan;
-        $laporanKeuangan->pengeluaran = $pengeluaran;
-
-        // Assign pendapatanBersih directly to the database column
-        $laporanKeuangan->pendapatan_bersih = $pendapatanBersih;
-
-        if ($request->hasFile('bukti_pembayaran')) {
-            $file = $request->file('bukti_pembayaran');
-            $fileName = time() . '_' . $file->getClientOriginalName(); // Appending timestamp to ensure uniqueness
-            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
-            // Change the directory name here
-            $laporanKeuangan->bukti_pembayaran = $filePath; // Use -> instead of array notation
-        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
-            $laporanKeuangan->bukti_pembayaran = 'Cash Payment'; // Use -> instead of array notation
-        }
-        // Save the data to the database
-
-        if ($laporanKeuangan->save()) {
-            // Update pendapatan bersih
-            $this->updatePendapatanBersih($laporanKeuangan);
-
-            // Redirect with success message
-            return redirect()->route('laporan-keuangan.detail.show', [
-                'lokasi_id' => $lokasiKos->id,
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-            ])->with('success_add', 'Berhasil menambahkan data');
-        } else {
-            // Redirect with an error message
-            return redirect()->back()->with('error', 'Gagal menambahkan data');
-        }
-    }
-
+   
+     public function store(Request $request)
+     {
+         try {
+             // Validate input form fields (already implemented in your code)
+     
+             // Capture the selected values from the form
+             $tanggal = date('Y-m-d', strtotime($request->input('tanggal')));
+             $bulan = date('m', strtotime($tanggal));
+             $tahun = date('Y', strtotime($tanggal));
+     
+             $kamar = Kamar::findOrFail($request->input('kamar_id'));
+     
+             $lokasiKos = LokasiKos::findOrFail($request->input('lokasi_id'));
+             $nama_kos = $lokasiKos->nama_kos;
+     
+             $tanggalInvestor = TanggalLaporan::where('nama_kos', $nama_kos)
+                 ->where('bulan', $bulan)
+                 ->where('tahun', $tahun)
+                 ->first();
+     
+             if (!$tanggalInvestor) {
+                 // Redirect with an error message
+                 return redirect()->back()->with('error', 'Data TanggalInvestor belum tersedia untuk nama_kos, bulan, dan tahun ini');
+             }
+     
+             // Initialize pemasukan and pengeluaran
+             $prevPendapatanBersih = LaporanKeuangan::where('lokasi_id', $lokasiKos->id)
+                 ->where('bulan', $bulan)
+                 ->where('tahun', $tahun)
+                 ->orderBy('id', 'desc')
+                 ->first();
+     
+             // Initialize pemasukan and pengeluaran
+             $jenis = $request->input('jenis');
+             $pemasukan = ($jenis === 'pemasukan') ? $request->input('pemasukan') : 0;
+             $pengeluaran = ($jenis === 'pengeluaran') ? $request->input('pengeluaran') : 0;
+     
+             // Calculate pendapatanBersih
+             if ($prevPendapatanBersih) {
+                 $pendapatanBersih = $prevPendapatanBersih->pendapatan_bersih + $pemasukan - $pengeluaran;
+             } else {
+                 $pendapatanBersih = $pemasukan - $pengeluaran;
+             }
+     
+             // Create a new LaporanKeuangan instance
+             $laporanKeuangan = new LaporanKeuangan;
+     
+             // Fill in the required columns
+             $laporanKeuangan->tanggal = $tanggal;
+             $laporanKeuangan->bulan = $bulan;
+             $laporanKeuangan->tahun = $tahun;
+             $laporanKeuangan->kamar_id = $kamar->id;
+             $laporanKeuangan->lokasi_id = $lokasiKos->id;
+             $laporanKeuangan->jenis = $jenis;
+             $laporanKeuangan->tipe_pembayaran = $request->input('tipe_pembayaran');
+             $laporanKeuangan->bukti_pembayaran = $request->input('bukti_pembayaran');
+             $laporanKeuangan->tanggal_pembayaran_awal = $request->input('tanggal_pembayaran_awal');
+             $laporanKeuangan->tanggal_pembayaran_akhir = $request->input('tanggal_pembayaran_akhir');
+             $laporanKeuangan->status_pembayaran = $request->input('status_pembayaran');
+             $laporanKeuangan->keterangan = $request->input('keterangan');
+             $laporanKeuangan->nama_kos = $nama_kos;
+     
+             // Assign pemasukan and pengeluaran directly to the database columns
+             $laporanKeuangan->pemasukan = $pemasukan;
+             $laporanKeuangan->pengeluaran = $pengeluaran;
+     
+             // Assign pendapatanBersih directly to the database column
+             $laporanKeuangan->pendapatan_bersih = $pendapatanBersih;
+     
+             if ($request->hasFile('bukti_pembayaran')) {
+                 $file = $request->file('bukti_pembayaran');
+                 $fileName = time() . '_' . $file->getClientOriginalName(); // Appending timestamp to ensure uniqueness
+                 $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+                 // Change the directory name here
+                 $laporanKeuangan->bukti_pembayaran = $filePath; // Use -> instead of array notation
+             } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+                 $laporanKeuangan->bukti_pembayaran = 'Cash Payment'; // Use -> instead of array notation
+             }
+     
+             // Start a database transaction
+             DB::beginTransaction();
+     
+             // Save the data to the database
+             if ($laporanKeuangan->save()) {
+                 // Update pendapatan bersih
+                 $this->updatePendapatanBersih($laporanKeuangan);
+     
+                 // Commit the database transaction
+                 DB::commit();
+     
+                 // Redirect with success message
+                 return redirect()->route('laporan-keuangan.detail.show', [
+                     'lokasi_id' => $lokasiKos->id,
+                     'bulan' => $bulan,
+                     'tahun' => $tahun,
+                 ])->with('success_add', 'Berhasil menambahkan data');
+             } else {
+                 // If save fails, roll back the database transaction
+                 DB::rollBack();
+     
+                 // Redirect with an error message
+                 return redirect()->back()->with('error', 'Gagal menambahkan data');
+             }
+     
+         } catch (\Exception $e) {
+             // If an exception occurs, handle it here
+             // Roll back the database transaction
+             DB::rollBack();
+     
+             // Log the exception or show an error message
+             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+         }
+     }
+     
+     // Additional method to update pendapatan bersih
+   
+     
 
 
 
@@ -266,71 +291,99 @@ class LaporanKeuanganController extends Controller
      */
     // LaporanKeuanganController.php
 
+   
+
+
+
+    
     public function update(Request $request, $id)
     {
-        // Validate the request data
-        $request->validate([
-            'tanggal' => 'nullable|date',
-            'jenis' => 'nullable|in:pemasukan,pengeluaran',
-            'pemasukan' => 'nullable|numeric',
-            'pengeluaran' => 'nullable|numeric',
-            'tipe_pembayaran' => 'required|string',
-            'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
-            'tanggal_pembayaran_awal' => 'nullable|date',
-            'tanggal_pembayaran_akhir' => 'nullable|date',
-            'status_pembayaran' => 'nullable|in:lunas,cicil,belum-lunas',
-            'keterangan' => 'nullable|string',
-        ]);
-        
-
-        // Find the laporan-keuangan by ID
-        $laporan = LaporanKeuangan::findOrFail($id);
-        $jenis = $request->input('jenis');
-        $pemasukan = ($jenis === 'pemasukan') ? $request->input('pemasukan') : 0;
-        $pengeluaran = ($jenis === 'pengeluaran') ? $request->input('pengeluaran') : 0;
-        $prevPemasukan = LaporanKeuangan::where('lokasi_id', $laporan->lokasi_id)
-            ->where('tanggal', '<', $laporan->tanggal)
-            ->orderBy('tanggal', 'desc')
-            ->value('pemasukan');
-        $prevPengeluaran = LaporanKeuangan::where('lokasi_id', $laporan->lokasi_id)
-            ->where('tanggal', '<', $laporan->tanggal)
-            ->orderBy('tanggal', 'desc')
-            ->value('pengeluaran');
-        // Calculate pendapatanBersih
-        $totalPemasukan = $prevPemasukan + $pemasukan;
-        $totalPengeluaran = $prevPengeluaran + $pengeluaran;
-        $pendapatan_bersih = $totalPemasukan - $totalPengeluaran;
-        if ($request->hasFile('bukti_pembayaran')) {
-            $file = $request->file('bukti_pembayaran');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
-            $laporan->bukti_pembayaran = $filePath;
-        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
-            $laporan->bukti_pembayaran = null; // Set bukti_pembayaran to null for tunai payments
+        try {
+            // Validate the request data
+            $request->validate([
+                'tanggal' => 'nullable|date',
+                'jenis' => 'nullable|in:pemasukan,pengeluaran',
+                'pemasukan' => 'nullable|numeric',
+                'pengeluaran' => 'nullable|numeric',
+                'tipe_pembayaran' => 'required|string',
+                'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
+                'tanggal_pembayaran_awal' => 'nullable|date',
+                'tanggal_pembayaran_akhir' => 'nullable|date',
+                'status_pembayaran' => 'nullable|in:lunas,cicil,belum-lunas',
+                'keterangan' => 'nullable|string',
+            ]);
+    
+            // Find the laporan-keuangan by ID
+            $laporan = LaporanKeuangan::findOrFail($id);
+    
+            $jenis = $request->input('jenis');
+            $pemasukan = ($jenis === 'pemasukan') ? $request->input('pemasukan') : 0;
+            $pengeluaran = ($jenis === 'pengeluaran') ? $request->input('pengeluaran') : 0;
+    
+            $prevPemasukan = LaporanKeuangan::where('lokasi_id', $laporan->lokasi_id)
+                ->where('tanggal', '<', $laporan->tanggal)
+                ->orderBy('tanggal', 'desc')
+                ->value('pemasukan');
+    
+            $prevPengeluaran = LaporanKeuangan::where('lokasi_id', $laporan->lokasi_id)
+                ->where('tanggal', '<', $laporan->tanggal)
+                ->orderBy('tanggal', 'desc')
+                ->value('pengeluaran');
+    
+            // Calculate pendapatanBersih
+            $totalPemasukan = $prevPemasukan + $pemasukan;
+            $totalPengeluaran = $prevPengeluaran + $pengeluaran;
+            $pendapatan_bersih = $totalPemasukan - $totalPengeluaran;
+    
+            if ($request->hasFile('bukti_pembayaran')) {
+                $file = $request->file('bukti_pembayaran');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+                $laporan->bukti_pembayaran = $filePath;
+            } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+                $laporan->bukti_pembayaran = null; // Set bukti_pembayaran to null for tunai payments
+            }
+    
+            // Start the database transaction
+            DB::beginTransaction();
+    
+            try {
+                // Update the laporan-keuangan with the request data
+                $laporan->update([
+                    'tanggal' => $request->input('tanggal'),
+                    'jenis' => $jenis,
+                    'pemasukan' => $pemasukan,
+                    'pengeluaran' => $pengeluaran,
+                    'keterangan' => $request->input('keterangan'),
+                    'pendapatan_bersih' => $pendapatan_bersih,
+                    'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+                    'bukti_pembayaran' => $laporan->bukti_pembayaran,
+                    'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
+                    'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
+                    'status_pembayaran' => $request->input('status_pembayaran'),
+                ]);
+    
+                // Update pendapatan bersih
+                $this->updatePendapatanBersih($laporan);
+    
+                // Commit the transaction
+                DB::commit();
+    
+                // Redirect back with a success message
+                return redirect()->back()->with('success_update', 'Data laporan keuangan berhasil diperbarui.');
+            } catch (\Exception $e) {
+                // Rollback the transaction in case of an exception
+                DB::rollback();
+    
+                // Log or handle the exception as needed
+                return redirect()->back()->with('error', 'Gagal memperbarui data laporan keuangan.');
+            }
+        } catch (QueryException $e) {
+            // Log or handle the exception as needed
+            return redirect()->back()->with('error', 'Gagal memperbarui data laporan keuangan.');
         }
-        // dd($pendapatan_bersih);
-        // Update the laporan-keuangan with the request data
-        $laporan->update([
-            'tanggal' => $request->input('tanggal'),
-            'jenis' => $jenis,
-            'pemasukan' => $pemasukan,
-            'pengeluaran' => $pengeluaran,
-            'keterangan' => $request->input('keterangan'),
-            'pendapatan_bersih' => $pendapatan_bersih,
-            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
-            'bukti_pembayaran' => $laporan->bukti_pembayaran,
-            'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
-            'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
-            'status_pembayaran' => $request->input('status_pembayaran'),
-        ]);
-
-        // Update pendapatan bersih
-        $this->updatePendapatanBersih($laporan);
-
-        // Redirect back with a success message
-        return redirect()->back()->with('success_update', 'Data laporan keuangan berhasil diperbarui.');
     }
-
+    
     private function updatePendapatanBersih($laporanKeuangan)
     {
         $lokasiId = $laporanKeuangan->lokasi_id;

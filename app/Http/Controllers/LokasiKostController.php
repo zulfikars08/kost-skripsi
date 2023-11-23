@@ -6,7 +6,7 @@ use App\Models\Investor;
 use App\Models\LokasiKos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\DB;
 class LokasiKostController extends Controller
 {
     /**
@@ -59,31 +59,48 @@ class LokasiKostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+ 
+
+public function store(Request $request)
 {
-    // Validate the request data
-    $request->validate([
-        'nama_kos' => 'required|string|unique:lokasi_kos,nama_kos',
-        'alamat_kos' => 'required',
-    ], [
-        'nama_kos.required' => 'Nama kos wajib di isi',
-        'nama_kos.unique' => 'Nama kos sudah digunakan',
-        'alamat_kos.required' => 'Alamat wajib di isi',
-    ]);
+    try {
+        // Start a database transaction
+        DB::beginTransaction();
 
-    // Calculate the total number of kamar based on the sum of jumlah_pintu for the specified nama_kos
-    
-    // Create a new LokasiKos record
-    $data = [
-        'lokasi_id' => $request->lokasi_id,
-        'nama_kos' => $request->nama_kos,
-        'jumlah_kamar' => $request->jumlah_kamar,
-        'alamat_kos' => $request->alamat_kos,
-    ];
-  
-    LokasiKos::create($data);
+        // Validate the request data
+        $request->validate([
+            'nama_kos' => 'required|string|unique:lokasi_kos,nama_kos',
+            'alamat_kos' => 'required',
+        ], [
+            'nama_kos.required' => 'Nama kos wajib di isi',
+            'nama_kos.unique' => 'Nama kos sudah digunakan',
+            'alamat_kos.required' => 'Alamat wajib di isi',
+        ]);
 
-    return redirect()->to('lokasi_kos')->with('success_add', 'Berhasil menambahkan data');
+        // Calculate the total number of kamar based on the sum of jumlah_pintu for the specified nama_kos
+
+        // Create a new LokasiKos record
+        $data = [
+            'lokasi_id' => $request->lokasi_id,
+            'nama_kos' => $request->nama_kos,
+            'jumlah_kamar' => $request->jumlah_kamar,
+            'alamat_kos' => $request->alamat_kos,
+        ];
+
+        LokasiKos::create($data);
+
+        // Commit the database transaction
+        DB::commit();
+
+        return redirect()->to('lokasi_kos')->with('success_add', 'Berhasil menambahkan data');
+
+    } catch (\Exception $e) {
+        // If an exception occurs, roll back the database transaction
+        DB::rollBack();
+
+        // Handle the exception, you can log it or show an error message.
+        return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+    }
 }
 
 

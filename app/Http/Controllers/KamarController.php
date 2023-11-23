@@ -10,6 +10,7 @@ use App\Models\LokasiKos;
 use App\Models\Penyewa;
 use App\Models\TipeKamar;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class KamarController extends Controller
 {
@@ -70,70 +71,85 @@ class KamarController extends Controller
    
     public function store(Request $request)
     {
-        // Check if the combination of no_kamar and lokasi_id already exists
-        $existingKamar = Kamar::where('no_kamar', $request->no_kamar)
-            ->where('lokasi_id', $request->lokasi_id)
-            ->first();
+        try {
+            // Start a database transaction
+            DB::beginTransaction();
     
-        if ($existingKamar) {
-            return redirect()->back()->with('errorNoKamar', 'Nomor kamar sudah digunakan untuk lokasi kos ini.');
+            // Check if the combination of no_kamar and lokasi_id already exists
+            $existingKamar = Kamar::where('no_kamar', $request->no_kamar)
+                ->where('lokasi_id', $request->lokasi_id)
+                ->first();
+    
+            if ($existingKamar) {
+                return redirect()->back()->with('errorNoKamar', 'Nomor kamar sudah digunakan untuk lokasi kos ini.');
+            }
+    
+            $request->validate([
+                'no_kamar' => [
+                    'required',
+                    'string',
+                    Rule::unique('kamar')->where(function ($query) use ($request) {
+                        return $query->where('no_kamar', $request->no_kamar)
+                            ->where('lokasi_id', $request->lokasi_id);
+                    }),
+                ],
+                'harga' => 'required',
+                'tipe_kamar' => 'required|in:AC,Non AC',
+                'fasilitas' => 'required|array',
+                'fasilitas.*' => 'in:AC,Lemari,Kasur,TV',
+                'status' => 'required|in:Belum Terisi,Sudah Terisi',
+                'lokasi_id' => 'required|exists:lokasi_kos,id',
+            ], [
+                // Custom error messages...
+                'no_kamar.required' => 'Nomor kamar wajib di isi',
+                'no_kamar.unique' => 'Nomor kamar sudah digunakan untuk lokasi kos ini',
+                'harga.required' => 'Harga wajib di isi',
+                'tipe_kamar.required' => 'Tipe kamar wajib di isi',
+                'fasilitas.required' => 'Fasilitas wajib di isi',
+                'status.required' => 'Status wajib di isi',
+                'status.in' => 'Status harus salah satu dari "Belum Terisi" atau "Sudah Terisi"',
+                'lokasi_id.required' => 'Lokasi kos wajib dipilih',
+                'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
+            ]);
+    
+            // Convert array to string
+            $fasilitas = implode(',', $request->input('fasilitas'));
+    
+            // Use the validated data
+            $data = [
+                'no_kamar' => $request->no_kamar,
+                'harga' => $request->harga,
+                'tipe_kamar' => $request->tipe_kamar,
+                'fasilitas' => $fasilitas,
+                'status' => $request->status,
+                'lokasi_id' => $request->lokasi_id,
+            ];
+    
+            // Create a new Kamar record
+            $kamar = Kamar::create($data);
+    
+            // Create a new TipeKamar record
+            TipeKamar::create([
+                'kamar_id' => $kamar->id,
+                'no_kamar' => $kamar->no_kamar,
+                'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos, // Use the value from the data array
+                'lokasi_id' => $kamar->lokasi_id,
+                'tipe_kamar' => $data['tipe_kamar'],
+            ]);
+    
+            // Commit the database transaction
+            DB::commit();
+    
+            $page = $request->input('page', 1);
+            return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar dan investor');
+    
+        } catch (\Exception $e) {
+            // If an exception occurs, roll back the database transaction
+            DB::rollBack();
+    
+            // Handle the exception, you can log it or show an error message.
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
-    
-        $request->validate([
-            'no_kamar' => [
-                'required',
-                'string',
-                Rule::unique('kamar')->where(function ($query) use ($request) {
-                    return $query->where('no_kamar', $request->no_kamar)
-                        ->where('lokasi_id', $request->lokasi_id);
-                }),
-            ],
-            'harga' => 'required',
-            'tipe_kamar' => 'required|in:AC,Non AC',
-            'fasilitas' => 'required|array',
-            'fasilitas.*' => 'in:AC,Lemari,Kasur,TV',
-            'status' => 'required|in:Belum Terisi,Sudah Terisi',
-            'lokasi_id' => 'required|exists:lokasi_kos,id',
-        ], [
-            // Custom error messages...
-            'no_kamar.required' => 'Nomor kamar wajib di isi',
-            'no_kamar.unique' => 'Nomor kamar sudah digunakan untuk lokasi kos ini',
-            'harga.required' => 'Harga wajib di isi',
-            'tipe_kamar.required' => 'Tipe kamar wajib di isi',
-            'fasilitas.required' => 'Fasilitas wajib di isi',
-            'status.required' => 'Status wajib di isi',
-            'status.in' => 'Status harus salah satu dari "Belum Terisi" atau "Sudah Terisi"',
-            'lokasi_id.required' => 'Lokasi kos wajib dipilih',
-            'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
-        ]);
-    
-        // Convert array to string
-        $fasilitas = implode(',', $request->input('fasilitas'));
-    
-        // Use the validated data
-        $data = [
-            'no_kamar' => $request->no_kamar,
-            'harga' => $request->harga,
-            'tipe_kamar' => $request->tipe_kamar,
-            'fasilitas' =>  $fasilitas,
-            'status' => $request->status,
-            'lokasi_id' => $request->lokasi_id,
-        ];
-
-        // dd($data);
-    
-        // Create a new Kamar record
-        $kamar = Kamar::create($data);
-        // Create a new TipeKamar record
-        TipeKamar::create([
-            'kamar_id' => $kamar->id,
-            'no_kamar' => $kamar->no_kamar,
-            'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos, // Use the value from the data array
-            'lokasi_id' => $kamar->lokasi_id,
-            'tipe_kamar' => $data['tipe_kamar'],
-        ]);
-        $page = $request->input('page', 1);
-        return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar dan investor');
     }
     
 
@@ -146,51 +162,68 @@ class KamarController extends Controller
 
 
     // Update the specified resource in storage.
-public function update(Request $request, $id)
+    public function update(Request $request, $id)
 {
-    $request->validate([
-        'harga' => 'required',
-        'tipe_kamar' => 'required|in:AC,Non AC',
-        'fasilitas' => 'required',
-        // 'status' => 'required|in:Belum Terisi,Sudah Terisi',
-        'lokasi_id' => 'required',
-    ], [
-        'harga.required' => 'Harga wajib di isi',
-        'tipe_kamar.required' => 'Tipe kamar wajib di isi',
-        'fasilitas.required' => 'Fasilitas wajib di isi',
-        // 'status.required' => 'Status wajib di isi',
-        // 'status.in' => 'Status harus salah satu dari "belum terisi" atau "sudah terisi"',
-        'lokasi_id.required' => 'Lokasi Kos wajib di isi',
-    ]);
-    // Check if the status is "belum terisi"
-    if ($request->status === 'Belum Terisi') {
-        // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
-        $kamar = Kamar::findOrFail($id);
-        $lokasiId = $kamar->lokasi_id;
-        $noKamar = $kamar->no_kamar;
+    try {
+        // Begin a database transaction
+        DB::beginTransaction();
 
-        $penyewa = Penyewa::where('no_kamar', $noKamar)
-            ->where('lokasi_id', $lokasiId)
-            ->first();
+        $request->validate([
+            'harga' => 'required',
+            'tipe_kamar' => 'required|in:AC,Non AC',
+            'fasilitas' => 'required',
+            'lokasi_id' => 'required',
+        ], [
+            'harga.required' => 'Harga wajib di isi',
+            'tipe_kamar.required' => 'Tipe kamar wajib di isi',
+            'fasilitas.required' => 'Fasilitas wajib di isi',
+            'lokasi_id.required' => 'Lokasi Kos wajib di isi',
+        ]);
 
-        if ($penyewa) {
-            // Delete the related Penyewa record
-            $penyewa->delete();
+        // Check if the status is "belum terisi"
+        if ($request->status === 'Belum Terisi') {
+            // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
+            $kamar = Kamar::findOrFail($id);
+            $lokasiId = $kamar->lokasi_id;
+            $noKamar = $kamar->no_kamar;
+
+            $penyewa = Penyewa::where('no_kamar', $noKamar)
+                ->where('lokasi_id', $lokasiId)
+                ->first();
+
+            if ($penyewa) {
+                // Delete the related Penyewa record
+                $penyewa->delete();
+            }
         }
-    }
-    // Periksa apakah ada pembaruan pada harga
-    $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
 
-    $data = [
-        'harga' => $harga,
-        'tipe_kamar' => $request->tipe_kamar,
-        'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
-        // 'status' => $request->status,
-        'lokasi_id' => $request->lokasi_id,
-    ];
-    Kamar::where('id', $id)->update($data);
-    return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
+        // Check for updates on the harga field
+        $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
+
+        $data = [
+            'harga' => $harga,
+            'tipe_kamar' => $request->tipe_kamar,
+            'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
+            'lokasi_id' => $request->lokasi_id,
+        ];
+
+        // Update the Kamar record
+        Kamar::where('id', $id)->update($data);
+
+        // Commit the database transaction
+        DB::commit();
+
+        return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
+
+    } catch (\Exception $e) {
+        // Rollback the database transaction in case of an exception
+        DB::rollBack();
+
+        // Handle the exception, you can log it or show an error message.
+        return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+    }
 }
+    
     // routes/web.php
 
     // Remove the specified resource from storage.
