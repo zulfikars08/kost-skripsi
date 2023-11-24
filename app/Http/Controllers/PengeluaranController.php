@@ -208,13 +208,13 @@ class PengeluaranController extends Controller
             // Commit the database transaction
             DB::commit();
     
-            return redirect()->route('pengeluaran.index')->with('success', 'Data pengeluaran berhasil ditambahkan.');
+            return redirect()->route('pengeluaran.index')->with('success_add', 'Data pengeluaran berhasil ditambahkan');
         } catch (\Exception $e) {
             // Rollback the database transaction in case of an exception
             DB::rollBack();
     
             // Log or handle the exception as needed
-            return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan data pengeluaran');
         }
     }
     
@@ -274,11 +274,11 @@ class PengeluaranController extends Controller
             $pengeluaran->delete();
 
             // Optionally, you can send a success message back
-            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pemasukan berhasil dihapus.');
+            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pengeluaran berhasil dihapus.');
         } catch (\Exception $e) {
             // Handle any exceptions or errors that may occur during deletion
             // Log the error or return an error response
-            return response()->json(['error' => 'Failed to delete item'], 500);
+            return response()->json(['error' => 'Data pengeluaran gagal dihapus'], 500);
         }
     }
 }

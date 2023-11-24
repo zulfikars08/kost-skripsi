@@ -105,7 +105,7 @@ class TanggalInvestorController extends Controller
         // Save the TanggalInvestor record to the database
         $tanggalInvestor->save();
     
-        return redirect()->route('investor.index')->with('success_add', 'Data Tanggal Laporan berhasil disimpan.');
+        return redirect()->route('investor.index')->with('success_add', 'Data Tanggal Laporan berhasil disimpan');
     }
     
     

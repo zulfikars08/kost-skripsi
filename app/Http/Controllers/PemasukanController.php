@@ -220,7 +220,7 @@ class PemasukanController extends Controller
             DB::rollBack();
 
             // Log or handle the exception as needed
-            return redirect()->back()->with('error', 'Gagal menambahkan data pemasukan. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan data pemasukan');
         }
     }
 
@@ -292,18 +292,8 @@ class PemasukanController extends Controller
             'keterangan' => $request->input('keterangan'),
             // Add other fields as needed
         ]);
-
-
-
-        return redirect()->route('pemasukan.index')->with('success_update', 'Data pemasukan berhasil diupdate.');
+        return redirect()->route('pemasukan.index')->with('success_update', 'Data pemasukan berhasil diupdate');
     }
-
-
-
-
-
-
-
 
 
     /**
@@ -322,11 +312,11 @@ class PemasukanController extends Controller
             $pemasukan->delete();
 
             // Optionally, you can send a success message back
-            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pemasukan berhasil dihapus.');
+            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pemasukan berhasil dihapus');
         } catch (\Exception $e) {
             // Handle any exceptions or errors that may occur during deletion
             // Log the error or return an error response
-            return response()->json(['error' => 'Failed to delete item'], 500);
+            return response()->json(['error' => 'Data pemasukan gagal di hapus'], 500);
         }
     }
 }

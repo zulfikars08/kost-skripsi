@@ -220,7 +220,7 @@ class LaporanKeuanganController extends Controller
              DB::rollBack();
      
              // Log the exception or show an error message
-             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+             return redirect()->back()->with('error', 'Data yang diberikan tidak valid' );
          }
      }
      

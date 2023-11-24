@@ -127,7 +127,7 @@ class TransaksiController extends Controller
         $transaksi->save();
     
         // You can add a success message or redirect to a different page
-        return redirect()->route('transaksi.index')->with('success_add', 'Transaksi added successfully');
+        return redirect()->route('transaksi.index')->with('success_add', 'Data transaksi berhasil ditambahkan');
     }
     
 
@@ -245,10 +245,10 @@ class TransaksiController extends Controller
             }
     
             DB::commit();
-            return redirect()->route('transaksi.index')->with('success_add', 'Data Transaksi berhasil diupdate.');
+            return redirect()->route('transaksi.index')->with('success_update', 'Data Transaksi berhasil diupdate');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('transaksi.index')->with('error', 'Error updating data: ' . $e->getMessage());
+            return redirect()->route('transaksi.index')->with('error', 'Gagal update data Transaksi');
         }
     }
     

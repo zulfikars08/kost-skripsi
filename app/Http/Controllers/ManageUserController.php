@@ -55,13 +55,13 @@ class ManageUserController extends Controller
             DB::commit();
     
             // Redirect with success message
-            return redirect()->to('manage-users')->with('success_add', 'Berhasil menambahkan data');
+            return redirect()->to('manage-users')->with('success_add', 'Berhasil menambahkan data user');
         } catch (\Exception $e) {
             // Rollback the database transaction in case of an exception
             DB::rollBack();
     
             // Log or handle the exception as needed
-            return redirect()->back()->with('error', 'Gagal menambahkan data. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan data user ');
         }
     }
 
@@ -143,13 +143,13 @@ class ManageUserController extends Controller
     
             // Redirect with success message
             return redirect()->route('manage-users.index')
-                ->with('success', 'User updated successfully');
+                ->with('success_update', 'Update user berhasil');
         } catch (\Exception $e) {
             // Rollback the database transaction in case of an exception
             DB::rollBack();
     
             // Log or handle the exception as needed
-            return redirect()->back()->with('error', 'Failed to update user. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengupdate user');
         }
     }
     

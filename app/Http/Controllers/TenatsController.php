@@ -62,7 +62,7 @@ class TenatsController extends Controller
             'address' => $request->address
         ];
         tenants::create($data);
-        return redirect()->to('tenants')->with('success', 'success add data tenants');
+        return redirect()->to('tenants')->with('success_add', 'Berhasil menambahkan data tenant');
     }
 
     /**

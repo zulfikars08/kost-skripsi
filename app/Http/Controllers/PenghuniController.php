@@ -95,7 +95,7 @@ class PenghuniController extends Controller
          // Create the Penghuni record with the validated data
         //  Penghuni::create($request->all());
      
-         return redirect()->route('penyewa.penghuni.index', ['id' => $request->route('id')])->with('success', 'Penghuni added successfully.');
+         return redirect()->route('penyewa.penghuni.index', ['id' => $request->route('id')])->with('success_add', 'Data penghuni berhasil ditambahkan');
      }
      
     
@@ -176,7 +176,7 @@ class PenghuniController extends Controller
         ]);
        
 
-        return redirect()->route('penyewa.penghuni.index', ['id' => $penyewaId])->with('success', 'Penghuni updated successfully.');
+        return redirect()->route('penyewa.penghuni.index', ['id' => $penyewaId])->with('success_update', 'Date penghuni berhasil di update');
     }
 
 
@@ -197,7 +197,7 @@ class PenghuniController extends Controller
         // Hapus penghuni
         $penghuni->delete();
 
-        return redirect()->route('penyewa.penghuni.index', ['id' => $penyewaId])->with('success', 'Penghuni Destroy successfully.');
+        return redirect()->route('penyewa.penghuni.index', ['id' => $penyewaId])->with('success_delete', 'Data penghuni berhasil dihapus');
     }
 
 }

@@ -83,7 +83,7 @@ class TanggalLaporanController extends Controller
         $tanggalLaporan->save();
 
         // Redirect back or to a specific page with a success message
-        return redirect()->route('laporan-keuangan.index')->with('success_add', 'Data Tanggal Laporan berhasil disimpan.');
+        return redirect()->route('laporan-keuangan.index')->with('success_add', 'Data Tanggal Laporan berhasil disimpan');
     }
 
     public function showDetail($lokasi_id, $bulan, $tahun)

@@ -99,7 +99,7 @@ public function store(Request $request)
         DB::rollBack();
 
         // Handle the exception, you can log it or show an error message.
-        return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Data yang diberikan tidak valid');
     }
 }
 
@@ -161,7 +161,7 @@ public function store(Request $request)
           
     //     ];
     //     LokasiKos::where('id',$id)->update($data);
-    //     return redirect()->to('lokasi_kos')->with('success', 'berhasil melakukan update data');
+    //     return redirect()->to('lokasi_kos')->with('success_update', 'berhasil melakukan update data');
     }
 
     /**
@@ -174,6 +174,6 @@ public function store(Request $request)
     {
         //
         LokasiKos::where('id', $id)->delete();
-        return redirect()->to('lokasi_kos')->with('success_delete','berhasil melakukan delete');
+        return redirect()->to('lokasi_kos')->with('success_delete','Lokasi Kos Berhasil di hapus');
     }
 }

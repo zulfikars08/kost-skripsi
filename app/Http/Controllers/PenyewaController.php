@@ -144,7 +144,7 @@ class PenyewaController extends Controller
             DB::rollBack();
     
             // Handle the exception, you can log it or show an error message.
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan data penyewa');
         }
     }
     
@@ -223,14 +223,14 @@ class PenyewaController extends Controller
             // Commit the database transaction
             DB::commit();
     
-            return redirect()->route('penyewa.index')->with('success', 'Status penyewa berhasil diupdate.');
+            return redirect()->route('penyewa.index')->with('success_update', 'Status penyewa berhasil diupdate');
     
         } catch (\Exception $e) {
             // If an exception occurs, roll back the database transaction
             DB::rollBack();
     
             // Handle the exception, you can log it or show an error message.
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengupdate status penyewa');
         }
     }
     

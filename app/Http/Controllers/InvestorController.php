@@ -271,7 +271,7 @@ class InvestorController extends Controller
         $investor = Investor::find($id);
 
         if (!$investor) {
-            return redirect()->back()->with('error', 'Investor not found.');
+            return redirect()->back()->with('error', 'Investor tidak ditemukan');
         }
 
         // Update the investor with the new data
@@ -293,14 +293,14 @@ class InvestorController extends Controller
 
     // Check if the investor exists
     if (!$investor) {
-        return redirect()->back()->with('error', 'Investor not found.');
+        return redirect()->back()->with('error', 'Investor tidak ditemukan');
     }
 
     // Delete the investor
     $investor->delete();
 
     // Redirect to the index page with a success message
-    return redirect()->route('investor.detail.index')->with('success_delete', 'Investor deleted successfully.');
+    return redirect()->route('investor.detail.index')->with('success_delete', 'Investor berhasil di hapus');
 }
 
 }

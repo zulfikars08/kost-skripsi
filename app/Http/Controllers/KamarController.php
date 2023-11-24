@@ -81,7 +81,7 @@ class KamarController extends Controller
                 ->first();
     
             if ($existingKamar) {
-                return redirect()->back()->with('errorNoKamar', 'Nomor kamar sudah digunakan untuk lokasi kos ini.');
+                return redirect()->back()->with('error', 'Nomor kamar sudah digunakan untuk lokasi kos ini.');
             }
     
             $request->validate([
@@ -141,14 +141,14 @@ class KamarController extends Controller
             DB::commit();
     
             $page = $request->input('page', 1);
-            return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar dan investor');
+            return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar');
     
         } catch (\Exception $e) {
             // If an exception occurs, roll back the database transaction
             DB::rollBack();
     
             // Handle the exception, you can log it or show an error message.
-            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Data yang diberikan tidak valid' );
         }
     }
     
@@ -163,66 +163,66 @@ class KamarController extends Controller
 
     // Update the specified resource in storage.
     public function update(Request $request, $id)
-{
-    try {
-        // Begin a database transaction
-        DB::beginTransaction();
+    {
+        try {
+            // Begin a database transaction
+            DB::beginTransaction();
 
-        $request->validate([
-            'harga' => 'required',
-            'tipe_kamar' => 'required|in:AC,Non AC',
-            'fasilitas' => 'required',
-            'lokasi_id' => 'required',
-        ], [
-            'harga.required' => 'Harga wajib di isi',
-            'tipe_kamar.required' => 'Tipe kamar wajib di isi',
-            'fasilitas.required' => 'Fasilitas wajib di isi',
-            'lokasi_id.required' => 'Lokasi Kos wajib di isi',
-        ]);
+            $request->validate([
+                'harga' => 'required',
+                'tipe_kamar' => 'required|in:AC,Non AC',
+                'fasilitas' => 'required',
+                'lokasi_id' => 'required',
+            ], [
+                'harga.required' => 'Harga wajib di isi',
+                'tipe_kamar.required' => 'Tipe kamar wajib di isi',
+                'fasilitas.required' => 'Fasilitas wajib di isi',
+                'lokasi_id.required' => 'Lokasi Kos wajib di isi',
+            ]);
 
-        // Check if the status is "belum terisi"
-        if ($request->status === 'Belum Terisi') {
-            // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
-            $kamar = Kamar::findOrFail($id);
-            $lokasiId = $kamar->lokasi_id;
-            $noKamar = $kamar->no_kamar;
+            // Check if the status is "belum terisi"
+            if ($request->status === 'Belum Terisi') {
+                // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
+                $kamar = Kamar::findOrFail($id);
+                $lokasiId = $kamar->lokasi_id;
+                $noKamar = $kamar->no_kamar;
 
-            $penyewa = Penyewa::where('no_kamar', $noKamar)
-                ->where('lokasi_id', $lokasiId)
-                ->first();
+                $penyewa = Penyewa::where('no_kamar', $noKamar)
+                    ->where('lokasi_id', $lokasiId)
+                    ->first();
 
-            if ($penyewa) {
-                // Delete the related Penyewa record
-                $penyewa->delete();
+                if ($penyewa) {
+                    // Delete the related Penyewa record
+                    $penyewa->delete();
+                }
             }
+
+            // Check for updates on the harga field
+            $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
+
+            $data = [
+                'harga' => $harga,
+                'tipe_kamar' => $request->tipe_kamar,
+                'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
+                'lokasi_id' => $request->lokasi_id,
+            ];
+
+            // Update the Kamar record
+            Kamar::where('id', $id)->update($data);
+
+            // Commit the database transaction
+            DB::commit();
+
+            return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
+
+        } catch (\Exception $e) {
+            // Rollback the database transaction in case of an exception
+            DB::rollBack();
+
+            // Handle the exception, you can log it or show an error message.
+            return redirect()->back()->with('error', 'Data yang diberikan tidak valid');
         }
-
-        // Check for updates on the harga field
-        $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
-
-        $data = [
-            'harga' => $harga,
-            'tipe_kamar' => $request->tipe_kamar,
-            'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
-            'lokasi_id' => $request->lokasi_id,
-        ];
-
-        // Update the Kamar record
-        Kamar::where('id', $id)->update($data);
-
-        // Commit the database transaction
-        DB::commit();
-
-        return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
-
-    } catch (\Exception $e) {
-        // Rollback the database transaction in case of an exception
-        DB::rollBack();
-
-        // Handle the exception, you can log it or show an error message.
-        return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
     }
-}
     
     // routes/web.php
 
@@ -230,6 +230,6 @@ class KamarController extends Controller
     public function destroy($id)
     {
         Kamar::where('id', $id)->delete();
-        return redirect()->route('kamar.index')->with('success_delete', 'Berhasil melakukan delete');
+        return redirect()->route('kamar.index')->with('success_delete', 'Berhasil melakukan delete Kamar');
     }
 }

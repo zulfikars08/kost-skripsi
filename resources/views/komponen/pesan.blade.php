@@ -1,100 +1,30 @@
 <!-- ... Your page content ... -->
+{{-- toast list : success , info , warning , error  --}}
 @if (Session::has('success_add'))
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-    <div id="successAddToast" class="toast bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto text-white">Success</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-white">
-            Data berhasil ditambahkan
-        </div>
-    </div>
-</div>
-<script>
-    var successAddToast = new bootstrap.Toast(document.getElementById('successAddToast'));
-    successAddToast.show();
-</script>
+    <script>
+        toastr.success("{!! Session::get('success_add') !!}")
+    </script>
 @endif
 
 @if (Session::has('success_update'))
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-    <div id="successUpdateToast" class="toast bg-info" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto text-white">Info</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-white">
-            Data berhasil diubah
-        </div>
-    </div>
-</div>
 <script>
-    var successUpdateToast = new bootstrap.Toast(document.getElementById('successUpdateToast'));
-    successUpdateToast.show();
+    toastr.info("{!! Session::get('success_update') !!}")
 </script>
 @endif
 
 @if (Session::has('success_delete'))
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-    <div id="successDeleteToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto text-white">Info</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-white">
-            Data berhasil dihapus.
-        </div>
-    </div>
-</div>
 <script>
-    var successDeleteToast = new bootstrap.Toast(document.getElementById('successDeleteToast'));
-    successDeleteToast.show();
+    toastr.warning("{!! Session::get('success_delete') !!}")
 </script>
 @endif
-
 
 @if (Session::has('error'))
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-    <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto text-white">Error</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-white">
-            Maaf ada kesalahan
-            @foreach ($errors->all() as $error)
-                <div class="text-danger">{{ $error }}</div>
-            @endforeach
-        </div>
-    </div>
-</div>
 <script>
-    var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-    errorToast.show();
+    toastr.error("{!! Session::get('error') !!}")
 </script>
 @endif
 
-@if (Session::has('errorNoKamar'))
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
-    <div id="errorToast" class="toast bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto text-white">Error</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-white">
-            Nomor kamar sudah digunakan untuk lokasi kos ini.
-            @foreach ($errors->all() as $errorNoKamar)
-                <div class="text-danger">{{ $errorNoKamar }}</div>
-            @endforeach
-        </div>
-    </div>
-</div>
-<script>
-    var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-    errorToast.show();
-</script>
-@endif
+
 
 </body>
 </html>
