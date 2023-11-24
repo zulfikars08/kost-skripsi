@@ -22,6 +22,7 @@
             @include('lokasi_kos.create')
             <!-- Include the modal partial -->
         </div>
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -29,7 +30,7 @@
                     <th>Lokasi Kos</th>
                     <th>Jumlah Kamar</th>
                     <th>Alamat</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,6 +64,7 @@
             </tbody>
         </table>
         {{ $data->withQueryString()->links() }}
+        </div>
     </div>
 
 

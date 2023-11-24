@@ -130,6 +130,8 @@ class PenyewaController extends Controller
                 'pengeluaran' => 0, // Set to 0 for integer columns
                 'keterangan' => '-', // Set to '-' for string columns
             ]);
+
+            
     
             // Commit the database transaction
             DB::commit();

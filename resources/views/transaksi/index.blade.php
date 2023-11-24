@@ -99,10 +99,9 @@
                         <th style="white-space: nowrap;">Total</th> --}}
                         <th style="white-space: nowrap;">Keterangan</th>
                         {{-- <th style="white-space: nowrap;">Pengeluaran</th> --}}
-                        <th style="white-space: nowrap;">Action</th>
+                        <th style="white-space: nowrap;">Aksi</th>
                     </tr>
                     <tr>
-                        
                     </tr>
                 </thead>
                 <tbody>
@@ -140,7 +139,7 @@
                         <td>
                             <!-- Display the proof of payment button/icon if it exists and payment type is "non-tunai" -->
                             @if ($item->tipe_pembayaran === 'non-tunai' && $item->bukti_pembayaran)
-                                <button type="button" class="btn btn-link btn-sm"  style="background-color: blueviolet;color: aliceblue"   onclick="openImageModal('{{ asset('storage/' . $item->bukti_pembayaran) }}')">
+                                <button type="button" class="btn btn-link btn-sm" onclick="openImageModal('{{ asset('storage/' . $item->bukti_pembayaran) }}')">
                                     <!-- Use an icon (e.g., an eye icon) to indicate viewing -->
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -180,19 +179,11 @@
                         
                                 @include('transaksi.edit')
 
-                                {{-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addTransactionModal{{ $item->kamar->id }}-{{ $item->lokasiKos->id }}" style="margin-left: 5px">
-                                    <i class="fas fa-plus" style="color: white"></i>
-                                </button>
-                        
-                                @include('transaksi.create', ['roomId' => $item->kamar->id, 'lokasiId' => $item->lokasiKos->id]) --}}
-
                                 <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" name="submit" class="btn btn-danger btn-sm"style="margin-left: 5px"><i class="fas fa-trash" ></i></button>
                                 </form>
-                        
-                               
                             </div>
                         </td>
                     </tr>
@@ -208,7 +199,7 @@
     </div>
 </div>
 
-{{-- <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -230,6 +221,6 @@
         // Open the modal
         $('#imageModal').modal('show');
     }
-</script> --}}
+</script>
 
 @endsection

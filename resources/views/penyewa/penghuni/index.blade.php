@@ -6,7 +6,7 @@
         <div class="col">
             <button type="button"
                 style="display: flex; align-items: center; background-color: rgb(64, 174, 207); color: #fff; border: none; padding: 5px; border-radius: 5px;"
-                onclick="window.location.href='{{ route('lokasi_kos.index') }}'">
+                onclick="window.location.href='{{ route('penyewa.index') }}'">
                 <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
             </button>
             <br>
@@ -90,7 +90,7 @@
                                     <th style="white-space: nowrap;">Pekerjaan</th>
                                     <th style="white-space: nowrap;">Perusahaan</th>
                                     <th style="white-space: nowrap;">Martial Status</th>
-                                    <th style="white-space: nowrap;">Action</th>
+                                    <th style="white-space: nowrap;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>

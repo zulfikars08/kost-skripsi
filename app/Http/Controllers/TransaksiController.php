@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf;
 use App\Exports\FilteredTransaksiExport;
+use App\Models\Pemasukan;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
@@ -160,82 +161,97 @@ class TransaksiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
     public function update(Request $request, $id)
     {
-        // Validate the request
-        $request->validate([
-            'tanggal' => 'nullable|date',
-            'jumlah_tarif' => 'required|numeric',
-            // 'kebersihan' => 'required|numeric',
-            // 'pengeluaran' => 'required|numeric',
-            'tipe_pembayaran' => 'required|in:tunai,non-tunai',
-            // 'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,pdf',
-            'tanggal_pembayaran_awal' => 'nullable|date',
-            'tanggal_pembayaran_akhir' => 'nullable|date',
-            'keterangan' => 'required|string',
-            'status_pembayaran' => 'required|in:lunas,belum_unas,cicil',
-            // Add validation rules for other fields as needed
-        ]);
-
-        // Find the Transaksi record by ID
-        $transaksi = Transaksi::findOrFail($id);
-
-        // Prepare the data for updating the Transaksi record
-        $data = [
-            'tanggal' => $request->input('tanggal'),
-            'jumlah_tarif' => $request->input('jumlah_tarif'),
-            // 'kebersihan' => $request->input('kebersihan'),
-            // 'pengeluaran' => $request->input('pengeluaran'),
-            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
-            'bukti_pembayaran' => $request->input('bukti_pembayaran'),
-            'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
-            'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
-            'keterangan' => $request->input('keterangan'),
-            'status_pembayaran' => $request->input('status_pembayaran'),
-            // Update other fields here
-        ];
-
-        // Handle file upload (if a file is provided)
-        if ($request->hasFile('bukti_pembayaran')) {
-            $file = $request->file('bukti_pembayaran');
-            $fileName = $file->getClientOriginalName();
-            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
-            $data['bukti_pembayaran'] = $filePath;
-        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
-            $data['bukti_pembayaran'] = 'Cash Payment';
-        }
-        
-
-        // Check if the 'tanggal' field is not null
-        if (!is_null($request->input('tanggal'))) {
-            // Extract the year and month from the 'tanggal' column
-            $tanggal = Carbon::parse($request->input('tanggal'));
-            $bulan = $tanggal->format('m'); // Extract the month in 'MM' format
-            $tahun = $tanggal->format('Y'); // Extract the year in 'YYYY' format
-
-            // Find or create the TanggalTransaksi record based on month and year
-            $tanggalTransaksi = TanggalTransaksi::firstOrNew([
-                'bulan' => $bulan,
-                'tahun' => $tahun,
+        try {
+            DB::beginTransaction();
+    
+            $request->validate([
+                'tanggal' => 'nullable|date',
+                'jumlah_tarif' => 'required|numeric',
+                'tipe_pembayaran' => 'required|in:tunai,non-tunai',
+                'tanggal_pembayaran_awal' => 'nullable|date',
+                'tanggal_pembayaran_akhir' => 'nullable|date',
+                'keterangan' => 'required|string',
+                'status_pembayaran' => 'required|in:lunas,belum_unas,cicil',
+                // Add validation rules for other fields as needed
             ]);
-
-            // Save the TanggalTransaksi record if it's new
-            if (!$tanggalTransaksi->exists) {
-                $tanggalTransaksi->save();
+    
+            $transaksi = Transaksi::findOrFail($id);
+    
+            $data = [
+                'tanggal' => $request->input('tanggal'),
+                'jumlah_tarif' => $request->input('jumlah_tarif'),
+                'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+                'bukti_pembayaran' => $request->input('bukti_pembayaran'),
+                'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
+                'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
+                'keterangan' => $request->input('keterangan'),
+                'status_pembayaran' => $request->input('status_pembayaran'),
+                // Update other fields here
+            ];
+    
+            if ($request->hasFile('bukti_pembayaran')) {
+                $file = $request->file('bukti_pembayaran');
+                $fileName = $file->getClientOriginalName();
+                $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+                $data['bukti_pembayaran'] = $filePath;
+            } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+                $data['bukti_pembayaran'] = 'Cash Payment';
             }
-
-            // Associate the Transaksi record with the TanggalTransaksi record
-            $transaksi->tanggalTransaksi()->associate($tanggalTransaksi);
-        } else {
-            // If 'tanggal' is null, disassociate the Transaksi record from any TanggalTransaksi record
-            $transaksi->tanggalTransaksi()->dissociate();
+    
+            if (!is_null($request->input('tanggal'))) {
+                $tanggal = Carbon::parse($request->input('tanggal'));
+                $bulan = $tanggal->format('m');
+                $tahun = $tanggal->format('Y');
+    
+                $tanggalTransaksi = TanggalTransaksi::firstOrNew([
+                    'bulan' => $bulan,
+                    'tahun' => $tahun,
+                ]);
+    
+                if (!$tanggalTransaksi->exists) {
+                    $tanggalTransaksi->save();
+                }
+    
+                $transaksi->tanggalTransaksi()->associate($tanggalTransaksi);
+            } else {
+                $transaksi->tanggalTransaksi()->dissociate();
+            }
+    
+            $transaksi->update($data);
+    
+            $nama_kos = $transaksi->lokasiKos->nama_kos;
+    
+            $pemasukan = [
+                'nama_kos' => $nama_kos,
+                'kamar_id' => $transaksi->kamar_id,
+                'lokasi_id' => $transaksi->lokasi_id,
+                'transaksi_id' => $transaksi->id,
+                'jumlah' => $transaksi->jumlah_tarif,
+                'tanggal' => $transaksi->tanggal,
+                'tipe_pembayaran' => $transaksi->tipe_pembayaran,
+                'bukti_pembayaran' => $transaksi->bukti_pembayaran,
+                'keterangan' => $transaksi->keterangan,
+            ];
+    
+            $pemasukanModel = Pemasukan::where('transaksi_id', $transaksi->id)->first();
+            if ($pemasukanModel) {
+                $pemasukanModel->update($pemasukan);
+            } else {
+                Pemasukan::create($pemasukan);
+            }
+    
+            DB::commit();
+            return redirect()->route('transaksi.index')->with('success_add', 'Data Transaksi berhasil diupdate.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('transaksi.index')->with('error', 'Error updating data: ' . $e->getMessage());
         }
-
-        // Update the Transaksi record with the prepared data
-        $transaksi->update($data);
-
-        return redirect()->route('transaksi.index')->with('success_add', 'Data Transaksi berhasil diupdate.');
     }
+    
 
 
 

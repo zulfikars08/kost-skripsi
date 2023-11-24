@@ -35,7 +35,7 @@
                     <th style="white-space: nowrap;">Bukti Pembayaran</th>
                     <th>Jumlah</th>
                     <th>Keterangan</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                     {{-- <th>Actions</th> --}}
                 </tr>
             </thead>

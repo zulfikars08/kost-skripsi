@@ -47,16 +47,16 @@
             <table class="table table-striped" style="width: 100%;">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Bulan</th>
-                        <th>Tahun</th>
-                        <th>Jumlah Pintu</th>
-                        <th>Lokasi</th>
-                        <th>Total Kamar</th>
-                        <th>Pendapatan Bersih</th>
-                        <th>Total Pendapatan</th>
-                        <th>Action</th>
+                        <th style="white-space: nowrap;">No</th>
+                        <th style="white-space: nowrap;">Nama</th>
+                        <th style="white-space: nowrap;">Bulan</th>
+                        <th style="white-space: nowrap;">Tahun</th>
+                        <th style="white-space: nowrap;">Jumlah Pintu</th>
+                        <th style="white-space: nowrap;">Lokasi</th>
+                        <th style="white-space: nowrap;">Total Kamar</th>
+                        <th style="white-space: nowrap;">Pendapatan Bersih</th>
+                        <th style="white-space: nowrap;">Total Pendapatan</th>
+                        <th style="white-space: nowrap;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

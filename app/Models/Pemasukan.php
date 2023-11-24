@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\PemasukanCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -32,7 +33,9 @@ class Pemasukan extends Model
         'deleted_by',
         'deleted_at',
     ];
-
+    protected $dispatchesEvents = [
+        'created' => PemasukanCreated::class,
+    ];
     public function kamar()
     {
         return $this->belongsTo(Kamar::class, 'kamar_id');

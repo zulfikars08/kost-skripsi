@@ -9,6 +9,7 @@
         <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
     </button>
     <h3 class="text-start" style="margin: 20px 0;">Laporan Keuangan</h3>
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
     <div class="d-flex justify-content-between align-items-center pb-3">
         {{-- <div class="d-flex flex-column">
             <button type="button"
@@ -40,7 +41,7 @@
     </div>
 
 
-    <div class="my-3 p-3 bg-body rounded shadow-sm">
+ 
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table class="table table-striped" style="width: 100%;">
                 <thead>
@@ -49,7 +50,7 @@
                         <th style="white-space: nowrap;">Kode Laporan</th>
                         <th style="white-space: nowrap;">Kode Pemasukan</th>
                         <th style="white-space: nowrap;">Kode Pengeluaran</th>
-                        <th>Tanggal</th>
+                        <th style="white-space: nowrap;">Tanggal</th>
                         <th style="white-space: nowrap;">No Kamar</th>
                         <th style="white-space: nowrap;">Nama Kos</th>
                         <th style="white-space: nowrap;">Tipe Pembayaran</th>
@@ -61,7 +62,7 @@
                         <th style="white-space: nowrap;">Jumlah Pemasukan</th>
                         <th style="white-space: nowrap;">Jumlah Pengeluaran</th>
                         <th style="white-space: nowrap;">Keterangan</th>
-                        <th>Action</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

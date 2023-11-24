@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PemasukanCreated;
 use App\Models\Kamar;
 use App\Models\LaporanKeuangan;
 use App\Models\LokasiKos;
@@ -136,79 +137,79 @@ class PemasukanController extends Controller
 
             // Save the Pemasukan
             $pemasukan->save();
+            event(new PemasukanCreated($pemasukan));
+            // $tanggal = $pemasukan->tanggal;
+            // $bulan = date('m', strtotime($tanggal));
+            // $tahun = date('Y', strtotime($tanggal));
 
-            $tanggal = $pemasukan->tanggal;
-            $bulan = date('m', strtotime($tanggal));
-            $tahun = date('Y', strtotime($tanggal));
+            // $laporanKeuanganAttributes = [
+            //     'tanggal' => $tanggal,
+            //     'kamar_id' => $pemasukan->kamar_id,
+            //     'lokasi_id' => $pemasukan->lokasi_id,
+            //     'pemasukan_id' => $pemasukan->id,
+            //     'jenis' => 'pemasukan',
+            //     'nama_kos' => $nama_kos,
+            //     'kode_pemasukan' => $pemasukan->kode_pemasukan,
+            //     'tipe_pembayaran' => $pemasukan->tipe_pembayaran,
+            //     'bukti_pembayaran' => $pemasukan->bukti_pembayaran,
+            //     'bulan' => $bulan,
+            //     'tahun' => $tahun,
+            //     'pemasukan' => $pemasukan->jumlah,
+            //     'keterangan' => $pemasukan->keterangan,
+            // ];
 
-            $laporanKeuanganAttributes = [
-                'tanggal' => $tanggal,
-                'kamar_id' => $pemasukan->kamar_id,
-                'lokasi_id' => $pemasukan->lokasi_id,
-                'pemasukan_id' => $pemasukan->id,
-                'jenis' => 'pemasukan',
-                'nama_kos' => $nama_kos,
-                'kode_pemasukan' => $pemasukan->kode_pemasukan,
-                'tipe_pembayaran' => $pemasukan->tipe_pembayaran,
-                'bukti_pembayaran' => $pemasukan->bukti_pembayaran,
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                'pemasukan' => $pemasukan->jumlah,
-                'keterangan' => $pemasukan->keterangan,
-            ];
+            // $tanggalLaporanAtributes = [
+            //     'nama_kos' => $nama_kos,
+            //     'kamar_id' => $pemasukan->kamar_id,
+            //     'lokasi_id' => $pemasukan->lokasi_id, // Assign the penyewa_id
+            //     // Set the default value or adjust as needed
+            //     'bulan' => $bulan,
+            //     'tahun' => $tahun,
+            //     // Set to '-' for string columns
+            //     'tanggal' => $pemasukan->tanggal,
+            // ];
 
-            $tanggalLaporanAtributes = [
-                'nama_kos' => $nama_kos,
-                'kamar_id' => $pemasukan->kamar_id,
-                'lokasi_id' => $pemasukan->lokasi_id, // Assign the penyewa_id
-                // Set the default value or adjust as needed
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                // Set to '-' for string columns
-                'tanggal' => $pemasukan->tanggal,
-            ];
+            // $tanggalInvestorAttributes = [
+            //     'nama_kos' => $nama_kos,
+            //     'lokasi_id' => $pemasukan->lokasi_id, // Assign the penyewa_id
+            //     // Set the default value or adjust as needed
+            //     'bulan' => $bulan,
+            //     'tahun' => $tahun,
+            //     // Set to '-' for string columns
+            //     'tanggal' => $pemasukan->tanggal,
+            // ];
 
-            $tanggalInvestorAttributes = [
-                'nama_kos' => $nama_kos,
-                'lokasi_id' => $pemasukan->lokasi_id, // Assign the penyewa_id
-                // Set the default value or adjust as needed
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                // Set to '-' for string columns
-                'tanggal' => $pemasukan->tanggal,
-            ];
+            // // Create a new LaporanKeuangan instance
+            // $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
+            // $existingLaporan = TanggalLaporan::where('nama_kos', $nama_kos)
+            //     ->where('bulan', $bulan)
+            //     ->where('tahun', $tahun)
+            //     ->first();
 
-            // Create a new LaporanKeuangan instance
-            $laporanKeuangan = new LaporanKeuangan($laporanKeuanganAttributes);
-            $existingLaporan = TanggalLaporan::where('nama_kos', $nama_kos)
-                ->where('bulan', $bulan)
-                ->where('tahun', $tahun)
-                ->first();
+            // $existingInvestor = TanggalInvestor::where('nama_kos', $nama_kos)
+            //     ->where('bulan', $bulan)
+            //     ->where('tahun', $tahun)
+            //     ->first();
 
-            $existingInvestor = TanggalInvestor::where('nama_kos', $nama_kos)
-                ->where('bulan', $bulan)
-                ->where('tahun', $tahun)
-                ->first();
+            // if ($existingLaporan) {
+            //     // Update existing entry
+            //     $existingLaporan->update($tanggalLaporanAtributes);
+            // } else {
+            //     // Create a new entry
+            //     $tanggalLaporan = new TanggalLaporan($tanggalLaporanAtributes);
+            //     $tanggalLaporan->save();
+            // }
 
-            if ($existingLaporan) {
-                // Update existing entry
-                $existingLaporan->update($tanggalLaporanAtributes);
-            } else {
-                // Create a new entry
-                $tanggalLaporan = new TanggalLaporan($tanggalLaporanAtributes);
-                $tanggalLaporan->save();
-            }
-
-            if ($existingInvestor) {
-                // Update existing entry
-                $existingInvestor->update($tanggalInvestorAttributes);
-            } else {
-                // Create a new entry
-                $tanggalInvestor = new TanggalInvestor($tanggalInvestorAttributes);
-                $tanggalInvestor->save();
-            }
-            // Save the new LaporanKeuangan instance
-            $laporanKeuangan->save();
+            // if ($existingInvestor) {
+            //     // Update existing entry
+            //     $existingInvestor->update($tanggalInvestorAttributes);
+            // } else {
+            //     // Create a new entry
+            //     $tanggalInvestor = new TanggalInvestor($tanggalInvestorAttributes);
+            //     $tanggalInvestor->save();
+            // }
+            // // Save the new LaporanKeuangan instance
+            // $laporanKeuangan->save();
 
             // Commit the database transaction
             DB::commit();

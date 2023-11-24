@@ -21,14 +21,14 @@
             </button>
             @include('manage-users.create')
         </div>
-
-        <table class="table table-striped">
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+            <table class="table table-striped" style="width: 100%;">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Action</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,6 +50,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 @endsection

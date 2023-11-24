@@ -30,7 +30,7 @@
                         <th>Nama Kos</th>
                         <th>Bulan</th>
                         <th>Tahun</th>
-                        <th>Action</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -20,12 +20,12 @@
             <table class="table table-striped" style="width: 100%;">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama Kos</th>
-                        <th>bulan</th>
-                        <th>tahun</th>
-                        <th>Jumlah Investor</th>
-                        <th>Action</th>
+                        <th style="white-space: nowrap;">No</th>
+                        <th style="white-space: nowrap;">Nama Kos</th>
+                        <th style="white-space: nowrap;">bulan</th>
+                        <th style="white-space: nowrap;">tahun</th>
+                        <th style="white-space: nowrap;">Jumlah Investor</th>
+                        <th style="white-space: nowrap;">Aksi</th>
                         <!-- Add more columns as needed -->
                     </tr>
                 </thead>

@@ -29,7 +29,6 @@
   <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/search.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/loading.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" type="text/css">
 
 
@@ -38,9 +37,7 @@
 </head>
 
 <body>
-  <div id="loading-overlay" class="loading-overlay">
-    <div class="loading-spinner"></div>
-  </div>
+  <div class="wrapper d-flex align-items-stretch">
   <nav class="sidebar">
     <h5 class="hide" style="display: flex; align-items: center; justify-content: center;" id="admin">
       <!-- Second icon -->
@@ -200,18 +197,19 @@
  
   <script src="{{ asset('javascript/dropdown.js') }}"></script>
 
-  <main>
+  {{-- <main> --}}
     <div class="loading-overlay">
       <div class="loading-spinner"></div>
     </div>
-    <div class="centered-content">
+     <div id="centered-content" class="p-4 p-md-5 pt-5">
       @yield('content')
     </div>
-  </main>
+  {{-- </main> --}}
+  </div>
   <script src="{{ asset('javascript/chart.js') }}"></script>
   <script src="{{ asset('javascript/autoHarga.js') }}"></script>
   <script src="{{ asset('javascript/autoHargaEdit.js') }}"></script>
-  <script src="{{ asset('javascript/loading.js') }}"></script>
+
 </body>
 
 </html>

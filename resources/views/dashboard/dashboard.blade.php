@@ -1,13 +1,12 @@
 @extends('layout.template')
 
 @section('content')
-<div class="container-fluid" style="max-height: 800px; overflow-y: auto;">
+<div class="container-fluid" style="max-height: 800px;">
     <h3 class="text-start"
         style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; color: #333;">
         Dashboard</h3>
-    <div class="my-3 p-3 bg-body rounded shadow-sm">
+    {{-- <div class="my-3 p-3 bg-body rounded shadow-sm"> --}}
         <div class="row">
-
             <div class="col-md-4 col-xl-3">
                 <div class="card bg-success text-white order-card mb-4">
                     <div class="card-body">
@@ -99,7 +98,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Add the following card to your existing dashboard.blade.php file -->
             <div class="col-md-4 col-xl-3">
                 <div class="card bg-info order-card mb-4">
@@ -111,22 +109,12 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-        <!-- Graph Section -->
-        <!-- Graph Section -->
-        <!-- Graph Section -->
-
-        <!-- Add more cards here if needed -->
-
-        <!-- Display detailed information for each day -->
         <div class="row">
             <div class="col-md-12">
                 <canvas id="myChart" width="400" height="300"></canvas>
             </div>
         </div>
-
         <script>
             var chartData = {
         days: @json($days),
@@ -137,7 +125,7 @@
         <!-- Add more cards here if needed -->
 
 
+    </div>
+    <!-- Graph Section -->
 
-        <!-- Graph Section -->
-
-        @endsection
+    @endsection

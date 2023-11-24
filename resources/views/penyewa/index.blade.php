@@ -35,7 +35,7 @@
                         <th>No Kamar</th>
                         <th>Lokasi Kos</th>
                         <th>Status Penyewa</th>
-                        <th>Action</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
