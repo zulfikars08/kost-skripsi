@@ -3,7 +3,7 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{{ route('transaksi.index') }}" method="GET">
+            <form action="{{ route('pengeluaran.index') }}" method="GET">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="filterModalLabel">Filter Transaksi</h5>
@@ -14,7 +14,7 @@
                         <label for="filterNamaKos">Nama Kos</label>
                         <select class="form-control" id="filterNamaKos" name="nama_kos">
                             <option value="">Pilih Lokasi Kos</option>
-                            @foreach ($lokasiKosData as $lokasiKosOption)
+                            @foreach ($lokasiKos as $lokasiKosOption)
                             <option value="{{ $lokasiKosOption->nama_kos }}">{{ $lokasiKosOption->nama_kos }}</option>
                             @endforeach
                         </select>
@@ -46,15 +46,6 @@
                             <option value="non-tunai">Non Tunai</option>
                         </select>
                     </div>                    
-                    <div class="form-group">
-                        <label for="filterStatusPembayaran">Status Pembayaran</label>
-                        <select class="form-control" id="filterStatusPembayaran" name="status_pembayaran">
-                            <option value="">Pilih Status Pembayaran</option>
-                            <option value="Lunas">Lunas</option>
-                            <option value="Cicil">Cicil</option>
-                            <option value="belum_lunas">Belum Lunas</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between mb-3">
@@ -88,9 +79,6 @@
             }
             if (tahun.value) {
                 queryParams.push(`tahun=${tahun.value}`);
-            }
-            if (statusPembayaran.value) {
-                queryParams.push(`status_pembayaran=${statusPembayaran.value}`);
             }
             if (tipePembayaran.value) {
                 queryParams.push(`tipe_pembayaran=${tipePembayaran.value}`);

@@ -3,8 +3,8 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form action="{{ route('pengeluaran.index') }}" method="GET">
-                @csrf
+            <form action="<?php echo e(route('pengeluaran.index')); ?>" method="GET">
+                <?php echo csrf_field(); ?>
                 <div class="modal-header">
                     <h5 class="modal-title" id="filterModalLabel">Filter Transaksi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -14,27 +14,27 @@
                         <label for="filterNamaKos">Nama Kos</label>
                         <select class="form-control" id="filterNamaKos" name="nama_kos">
                             <option value="">Pilih Lokasi Kos</option>
-                            @foreach ($lokasiKos as $lokasiKosOption)
-                            <option value="{{ $lokasiKosOption->nama_kos }}">{{ $lokasiKosOption->nama_kos }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $lokasiKos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lokasiKosOption): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($lokasiKosOption->nama_kos); ?>"><?php echo e($lokasiKosOption->nama_kos); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="filterBulan">Bulan</label>
                         <select class="form-control" id="filterBulan" name="bulan">
                             <option value="">Pilih Bulan</option>
-                            @foreach ($months as $monthValue => $monthName)
-                            <option value="{{ $monthValue }}">{{ $monthName }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $months; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $monthValue => $monthName): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($monthValue); ?>"><?php echo e($monthName); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="filterTahun">Tahun</label>
                         <select class="form-control" id="filterTahun" name="tahun">
                             <option value="">Pilih Tahun</option>
-                            @foreach ($years as $year)
-                            <option value="{{ $year }}">{{ $year }}</option>
-                            @endforeach
+                            <?php $__currentLoopData = $years; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $year): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($year); ?>"><?php echo e($year); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <!-- Add options for years -->
                         </select>
                     </div>
@@ -62,6 +62,7 @@
         const namaKos = document.getElementById('filterNamaKos');
         const bulan = document.getElementById('filterBulan');
         const tahun = document.getElementById('filterTahun');
+        const statusPembayaran = document.getElementById('filterStatusPembayaran');
         const tipePembayaran = document.getElementById('filterTipePembayaran');
         const resetButton = document.getElementById('reset-button');
 
@@ -83,8 +84,9 @@
                 queryParams.push(`tipe_pembayaran=${tipePembayaran.value}`);
             }
 
-            const url = "{{ route('transaksi.index') }}";
+            const url = "<?php echo e(route('transaksi.index')); ?>";
             window.location.href = url + (queryParams.length > 0 ? '?' + queryParams.join('&') : '');
         });
     });
 </script>
+<?php /**PATH C:\skripsi\kost-skripsi\resources\views/pengeluaran/filter.blade.php ENDPATH**/ ?>

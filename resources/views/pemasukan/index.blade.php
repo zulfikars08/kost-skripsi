@@ -17,11 +17,16 @@
                     <button class="btn btn-secondary" type="submit">Cari</button>
                 </div>
             </form>
-
+            <div class="d-flex justify-content-between mb-3">
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataPemasukanModal">
                 <i class="fas fa-plus"></i> Tambah Data
             </button>
             @include('pemasukan.create')
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                Filter
+            </button>
+            @include('pemasukan.filter')
+            </div>
             <!-- Include the modal partial -->
         </div>
         <table class="table table-striped">

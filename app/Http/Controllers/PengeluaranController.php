@@ -21,8 +21,10 @@ class PengeluaranController extends Controller
     {
         $kamars = Kamar::all();
         $lokasiKos = LokasiKos::all();
+        $namaKos = $request->input('nama_kos');
         $bulan = $request->input('bulan');
         $tahun = $request->input('tahun');
+        $tipe_pembayaran = $request->input('tipe_pembayaran');
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format to two digits (e.g., 01, 02, ...)
@@ -34,22 +36,37 @@ class PengeluaranController extends Controller
         $currentYear = date('Y');
         $years = range($currentYear, $currentYear - 10);
         // Retrieve expenditures and apply any search filter if provided
-        $expenditures = Pengeluaran::query();
+        $query = Pengeluaran::query();
 
+        $query->when($namaKos, function ($q) use ($namaKos) {
+            return $q->whereHas('lokasiKos', function ($subQuery) use ($namaKos) {
+                $subQuery->where('nama_kos', $namaKos);
+            });
+        })
+            ->when($bulan, function ($q) use ($bulan) {
+                return $q->whereMonth('tanggal', $bulan);
+            })
+            ->when($tahun, function ($q) use ($tahun) {
+                return $q->whereYear('tanggal', $tahun);
+            })
+            ->when($tipe_pembayaran, function ($q) use ($tipe_pembayaran) {
+                return $q->where('tipe_pembayaran', $tipe_pembayaran);
+            })
+            ->with('lokasiKos');
+    
         // Check if a search query is provided
         if ($request->has('katakunci')) {
             $keyword = $request->input('katakunci');
-            $expenditures->where('nama_kos', 'like', '%' . $keyword . '%')
+            $query->where('nama_kos', 'like', '%' . $keyword . '%')
                 ->orWhere('bulan', 'like', '%' . $keyword . '%')
                 ->orWhere('tahun', 'like', '%' . $keyword . '%');
         }
+    
+        $pengeluaran = $request->ajax() ? $query->get() : $query->paginate(10);
+    
+        return view('pengeluaran.index', compact('pengeluaran', 'lokasiKos', 'months', 'years', 'kamars'));
 
-        $expenditures = $expenditures->paginate(10); // You can adjust the number of records per page
-
-        return view('pengeluaran.index', compact('expenditures', 'lokasiKos', 'months', 'years', 'kamars'));
     }
-
-
     /**
      * Show the form for creating a new resource.
      *

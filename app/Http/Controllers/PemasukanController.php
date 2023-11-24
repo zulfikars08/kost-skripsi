@@ -26,7 +26,9 @@ class PemasukanController extends Controller
         $kamars = Kamar::all();
         $lokasiKos = LokasiKos::all();
         $bulan = $request->input('bulan');
+        $namaKos = $request->input('nama_kos');
         $tahun = $request->input('tahun');
+        $tipe_pembayaran = $request->input('tipe_pembayaran');
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
             $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format to two digits (e.g., 01, 02, ...)
@@ -38,25 +40,36 @@ class PemasukanController extends Controller
         $currentYear = date('Y');
         $years = range($currentYear, $currentYear - 10);
         // Retrieve expenditures and apply any search filter if provided
-        $pemasukan = Pemasukan::query();
+        $query = Pemasukan::query();
 
+        $query->when($namaKos, function ($q) use ($namaKos) {
+            return $q->whereHas('lokasiKos', function ($subQuery) use ($namaKos) {
+                $subQuery->where('nama_kos', $namaKos);
+            });
+        })
+            ->when($bulan, function ($q) use ($bulan) {
+                return $q->whereMonth('tanggal', $bulan);
+            })
+            ->when($tahun, function ($q) use ($tahun) {
+                return $q->whereYear('tanggal', $tahun);
+            })
+            ->when($tipe_pembayaran, function ($q) use ($tipe_pembayaran) {
+                return $q->where('tipe_pembayaran', $tipe_pembayaran);
+            })
+            ->with('lokasiKos');
+    
         // Check if a search query is provided
         if ($request->has('katakunci')) {
             $keyword = $request->input('katakunci');
-            $pemasukan->where('nama_kos', 'like', '%' . $keyword . '%')
+            $query->where('nama_kos', 'like', '%' . $keyword . '%')
                 ->orWhere('bulan', 'like', '%' . $keyword . '%')
                 ->orWhere('tahun', 'like', '%' . $keyword . '%');
         }
-
-        if ($request->ajax()) {
-            $pemasukan = $pemasukan->get(); // Get all records without pagination for AJAX request
-        } else {
-            $pemasukan = $pemasukan->paginate(10); // Paginate results for non-AJAX request
-        } // You can adjust the number of records per page
-
+    
+        $pemasukan = $request->ajax() ? $query->get() : $query->paginate(10);
+    
         return view('pemasukan.index', compact('pemasukan', 'lokasiKos', 'months', 'years', 'kamars'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
