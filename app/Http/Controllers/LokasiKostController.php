@@ -99,7 +99,7 @@ public function store(Request $request)
         DB::rollBack();
 
         // Handle the exception, you can log it or show an error message.
-        return redirect()->back()->with('error', 'Data yang diberikan tidak valid');
+        return redirect()->back()->with('error', 'Nama Lokasi Kos sudah digunakan');
     }
 }
 
