@@ -1,21 +1,17 @@
-function showLoadingOverlay() {
-      document.getElementById('loading-overlay').style.display = 'flex';
-    }
+function showLoading() {
+  $(".loading-overlay").css("display", "flex");
+}
 
-    function hideLoadingOverlay() {
-      document.getElementById('loading-overlay').style.display = 'none';
-    }
+// Hide loading overlay
+function hideLoading() {
+  $(".loading-overlay").css("display", "none");
+}
 
-    // Event listener for menu links
-    document.querySelectorAll('.tooltip-element a').forEach(function(link) {
-      link.addEventListener('click', function() {
-        showLoadingOverlay();
-      });
-    });
+// Example: Call showLoading before making an AJAX request and hideLoading after receiving the response
+$(document).ajaxStart(function () {
+  showLoading();
+});
 
-    // Event listener for submenu links
-    document.querySelectorAll('.submenu a').forEach(function(subLink) {
-      subLink.addEventListener('click', function() {
-        showLoadingOverlay();
-      });
-    });
+$(document).ajaxStop(function () {
+  hideLoading();
+});

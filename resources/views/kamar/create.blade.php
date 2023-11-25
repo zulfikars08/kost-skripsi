@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="tambahDataModalLabel">Tambah Data Kamar</h5>
             </div>
-            <form action="{{ route('kamar.store') }}" method="post">
+            <form action="{{ route('kamar.store') }}" method="post" onsubmit="showLoadingOverlay()">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
