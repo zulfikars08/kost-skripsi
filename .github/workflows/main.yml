@@ -23,5 +23,5 @@ jobs:
         REMOTE_USER: ${{ secrets.u410590140 }}
         REMOTE_PORT: ${{ secrets.65002 }}
         SOURCE: "./"
-        TARGET: ${{ /home/u410590140/kost-skripsi }}
+        TARGET: "/home/u410590140/kost-skripsi"
         ARGS: "-avzr --delete"
