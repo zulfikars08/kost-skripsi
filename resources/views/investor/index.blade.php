@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <h3 class="text-start"
         style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
-        Tanggal investorssssssstttttttttt
+        Tanggal investor updet test
     </h3>
     
     <div class="my-3 p-3 bg-body rounded shadow-sm">
