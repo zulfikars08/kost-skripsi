@@ -23,5 +23,5 @@ jobs:
         REMOTE_USER: ${{ secrets.USERNAME }} # Use the correct secret name
         REMOTE_PORT: ${{ secrets.PORT }} # Use the correct secret name
         SOURCE: "./"
-        TARGET: "/home/u410590140/kost-skripsi" # Verify this path
+        TARGET: "~/kost-skripsi" # Verify this path
         ARGS: "-avzr --delete"
