@@ -18,10 +18,10 @@ jobs:
     - name: Deploy to Hostinger
       uses: easingthemes/ssh-deploy@v2.1.5
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.HostingerKey }}
-        REMOTE_HOST: ${{ secrets.154.41.240.68 }}
-        REMOTE_USER: ${{ secrets.u410590140 }}
-        REMOTE_PORT: ${{ secrets.65002 }}
+        SSH_PRIVATE_KEY: ${{ secrets.KEY }}
+        REMOTE_HOST: ${{ secrets.IP }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        REMOTE_PORT: ${{ secrets.PORT }}
         SOURCE: "./"
         TARGET: "/home/u410590140/kost-skripsi"
         ARGS: "-avzr --delete"
