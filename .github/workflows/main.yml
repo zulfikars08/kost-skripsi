@@ -17,5 +17,6 @@ jobs:
 
     - name: Deploy to Hostinger
       run: |
-        rsync -e "ssh -p *** -i /home/runner/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-        -avzrv --delete /home/runner/work/***/***/./ ${{ secrets.USERNAME }}@${{ secrets.IP }}:/home/u410590140/kost-skripsi
+        rsync -e "ssh -p PORT_NUMBER -i /home/runner/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+        -avzrv --delete /home/runner/work/***/***/./ USERNAME@REMOTE_HOST:/home/u410590140/kost-skripsi
+
