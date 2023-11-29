@@ -18,7 +18,7 @@ jobs:
     - name: Deploy to Hostinger
       uses: easingthemes/ssh-deploy@v2.1.5
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.Hostinger Key }}
+        SSH_PRIVATE_KEY: ${{ secrets.HostingerKey }}
         REMOTE_HOST: ${{ secrets.154.41.240.68 }}
         REMOTE_USER: ${{ secrets.u410590140 }}
         REMOTE_PORT: ${{ secrets.65002 }}
