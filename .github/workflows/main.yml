@@ -16,7 +16,9 @@ jobs:
     # Tambahkan langkah-langkah lain untuk build/test jika diperlukan
 
     - name: Deploy to Hostinger
-      uses: easingthemes/ssh-deploy@v2.1.5
+      run: |
+        rsync -e "ssh -p ${{ secrets.PORT }} -i /home/runner/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+        -avzrv --delete /home/runner/work/***/***/./ ${{ secrets.USERNAME }}@${{ secrets.IP }}:/home/u410590140/kost-skripsi
       env:
         SSH_PRIVATE_KEY: ${{ secrets.KEY }}
         REMOTE_HOST: ${{ secrets.IP }}
