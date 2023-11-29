@@ -1,0 +1,27 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Tambahkan langkah-langkah lain untuk build/test jika diperlukan
+
+    - name: Deploy to Hostinger
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.Hostinger Key }}
+        REMOTE_HOST: ${{ secrets.154.41.240.68 }}
+        REMOTE_USER: ${{ secrets.u410590140 }}
+        REMOTE_PORT: ${{ secrets.65002 }}
+        SOURCE: "./"
+        TARGET: ${{ /home/u410590140/kost-skripsi }}
+        ARGS: "-avzr --delete"
