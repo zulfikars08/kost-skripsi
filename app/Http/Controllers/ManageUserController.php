@@ -12,11 +12,28 @@ class ManageUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         // Retrieve the list of users
         $users = User::all();
+
+        $query = User::query();
+     
+        // Cek apakah ada kata kunci pencarian yang diberikan
+        if ($request->filled('katakunci')) {
+            $katakunci = $request->input('katakunci');
+            $query->where('name', 'like', '%' . $katakunci . '%');
+        }
+    
+        // Paginate hasil query
+        $users = $query->paginate(5);
+    
+        // Cek apakah request adalah AJAX request
+        if ($request->ajax()) {
+            // Jika iya, kembalikan partial view yang berisi tabel penyewa saja
+            return view('manage-users.list', compact('users'))->render(); // Gunakan render() untuk mendapatkan HTML
+        }
 
         return view('manage-users.index', ['users' => $users]);
     }

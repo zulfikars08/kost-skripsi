@@ -87,9 +87,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('investorr/{id}/edit',[InvestorController::class, 'edit'])->name('investor.edit');
     Route::put('investorr/{id}', [InvestorController::class, 'update'])->name('investor.update');
-
+    Route::get('/get-suggestions', [InvestorController::class, 'getSuggestions']);
     Route::get('investor/{lokasi_id}/{bulan}/{tahun}', [TanggalInvestorController::class, 'show'])
         ->name('investor.detail.show');
+    Route::get('/investors/search', [InvestorController::class, 'search'])->name('investor.search');
+
     // Example: InvestorController routes
     Route::get('/generate-investor-report', [InvestorController::class, 'showGenerateFinancialReportView'])->name('show-generate-investor-report-view');
     Route::post('/generate-investor-report', [InvestorController::class, 'generateFinancialReport'])->name('generate-investor-report');
@@ -128,6 +130,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/transaksi/filter', [TransaksiController::class, 'filterTransaksi'])->name('transaksi.filter');
         Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
         Route::put('/transaksi/{id}', [TransaksiController::class, 'update'])->name('transaksi.update');
+        Route::post('/transaksi/filter', [TransaksiController::class, 'filter'])->name('transaksi.filter');
+        Route::get('/transaksi/updateList', [TransaksiController::class, 'updateList'])->name('transaksi.updateList');
 
         //manage user route
         Route::get('/manage-users', [ManageUserController::class, 'index'])->name('manage-users.index');
@@ -136,8 +140,8 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/manage-users/{user}', [ManageUserController::class, 'update'])->name('manage-users.update');
 
         //excel route
-        Route::get('/generate-report', [TransaksiController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
-        Route::post('/generate-report', [TransaksiController::class, 'generateFinancialReport'])->name('generate-financial-report');
+        Route::get('/generate-transaksi-report', [TransaksiController::class, 'showGenerateFinancialReportView'])->name('show-generate-transaksi-report-view');
+        Route::post('/generate-transaksi-report', [TransaksiController::class, 'generateFinancialReport'])->name('generate-transaksi-report');
 
         //laporan keuangan route
         Route::get('/laporan-keuangan', [LaporanKeuanganController::class, 'index'])->name('laporan-keuangan.detail.index');

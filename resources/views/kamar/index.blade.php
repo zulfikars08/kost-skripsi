@@ -9,25 +9,19 @@
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">
-            <!-- SEARCH FORM -->
-            <form class="d-flex" action="{{ route('kamar.index') }}" method="get" id="search-form">
-                <div class="input-group">
-                    {{-- <label class="input-group-text search-input" for="search-input">Search</label> --}}
-                    <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
-                        aria-label="Search" id="search-input">
-                    <button class="btn btn-secondary" type="submit">Cari</button>
-                    <button class="btn btn-secondary" type="submit">Reset Filter</button>
-                </div>
-            </form>
-
-
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
+            <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-secondary" type="submit">Reset Filter</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal" style="margin-left: 5px">
+                Filter
+            </button>
+            @include('kamar.filter')
+            </div>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal" style="margin-left: 5px">
                 <i class="fas fa-plus"></i> Tambah Data
             </button>
             @include('kamar.create')
-
             <!-- Include the modal partial -->
-
+            
             <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                 <table class="table table-striped">
                     <thead>

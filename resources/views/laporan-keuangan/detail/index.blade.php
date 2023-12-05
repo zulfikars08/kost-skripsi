@@ -10,38 +10,38 @@
     </button>
     <h3 class="text-start" style="margin: 20px 0;">Laporan Keuangan</h3>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
-    <div class="d-flex justify-content-between align-items-center pb-3">
-        {{-- <div class="d-flex flex-column">
-            <button type="button"
-                style="display: flex; align-items: center; background-color: rgb(64, 174, 207); color: #fff; border: none; padding: 5px; border-radius: 5px;"
-                data-bs-toggle="modal" data-bs-target="#tambahDataModal">
-                <i class="fas fa-plus"></i> Tambah Data Laporan
-            </button>
-            @include('laporan-keuangan.detail.create')
-        </div> --}}
-        <!-- Include the filter modal -->
-        <form class="d-flex" action="{{ route('laporan-keuangan.detail.index') }}" method="get" id="search-form">
-            <div class="input-group">
-                <input class="form-control" type="search" name="search" placeholder="Cari Nama Kos, Bulan, Tahun"
-                    aria-label="Search" id="search-input">
-                <button class="btn btn-secondary" type="submit">Cari</button>
+        <div class="d-flex justify-content-between align-items-center pb-3">
+            {{-- <div class="d-flex flex-column">
+                <button type="button"
+                    style="display: flex; align-items: center; background-color: rgb(64, 174, 207); color: #fff; border: none; padding: 5px; border-radius: 5px;"
+                    data-bs-toggle="modal" data-bs-target="#tambahDataModal">
+                    <i class="fas fa-plus"></i> Tambah Data Laporan
+                </button>
+                @include('laporan-keuangan.detail.create')
+            </div> --}}
+            <!-- Include the filter modal -->
+            {{-- <form class="d-flex" id="search-form">
+                <div class="input-group">
+                    <input class="form-control me-2" type="search" name="katakunci" placeholder="Masukkan kata kunci"
+                        aria-label="Search" id="search-input">
+                    <button class="btn btn-secondary" type="submit">Cari</button>
+                </div>
+            </form> --}}
+            <div class="d-flex justify-content-between mb-3">
+                <button class="btn btn-secondary" type="submit" style="margin-left: 5px">Reset Filter</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal"
+                    style="margin-left: 5px">
+                    Filter
+                </button>
+                @include('laporan-keuangan.detail.filter')
             </div>
-        </form>
-        <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
-                Filter
-            </button>
-            @include('laporan-keuangan.detail.filter')
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" style="margin-left:10px"
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" style="margin-left:5px"
                 data-bs-target="#generateReportModal">
                 Excel
             </button>
             @include('laporan-keuangan.export')
         </div>
-    </div>
 
-
- 
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table class="table table-striped" style="width: 100%;">
                 <thead>
@@ -103,8 +103,8 @@
                             {{ $item->status_pembayaran }}
                             @endif
                         </td>
-                        <td>{{ $item->jenis === 'pemasukan' ? $item->pemasukan : 0 }}</td>
-                        <td>{{ $item->jenis === 'pengeluaran' ? $item->pengeluaran : 0 }}</td>
+                        <td>Rp {{ number_format( $item->jenis === 'pemasukan' ? $item->pemasukan : 0) }}</td>
+                        <td>Rp {{ number_format($item->jenis === 'pengeluaran' ? $item->pengeluaran : 0) }}</td>
                         <td>{{ $item->keterangan }}</td>
                         <td>
                             <div class="d-flex justify-content-center">
@@ -116,8 +116,8 @@
                                 @include('laporan-keuangan.detail.edit')
 
 
-                                <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left: 10px" data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal{{ $item->id }}">
+                                <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left: 10px"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
                                     <i class="fas fa-trash" style="color: white"></i>
                                 </button>
                                 @include('laporan-keuangan.detail.delete')
@@ -150,35 +150,35 @@
             </table>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    hitungTotal();
-
-                    // Fungsi untuk menghitung total
-                    function hitungTotal() {
+                    // Call the function to calculate totals when the page is loaded
+                    calculateTotals();
+            
+                    // Function to calculate totals
+                    function calculateTotals() {
                         let totalPemasukan = 0;
                         let totalPengeluaran = 0;
                         const rows = document.querySelectorAll("tbody tr");
-
+            
                         rows.forEach(row => {
-                            const jenis = row.cells[6].textContent; // Kolom jenis (indeks 4)
-                            const pemasukan = parseFloat(row.cells[13].textContent); // Kolom pemasukan (indeks 6)
-                            const pengeluaran = parseFloat(row.cells[14].textContent); // Kolom pengeluaran (indeks 7)
-
+                            const pemasukan = parseFloat(row.cells[13].textContent.replace('Rp', '').replace(',', '')); // Kolom pemasukan (indeks 13)
+                            const pengeluaran = parseFloat(row.cells[14].textContent.replace('Rp', '').replace(',', '')); // Kolom pengeluaran (indeks 14)
+            
                             if (!isNaN(pemasukan)) {
                                 totalPemasukan += pemasukan;
                             }
-
+            
                             if (!isNaN(pengeluaran)) {
                                 totalPengeluaran += pengeluaran;
                             }
                         });
-
+            
                         // Hitung total pendapatan bersih
                         const pendapatanBersih = totalPemasukan - totalPengeluaran;
-
+            
                         // Perbarui total pemasukan, pengeluaran, dan pendapatan bersih
-                        document.getElementById("totalPemasukan").textContent = totalPemasukan.toFixed(2);
-                        document.getElementById("totalPengeluaran").textContent = totalPengeluaran.toFixed(2);
-                        document.getElementById("pendapatanBersih").textContent = pendapatanBersih.toFixed(2);
+                        document.getElementById("totalPemasukan").textContent = `Rp ${totalPemasukan.toFixed(2)}`;
+                        document.getElementById("totalPengeluaran").textContent = `Rp ${totalPengeluaran.toFixed(2)}`;
+                        document.getElementById("pendapatanBersih").textContent = `Rp ${pendapatanBersih.toFixed(2)}`;
                     }
                 });
             </script>
@@ -191,9 +191,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="imageModalLabel">Bukti Pembayaran</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <img id="buktiPembayaranImage" src="" alt="Bukti Pembayaran" class="img-fluid"
@@ -202,7 +200,6 @@
         </div>
     </div>
 </div>
-
 <script>
     function openImageModal(imageUrl) {
         // Set the image source

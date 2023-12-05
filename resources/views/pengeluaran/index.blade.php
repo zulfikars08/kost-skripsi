@@ -9,40 +9,41 @@
 
     
     <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <div class="d-flex justify-content-between align-items-center pb-3">
+        <div class="d-flex justify-content-end align-items-center mb-3">
             <!-- SEARCH FORM -->
-            <form class="d-flex" action="{{ route('lokasi_kos.index') }}" method="get" id="search-form">
+            {{-- <form class="d-flex" action="{{ route('lokasi_kos.index') }}" method="get" id="search-form">
                 <div class="input-group">
-                    {{-- <label class="input-group-text search-input" for="search-input">Search</label> --}}
+                    <label class="input-group-text search-input" for="search-input">Search</label>
                     <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
                         aria-label="Search" id="search-input">
                     <button class="btn btn-secondary" type="submit">Cari</button>
                 </div>
-            </form>
-            <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataPengeluaranModal">
-                <i class="fas fa-plus"></i> Tambah Data
-            </button>
-            @include('pengeluaran.create')
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+            </form> --}}
+            <button class="btn btn-secondary" type="submit" style="margin-left: 5px">Reset Filter</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal" style="margin-left: 5px">
                 Filter
             </button>
             @include('pengeluaran.filter')
-            </div>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataPengeluaranModal" style="margin-left: 5px">
+                <i class="fas fa-plus"></i> Tambah Data
+            </button>
+            @include('pengeluaran.create')
+            {{-- </div> --}}
             <!-- Include the modal partial -->
         </div>
+        <div class="table-responsive" >
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Kode Pengeluaran</th>
-                    <th>No Kamar</th>
-                    <th>Nama Kos</th>
-                    <th>Tanggal</th>
-                    <th>Tipe Pembayaran</th>
-                    <th>Bukti Pembayaran</th>
-                    <th>Jumlah</th>
-                    <th>Keterangan</th>
-                    <th>Aksi</th>
+                    <th style="white-space: nowrap;">Kode Pengeluaran</th>
+                    <th style="white-space: nowrap;">No Kamar</th>
+                    <th style="white-space: nowrap;">Nama Kos</th>
+                    <th style="white-space: nowrap;">Tanggal</th>
+                    <th style="white-space: nowrap;">Tipe Pembayaran</th>
+                    <th style="white-space: nowrap;">Bukti Pembayaran</th>
+                    <th style="white-space: nowrap;">Jumlah</th>
+                    <th style="white-space: nowrap;">Keterangan</th>
+                    <th style="white-space: nowrap;">Aksi</th>
                     {{-- <th>Actions</th> --}}
                 </tr>
             </thead>
@@ -84,6 +85,7 @@
                 @endforeach
             </tbody>
         </table>
+        </div>
     </div>
     <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">

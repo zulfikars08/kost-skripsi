@@ -24,21 +24,33 @@ class PenyewaController extends Controller
     
      public function index(Request $request)
      {
-         // Retrieve all Penyewa records from the database
-         $penyewas = Penyewa::paginate(5); // You can adjust the number of records per page
+         // Inisialisasi query builder untuk model Penyewa
+         $query = Penyewa::query();
      
-         // If a search keyword is provided, filter the results
-         if ($request->has('katakunci')) {
+         // Cek apakah ada kata kunci pencarian yang diberikan
+         if ($request->filled('katakunci')) {
              $katakunci = $request->input('katakunci');
-             $penyewas = Penyewa::where('nama', 'like', '%' . $katakunci . '%')
-                 ->paginate(5); // You can adjust the number of records per page for search results
+             $query->where('nama', 'like', '%' . $katakunci . '%');
          }
+     
+         // Paginate hasil query
+         $penyewas = $query->paginate(5);
+     
+         // Cek apakah request adalah AJAX request
+         if ($request->ajax()) {
+             // Jika iya, kembalikan partial view yang berisi tabel penyewa saja
+             return view('penyewa.list', compact('penyewas'))->render(); // Gunakan render() untuk mendapatkan HTML
+         }
+     
+         // Siapkan data lain yang diperlukan oleh halaman
          $kamars = Kamar::all();
          $lokasiKos = LokasiKos::all();
          
-         // Load the view and pass the data to it
-         return view('penyewa.index', compact('penyewas', 'lokasiKos','kamars'));
+         // Kembalikan full view dengan semua data yang diperlukan
+         return view('penyewa.index', compact('penyewas', 'kamars', 'lokasiKos'));
      }
+     
+     
      
     
     /**

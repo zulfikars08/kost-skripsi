@@ -10,10 +10,14 @@
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <!-- SEARCH FORM -->
-            <form class="d-flex" action="{{ route('manage-users.index') }}" method="get">
+            <form class="d-flex" id="search-form">
                 <div class="input-group">
-                    <input class="form-control" type="search" name="search" placeholder="Search by name or email" aria-label="Search">
-                    <button class="btn btn-secondary" type="submit">Search</button>
+                    {{-- <button class="btn btn-secondary">Cari</button> --}}
+                    <input class="form-control me-2" type="search" name="katakunci" placeholder="Masukan Nama"
+                        aria-label="Search" id="search-input">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        </div>
                 </div>
             </form>
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addUserModal">
@@ -21,36 +25,42 @@
             </button>
             @include('manage-users.create')
         </div>
-        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-            <table class="table table-striped" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($users as $user)
-                <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->role }}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}"><i class="fas fa-edit" style="color: white"></i></button>
-                        @include('manage-users.edit')
-                        {{-- <form action="{{ route('manage-users.destroy', $user->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
-                        </form> --}}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+         <div id="search-results">
+            {{-- Content will be loaded via AJAX --}}
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        // Load initial data
+        fetchPenyewaData();
+
+        // Fetch data as the user types in the search field
+        $('#search-input').on('input', function() {
+            var katakunci = $(this).val();
+            fetchPenyewaData(katakunci);
+        });
+
+        // Prevent form submission and fetch data when search button is clicked
+        $('#search-button').click(function() {
+            var katakunci = $('#search-input').val();
+            fetchPenyewaData(katakunci);
+        });
+
+        // AJAX function to fetch data
+        function fetchPenyewaData(katakunci = '') {
+            $.ajax({
+                url: "{{ route('manage-users.index') }}",
+                type: 'GET',
+                data: { katakunci: katakunci },
+                success: function(response) {
+                    $('#search-results').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+    });
+</script>
 @endsection

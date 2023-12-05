@@ -47,7 +47,7 @@ class InvestorController extends Controller
                 ->get();
             $investors = $investors->concat($investor);
         }
-
+        $searchTerm = $request->input('nama');
         // Start a new query to filter the data
         $query = Investor::query();
 
@@ -66,24 +66,26 @@ class InvestorController extends Controller
         if ($nama) {
             $query->where('nama', 'like', '%' . $nama . '%');
         }
-
+        if ($searchTerm) {
+            $investors->where('nama', 'like', '%' . $searchTerm . '%');
+        }
         // Get the filtered data
-        $investor = $query->get();
-
+        $investors = $query->get();
+        if($request->ajax()) {
+            return view('investor.detail.list', compact('investors', 'months','years'));
+        }
         // Pagination
-        $page = $request->get('page', 1);
-        $perPage = 10;
-        $items = $investor->forPage($page, $perPage);
-        $investors = new LengthAwarePaginator($items, $investor->count(), $perPage, $page);
 
         return view('investor.detail.index', compact('investors', 'lokasiKos', 'laporanKeuangan', 'months', 'years', 'tanggalInvestor'));
     }
 
-
-
-
-
-
+    // Helper function to generate months array
+    public function search(Request $request)
+    {
+        $nama = $request->input('nama');
+        $investors = Investor::where('nama', 'like', '%' . $nama . '%')->paginate(10);
+        return view('investor.detail.list', compact('investors'));
+    }
 
     public function create()
     {
@@ -115,7 +117,7 @@ class InvestorController extends Controller
         $investor->bulan = $request->input('bulan');
         $investor->tahun = $request->input('tahun');
         $investor->lokasi_id = $request->input('lokasi_id');
-        
+
         // Count the number of investors for the same 'lokasi_id'
         $jumlahInvestor = Investor::where('lokasi_id', $investor->lokasi_id)
             ->where('bulan', $bulan)
@@ -179,18 +181,18 @@ class InvestorController extends Controller
 
 
 
-    public function show($lokasi_id, $bulan, $tahun)
-    {
-        // Fetch the data you need for the view
-        $investors = Investor::where('lokasi_id', $lokasi_id)
-            ->where('bulan', $bulan)
-            ->where('tahun', $tahun)
-            ->get();
+    // public function show($lokasi_id, $bulan, $tahun)
+    // {
+    //     // Fetch the data you need for the view
+    //     $investors = Investor::where('lokasi_id', $lokasi_id)
+    //         ->where('bulan', $bulan)
+    //         ->where('tahun', $tahun)
+    //         ->get();
 
-        $lokasiKos = LokasiKos::find($lokasi_id);
+    //     $lokasiKos = LokasiKos::find($lokasi_id);
 
-        return view('investor.detail.show', compact('investors', 'lokasiKos', 'bulan', 'tahun'));
-    }
+    //     return view('investor.detail.show', compact('investors', 'lokasiKos', 'bulan', 'tahun'));
+    // }
 
     public function showGenerateFinancialReportView()
     {
@@ -255,7 +257,7 @@ class InvestorController extends Controller
         $lokasiKos = LokasiKos::all(); // Assuming you have this model
         $months = $this->getMonths(); // Add your logic for getting months
         $years = $this->getYears(); // Add your logic for getting years
-    
+
         return view('investor.detail.edit', compact('investor', 'lokasiKos', 'months', 'years'));
     }
     public function update(Request $request, $id)
@@ -287,20 +289,19 @@ class InvestorController extends Controller
     }
 
     public function destroy($id)
-{
-    // Find the investor by ID
-    $investor = Investor::find($id);
+    {
+        // Find the investor by ID
+        $investor = Investor::find($id);
 
-    // Check if the investor exists
-    if (!$investor) {
-        return redirect()->back()->with('error', 'Investor tidak ditemukan');
+        // Check if the investor exists
+        if (!$investor) {
+            return redirect()->back()->with('error', 'Investor tidak ditemukan');
+        }
+
+        // Delete the investor
+        $investor->delete();
+
+        // Redirect to the index page with a success message
+        return redirect()->route('investor.detail.index')->with('success_delete', 'Investor berhasil di hapus');
     }
-
-    // Delete the investor
-    $investor->delete();
-
-    // Redirect to the index page with a success message
-    return redirect()->route('investor.detail.index')->with('success_delete', 'Investor berhasil di hapus');
-}
-
 }

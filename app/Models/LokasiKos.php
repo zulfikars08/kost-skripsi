@@ -27,6 +27,7 @@ class LokasiKos extends Model
             $model->id = Str::uuid(); // Automatically set UUID when creating a new record
         });
     }
+    
 
     public function kamars()
     {

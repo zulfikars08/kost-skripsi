@@ -23,65 +23,68 @@ class TransaksiController extends Controller
 
     public function index(Request $request)
     {
-
+        // Retrieve all instances for dropdowns in the filter modal.
         $lokasiKosData = ModelsLokasiKos::all();
-        $namaKos = $request->input('nama_kos');
-        $bulan = $request->input('bulan');
-        $tahun = $request->input('tahun');
-        $statusPembayaran = $request->input('status_pembayaran');
+    
+        // Generate month and year arrays for the dropdowns.
+        $months = $this->getMonthsArray();
+        $years = $this->getYearsArray();
+    
+        // Start the query builder.
+         $query = Transaksi::query();
+
+    // Add search criteria
+    if ($request->filled('katakunci')) {
+        $katakunci = $request->input('katakunci');
+        $query->whereHas('penyewa', function ($q) use ($katakunci) {
+            $q->where('nama', 'like', '%' . $katakunci . '%');
+        });
+    }
+
+    // Apply filters if present.
+    if ($request->filled('nama_kos')) {
+        $query->whereHas('lokasiKos', function ($q) use ($request) {
+            $q->where('nama_kos', $request->input('nama_kos'));
+        });
+    }
+    if ($request->filled('bulan')) {
+        $query->whereMonth('tanggal', '=', $request->bulan);
+    }
+    if ($request->filled('tahun')) {
+        $query->whereYear('tanggal', '=', $request->tahun);
+    }
+    if ($request->filled('status_pembayaran')) {
+        $query->where('status_pembayaran', $request->status_pembayaran);
+    }
+
+    // Execute the query and get the results
+    $transaksiData = $query->paginate(10);
+
+    // Check if the request is AJAX and return the appropriate view
+    if ($request->ajax()) {
+        return view('transaksi.list', compact('transaksiData'))->render();
+    }
+
+    
+        // For the non-AJAX request, return the full view.
+        return view('transaksi.index', compact('transaksiData', 'lokasiKosData', 'months', 'years'));
+    }
+    
+    // Helper method to generate months array.
+    private function getMonthsArray() {
         $months = [];
         for ($i = 1; $i <= 12; $i++) {
-            $monthValue = str_pad($i, 2, '0', STR_PAD_LEFT); // Format to two digits (e.g., 01, 02, ...)
-            $monthName = date("F", mktime(0, 0, 0, $i, 1)); // Get month name from numeric value
-            $months[$monthValue] = $monthName;
-            // ... (your month data creation)
+            $months[$i] = date('F', mktime(0, 0, 0, $i, 1));
         }
-        // Generate an array of years (e.g., from the current year to 10 years ago)
-        $currentYear = date('Y');
-        $years = range($currentYear, $currentYear - 10);
-
-        // Check for the search query
-        if ($request->has('katakunci')) {
-            $katakunci = $request->input('katakunci');
-            $transaksiData = Transaksi::where('nama_kos', 'like', '%' . $katakunci . '%')
-                ->orWhereHas('penyewa', function ($query) use ($katakunci) {
-                    $query->where('nama', 'like', '%' . $katakunci . '%');
-                })
-                ->orWhereHas('lokasiKos', function ($query) use ($katakunci) {
-                    $query->where('nama_kos', 'like', '%' . $katakunci . '%');
-                })
-                ->orWhereHas('kamar', function ($query) use ($katakunci) {
-                    $query->where('no_kamar', 'like', '%' . $katakunci . '%');
-                })
-                ->paginate(5)
-                ->withQueryString();
-        } else {
-            $transaksiData = Transaksi::paginate(5)->withQueryString();
-        }
-
-        $transaksiData = Transaksi::when($namaKos, function ($query) use ($namaKos) {
-            return $query->whereHas('lokasiKos', function ($subQuery) use ($namaKos) {
-                $subQuery->where('nama_kos', $namaKos);
-            });
-        })
-            ->when($bulan, function ($query) use ($bulan) {
-                return $query->whereMonth('tanggal', $bulan);
-            })
-            ->when($tahun, function ($query) use ($tahun) {
-                return $query->whereYear('tanggal', $tahun);
-            })
-            ->when($statusPembayaran, function ($query) use ($statusPembayaran) {
-                return $query->where('status_pembayaran', $statusPembayaran);
-            })
-            ->with('lokasiKos')
-            ->paginate(5);
-
-
-
-
-        // Tampilkan view 'transaksi.index' and kirimkan data transaksi
-        return view('transaksi.index', compact('lokasiKosData', 'transaksiData', 'months', 'years'));
+        return $months;
     }
+    
+    // Helper method to generate years array.
+    private function getYearsArray() {
+        $currentYear = date('Y');
+        return range($currentYear - 10, $currentYear);
+    }
+
 
 
 
@@ -113,11 +116,11 @@ class TransaksiController extends Controller
             'kamar_id' => 'required|exists:kamar,id',
             'lokasi_id' => 'required|exists:lokasi_kos,id',
         ]);
-    
+        $jumlah_tarif = $request->filled('jumlah_tarif') ? intval(str_replace(',', '', $request->jumlah_tarif)) : intval(str_replace(',', '', $request->jumlah_tarif));
         // Create a new transaction
         $transaksi = new Transaksi;
         $transaksi->tanggal = $validatedData['tanggal'];
-        $transaksi->jumlah_tarif = $validatedData['jumlah_tarif'];
+        $transaksi->jumlah_tarif = $jumlah_tarif;
         $transaksi->tipe_pembayaran = $validatedData['tipe_pembayaran'];
         $transaksi->kamar_id = $validatedData['kamar_id'];
         $transaksi->lokasi_id = $validatedData['lokasi_id'];
@@ -170,7 +173,7 @@ class TransaksiController extends Controller
     
             $request->validate([
                 'tanggal' => 'nullable|date',
-                'jumlah_tarif' => 'required|numeric',
+                'jumlah_tarif' => ['required', 'regex:/^\d+(\,\d{1,3})*$/'],
                 'tipe_pembayaran' => 'required|in:tunai,non-tunai',
                 'tanggal_pembayaran_awal' => 'nullable|date',
                 'tanggal_pembayaran_akhir' => 'nullable|date',
@@ -178,12 +181,13 @@ class TransaksiController extends Controller
                 'status_pembayaran' => 'required|in:lunas,belum_unas,cicil',
                 // Add validation rules for other fields as needed
             ]);
-    
+            // dd($request->all());
             $transaksi = Transaksi::findOrFail($id);
-    
+            $jumlah_tarif = $request->filled('jumlah_tarif') ? intval(str_replace(',', '', $request->jumlah_tarif)) : 0;
+          
             $data = [
                 'tanggal' => $request->input('tanggal'),
-                'jumlah_tarif' => $request->input('jumlah_tarif'),
+                'jumlah_tarif' => str_replace(',', '', $request->input('jumlah_tarif')),
                 'tipe_pembayaran' => $request->input('tipe_pembayaran'),
                 'bukti_pembayaran' => $request->input('bukti_pembayaran'),
                 'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
@@ -201,7 +205,7 @@ class TransaksiController extends Controller
             } elseif ($request->input('tipe_pembayaran') === 'tunai') {
                 $data['bukti_pembayaran'] = 'Cash Payment';
             }
-    
+            
             if (!is_null($request->input('tanggal'))) {
                 $tanggal = Carbon::parse($request->input('tanggal'));
                 $bulan = $tanggal->format('m');
@@ -302,7 +306,7 @@ class TransaksiController extends Controller
         $export = new TransaksiExport($filteredTransaksiData, $namaKos, $namaBulan);
 
         // Generate and download the Excel file
-        return Excel::download($export, 'laporan-keuangan.xlsx');
+        return Excel::download($export, 'transaksi.xlsx');
     }
 
 

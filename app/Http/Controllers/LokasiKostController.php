@@ -16,31 +16,28 @@ class LokasiKostController extends Controller
      */
     public function index(Request $request)
     {
-        sleep(1);
-        $katakunci = $request->input('katakunci');
-        $data = LokasiKos::with('kamars')->when($katakunci, function ($query) use ($katakunci) {
-            return $query->where('nama_kos', 'like', "%$katakunci%");
-        }) // Eager load the kamars relationship
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        $query = LokasiKos::query();
+     
+         // Cek apakah ada kata kunci pencarian yang diberikan
+         if ($request->filled('katakunci')) {
+             $katakunci = $request->input('katakunci');
+             $query->where('nama_kos', 'like', '%' . $katakunci . '%');
+         }
+     
+         // Paginate hasil query
+         $data = $query->paginate(5);
+     
+         // Cek apakah request adalah AJAX request
+         if ($request->ajax()) {
+             // Jika iya, kembalikan partial view yang berisi tabel penyewa saja
+             return view('lokasi_kos.list', compact('data'))->render(); // Gunakan render() untuk mendapatkan HTML
+         }
+     
 
         return view('lokasi_kos.index', compact('data'));
     }
 
-    public function lokasi(Request $request)
-{
-    sleep(1);
-    $katakunci = $request->input('katakunci');
-    
-    $lokasiKosData = LokasiKos::with('kamars')
-        ->when($katakunci, function ($query) use ($katakunci) {
-            return $query->where('nama_kos', 'like', "%$katakunci%");
-        })
-        ->orderBy('created_at', 'desc')
-        ->paginate(5);
-
-    return view('tanggal-transaksi.lokasi', compact('lokasiKosData'));
-}
+   
 
     /**
      * Show the form for creating a new resource.

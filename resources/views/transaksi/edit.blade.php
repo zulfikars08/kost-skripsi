@@ -17,13 +17,12 @@
                         <label for="tanggal" class="form-label">Tanggal</label>
                         <input type="date" class="form-control" name="tanggal" id="tanggal">
                     </div>
-
                     <div class="mb-3 custom-form-group">
                         <label for="jumlah_tarif" class="form-label">Jumlah Tarif</label>
-                        <input type="text" class="form-control" name="jumlah_tarif" id="jumlah_tarif"
-                            value="{{ old('jumlah_tarif') }}" required>
+                        <input type="text" class="form-control" name="jumlah_tarif" id="jumlah_tarif" 
+                        placeholder="e.g., 1,000" value="{{ number_format($item->jumlah_tarif, 0, ',', ',') }}" required 
+                        onkeyup="formatNumberWithComma(this)">                    
                     </div>
-
                     <!-- Tipe Pembayaran -->
                     <div class="mb-3 custom-form-group">
                         <label for="tipe_pembayaran" class="form-label">Tipe Pembayaran</label>
@@ -71,7 +70,7 @@
                     <div class="mb-3 custom-form-group">
                         <label for="keterangan" class="form-label">Keterangan</label>
                         <input type="text" class="form-control" name="keterangan" id="keterangan"
-                            value="{{ old('keterangan') }}" required>
+                            value="{{ old('keterangan') }}" >
                     </div>
                     <!-- Add other fields as needed -->
                 </div>
@@ -115,5 +114,12 @@
         tipePembayaranSelect.dispatchEvent(new Event("change"));
         statusPembayaranSelect.dispatchEvent(new Event("change"));
     });
+    function formatNumberWithComma(inputField) {
+        let input = inputField.value;
+        // Remove any non-digit characters, including commas
+        let number = input.replace(/[^0-9]/g, '');
+        // Format the number with commas and update the input field
+        inputField.value = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 </script>
 

@@ -17,34 +17,32 @@ class KamarController extends Controller
     // Display a listing of the resource.
     public function index(Request $request)
     {
-        $katakunci = $request->input('katakunci');
-        $filter_by_tipe_kamar = $request->input('filter_by_tipe_kamar');
-        $filter_by_lokasi = $request->input('filter_by_lokasi');
-        $filter_by_status = $request->input('filter_by_status');
-
-        $filteredKamarData = Kamar::when($katakunci, function ($query) use ($katakunci) {
-            $query->where('no_kamar', 'like', "%$katakunci%");
-        })
-            ->when($filter_by_lokasi, function ($query) use ($filter_by_lokasi) {
-                $query->whereHas('lokasiKos', function ($subQuery) use ($filter_by_lokasi) {
-                    $subQuery->where('nama_kos', $filter_by_lokasi);
+        // Retrieve input data from the request
+        $namaKos = $request->input('nama_kos');
+        $tipe_kamar = $request->input('tipe_kamar');
+        $status = $request->input('status');
+    
+        // Query to filter Kamar data based on user inputs
+        $filteredKamarData = Kamar::when($namaKos, function ($query) use ($namaKos) {
+                $query->whereHas('lokasiKos', function ($subQuery) use ($namaKos) {
+                    $subQuery->where('nama_kos', $namaKos);
                 });
             })
-            ->when($filter_by_status, function ($query) use ($filter_by_status) {
-                $query->where('status', $filter_by_status);
+            ->when($tipe_kamar, function ($query) use ($tipe_kamar) {
+                $query->where('tipe_kamar', $tipe_kamar);
             })
-            ->when($filter_by_tipe_kamar, function ($query) use ($filter_by_tipe_kamar) {
-                $query->where('tipe_kamar', $filter_by_tipe_kamar);
+            ->when($status, function ($query) use ($status) {
+                $query->where('status', $status);
             })
             ->with('lokasiKos')
             ->paginate(5);
-
-
+    
         $lokasiKosOptions = LokasiKos::all();
         $kamars = Kamar::all();
-
-        return view('kamar.index', compact('filteredKamarData', 'lokasiKosOptions','kamars'));
+    
+        return view('kamar.index', compact('filteredKamarData', 'lokasiKosOptions', 'kamars'));
     }
+    
 
 
     // ... Other methods in your controller ...

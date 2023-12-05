@@ -27,6 +27,7 @@ class Transaksi extends Model
         'penyewa_id',
         'tanggal_transaksi_id'
     ];
+    
     protected static function boot()
     {
         parent::boot();

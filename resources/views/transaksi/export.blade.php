@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('generate-financial-report') }}" method="post">
+                <form action="{{ route('generate-transaksi-report') }}" method="post">
                     @csrf
                     <div class="form-group">
                         <label for="nama_kos">Name of Kos:</label>

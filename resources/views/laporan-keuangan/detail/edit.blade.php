@@ -71,16 +71,18 @@
                         <div class="col-md-6" id="pemasukanField_{{ $item->id }}" style="display: none;">
                             <div class="mb-3">
                                 <label for="pemasukan" class="form-label">Jumlah Pemasukan</label>
-                                <input type="number" class="form-control" id="pemasukan_{{ $item->id }}" name="pemasukan"
-                                    value="{{ $item->jenis === 'pemasukan' ? $item->jumlah : '' }}">
+                                <input type="text" class="form-control" id="pemasukan_{{ $item->id }}" name="pemasukan"
+                                    value="{{ number_format($item->jumlah, 0, ',', ',') }}" required 
+                                    onkeyup="formatNumberWithComma(this)">
                             </div>
                         </div>
                         <!-- Jumlah Pengeluaran -->
                         <div class="col-md-6" id="pengeluaranField_{{ $item->id }}" style="display: none;">
                             <div class="mb-3">
                                 <label for="pengeluaran" class="form-label">Jumlah Pengeluaran</label>
-                                <input type="number" class="form-control" id="pengeluaran_{{ $item->id }}" name="pengeluaran"
-                                    value="{{ $item->jenis === 'pengeluaran' ? $item->jumlah : '' }}">
+                                <input type="text" class="form-control" id="pengeluaran_{{ $item->id }}" name="pengeluaran"
+                                    value="{{ number_format($item->jumlah, 0, ',', ',') }}" required 
+                                    onkeyup="formatNumberWithComma(this)">
                             </div>
                         </div>
                         <!-- Bukti Pembayaran -->
@@ -99,14 +101,15 @@
                         <!-- Tanggal Pembayaran Awal and Tanggal Pembayaran Akhir Container (with unique ID) -->
                         <div class="col-md-6" id="tanggal_pembayaran_fields_{{ $item->id }}" style="display: none;">
                             <!-- Tanggal Pembayaran Awal -->
-                            <div class="mb-3">
-                                <label for="tanggal_pembayaran_awal" class="form-label">Tanggal Pembayaran Awal</label>
+                            <div class="mb-3 custom-form-group">
+                                <label for="tanggal_pembayaran_awal_{{ $item->id }}" class="form-label">Tanggal Pembayaran Awal</label>
                                 <input type="date" class="form-control" name="tanggal_pembayaran_awal"
                                     id="tanggal_pembayaran_awal_{{ $item->id }}">
                             </div>
+    
                             <!-- Tanggal Pembayaran Akhir -->
-                            <div class="mb-3">
-                                <label for="tanggal_pembayaran_akhir" class="form-label">Tanggal Pembayaran Akhir</label>
+                            <div class="mb-3 custom-form-group">
+                                <label for="tanggal_pembayaran_akhir_{{ $item->id }}" class="form-label">Tanggal Pembayaran Akhir</label>
                                 <input type="date" class="form-control" name="tanggal_pembayaran_akhir"
                                     id="tanggal_pembayaran_akhir_{{ $item->id }}">
                             </div>
@@ -134,42 +137,54 @@
 
 <script>
     // Function to toggle fields based on the selected "jenis"
-    function toggleJenisFields(laporanId) {
-        const selectedJenis = document.getElementById(`jenis_${laporanId}`).value;
-        const pemasukanField = document.getElementById(`pemasukanField_${laporanId}`);
-        const pengeluaranField = document.getElementById(`pengeluaranField_${laporanId}`);
+    document.addEventListener("DOMContentLoaded", function () {
+        var tipePembayaranSelect = document.getElementById("tipe_pembayaran_{{ $item->id }}");
+        var statusPembayaranSelect = document.getElementById("status_pembayaran_{{ $item->id }}");
+        var buktiPembayaranField = document.getElementById("bukti_pembayaran_field_{{ $item->id }}");
+        var tanggalPembayaranFields = document.getElementById("tanggal_pembayaran_fields_{{ $item->id }}");
+        var jenisSelect = document.getElementById("jenis_{{ $item->id }}");
+        var pemasukanField = document.getElementById("pemasukanField_{{ $item->id }}");
+        var pengeluaranField = document.getElementById("pengeluaranField_{{ $item->id }}");
 
-        if (selectedJenis === 'pemasukan') {
-            pemasukanField.style.display = 'block';
-            pengeluaranField.style.display = 'none';
-        } else if (selectedJenis === 'pengeluaran') {
-            pemasukanField.style.display = 'none';
-            pengeluaranField.style.display = 'block';
-        } else {
-            pemasukanField.style.display = 'none';
-            pengeluaranField.style.display = 'none';
-        }
-    }
+        function updateVisibility() {
+            if (tipePembayaranSelect.value === "non-tunai") {
+                buktiPembayaranField.style.display = "block";
+            } else {
+                buktiPembayaranField.style.display = "none";
+            }
 
-    // Function to toggle Bukti Pembayaran field
-    function toggleBuktiPembayaranField(laporanId) {
-        const tipePembayaran = document.getElementById(`tipe_pembayaran_${laporanId}`).value;
-        const buktiPembayaranField = document.getElementById(`bukti_pembayaran_field_${laporanId}`);
-        if (tipePembayaran === 'non-tunai') {
-            buktiPembayaranField.style.display = 'block';
-        } else {
-            buktiPembayaranField.style.display = 'none';
-        }
-    }
+            if (statusPembayaranSelect.value === 'cicil') {
+                tanggalPembayaranFields.style.display = 'block';
+            } else {
+                tanggalPembayaranFields.style.display = 'none';
+            }
 
-    // Function to toggle Tanggal Pembayaran fields
-    function toggleTanggalPembayaranFields(laporanId) {
-        const statusPembayaran = document.getElementById(`status_pembayaran_${laporanId}`).value;
-        const tanggalPembayaranFields = document.getElementById(`tanggal_pembayaran_fields_${laporanId}`);
-        if (statusPembayaran === 'cicil') {
-            tanggalPembayaranFields.style.display = 'block'; // Show the date fields for Cicil
-        } else {
-            tanggalPembayaranFields.style.display = 'none'; // Hide the date fields for Lunas dan Belum Lunas
+            if (jenisSelect.value === "pemasukan") {
+                pemasukanField.style.display = "block";
+                pengeluaranField.style.display = "none";
+            } else if (jenisSelect.value === "pengeluaran") {
+                pemasukanField.style.display = "none";
+                pengeluaranField.style.display = "block";
+            } else {
+                pemasukanField.style.display = "none";
+                pengeluaranField.style.display = "none";
+            }
         }
+
+        tipePembayaranSelect.addEventListener("change", updateVisibility);
+        statusPembayaranSelect.addEventListener("change", updateVisibility);
+        jenisSelect.addEventListener("change", updateVisibility);
+        // Trigger the change event to initialize the form based on the default selected values
+        tipePembayaranSelect.dispatchEvent(new Event("change"));
+        statusPembayaranSelect.dispatchEvent(new Event("change"));
+        jenisSelect.dispatchEvent(new Event("change"));
+    });
+
+    function formatNumberWithComma(inputField) {
+        let input = inputField.value;
+        // Remove any non-digit characters, including commas
+        let number = input.replace(/[^0-9]/g, '');
+        // Format the number with commas and update the input field
+        inputField.value = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 </script>

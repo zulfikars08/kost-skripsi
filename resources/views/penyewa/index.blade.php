@@ -1,80 +1,70 @@
+{{-- resources/views/penyewa/index.blade.php --}}
 @extends('layout.template')
 
 @section('content')
 @include('komponen.pesan')
+
 <div class="container-fluid">
-    <h3 class="text-start"
-        style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
-        Data Penyewa</h3>
+    <h3 class="text-start mb-4">Data Penyewa</h3>
 
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">
             <!-- SEARCH FORM -->
-            <form class="d-flex" action="{{ route('penyewa.index') }}" method="get" id="search-form">
+            <form class="d-flex" id="search-form">
                 <div class="input-group">
-                    <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
+                    <input class="form-control me-2" type="search" name="katakunci" placeholder="Masukkan Nama"
                         aria-label="Search" id="search-input">
-                    <button class="btn btn-secondary" type="submit">Cari</button>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        </div>
                 </div>
             </form>
-
+            <!-- Tambah Data Button -->
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataModal">
                 <i class="fas fa-plus"></i> Tambah Data
             </button>
-            @include('penyewa.create')
             <!-- Include the modal partial -->
+            @include('penyewa.create')
         </div>
         <!-- PENYEWA LIST TABLE -->
-        <div class="table-responsive">
-            <table class="table table-striped" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>ID</th> <!-- Add the ID column -->
-                        <th>Nama</th>
-                        <th>No Kamar</th>
-                        <th>Lokasi Kos</th>
-                        <th>Status Penyewa</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($penyewas as $penyewa)
-                    <tr>
-                        <td>{{ $loop->index + 1 + $penyewas->perPage() * ($penyewas->currentPage() - 1) }}</td>
-                        <td>{{ $penyewa->kode_penyewa }}</td> <!-- Display the ID -->
-                        <td>{{ $penyewa->nama }}</td>
-                        <td>{{ $penyewa->kamar->no_kamar }}</td>
-                        <td>{{ $penyewa->lokasiKos->nama_kos }}</td>
-                        <td>
-                            @if ($penyewa->status_penyewa === 'aktif')
-                            <button class="btn btn-success btn-sm">Aktif</button>
-                            @else
-                            <button class="btn btn-danger btn-sm">Tidak Aktif</button>
-                            @endif
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                data-bs-target="#editStatusPenyewaModal{{ $penyewa->id }}">
-                                <i class="fas fa-edit" style="color: white"></i>
-                            </button>
-                            @include('penyewa.edit')
-                            <a href="{{ route('penyewa.show', $penyewa->id) }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-info-circle" style="color: white"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8">Tidak ada data.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-            {{ $penyewas->withQueryString()->links() }}
+        <div id="search-results">
+            {{-- Content will be loaded via AJAX --}}
         </div>
-        
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Load initial data
+        fetchPenyewaData();
+
+        // Fetch data as the user types in the search field
+        $('#search-input').on('input', function() {
+            var katakunci = $(this).val();
+            fetchPenyewaData(katakunci);
+        });
+
+        // Prevent form submission and fetch data when search button is clicked
+        $('#search-button').click(function() {
+            var katakunci = $('#search-input').val();
+            fetchPenyewaData(katakunci);
+        });
+
+        // AJAX function to fetch data
+        function fetchPenyewaData(katakunci = '') {
+            $.ajax({
+                url: "{{ route('penyewa.index') }}",
+                type: 'GET',
+                data: { katakunci: katakunci },
+                success: function(response) {
+                    $('#search-results').html(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
+    });
+</script>
 
 @endsection

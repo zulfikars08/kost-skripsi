@@ -26,13 +26,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('css/main.css') }}" rel="stylesheet" type="text/css">
+  {{-- <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ asset('css/search.css') }}" rel="stylesheet" type="text/css">
-  <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" 
-  integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" 
-  crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" type="text/css"> --}}
 
 
   {{--
@@ -198,7 +195,7 @@
   <script src="{{ asset('javascript/sidebar.js') }}"></script>
   <script src="{{ asset('javascript/subMenuSidebar.js') }}"></script>
  
-  <script src="{{ asset('javascript/dropdown.js') }}"></script>
+
 
   {{-- <main> --}}
     <div class="loading-overlay">
@@ -209,14 +206,10 @@
     </div>
   {{-- </main> --}}
   </div>
+  {{-- <script src="{{ asset('javascript/dropdown.js') }}"></script> --}}
   <script src="{{ asset('javascript/chart.js') }}"></script>
   <script src="{{ asset('javascript/autoHarga.js') }}"></script>
   <script src="{{ asset('javascript/autoHargaEdit.js') }}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" 
-  integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" 
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
-  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 </body>
 

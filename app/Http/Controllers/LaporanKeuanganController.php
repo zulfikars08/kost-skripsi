@@ -303,8 +303,8 @@ class LaporanKeuanganController extends Controller
             $request->validate([
                 'tanggal' => 'nullable|date',
                 'jenis' => 'nullable|in:pemasukan,pengeluaran',
-                'pemasukan' => 'nullable|numeric',
-                'pengeluaran' => 'nullable|numeric',
+                'pemasukan' => ['required', 'regex:/^\d+(\,\d{1,3})*$/'],
+                'pengeluaran' => ['required', 'regex:/^\d+(\,\d{1,3})*$/'],
                 'tipe_pembayaran' => 'required|string',
                 'bukti_pembayaran' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
                 'tanggal_pembayaran_awal' => 'nullable|date',
@@ -317,8 +317,8 @@ class LaporanKeuanganController extends Controller
             $laporan = LaporanKeuangan::findOrFail($id);
     
             $jenis = $request->input('jenis');
-            $pemasukan = ($jenis === 'pemasukan') ? $request->input('pemasukan') : 0;
-            $pengeluaran = ($jenis === 'pengeluaran') ? $request->input('pengeluaran') : 0;
+            $pemasukan = ($jenis === 'pemasukan') ? str_replace(',', '', $request->input('pemasukan')) : 0;
+            $pengeluaran = ($jenis === 'pengeluaran') ? str_replace(',', '', $request->input('pengeluaran')) : 0;            
     
             $prevPemasukan = LaporanKeuangan::where('lokasi_id', $laporan->lokasi_id)
                 ->where('tanggal', '<', $laporan->tanggal)

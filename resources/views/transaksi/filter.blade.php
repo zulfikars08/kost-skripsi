@@ -57,35 +57,34 @@
         </div>
     </div>
 </div>
-<script>
+{{-- <script>
    document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('filter-form');
-    const namaKos = document.getElementById('nama_kos');
-    const bulan = document.getElementById('bulan');
-    const tahun = document.getElementById('tahun');
-    const statusPembayaran = document.getElementById('status_pembayaran');
-    const resetButton = document.getElementById('reset-button');
-
+    
     form.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the form from submitting
 
-        const queryParams = [];
+        const data = {
+            nama_kos: document.getElementById('filterNamaKos').value,
+            bulan: document.getElementById('filterBulan').value,
+            tahun: document.getElementById('filterTahun').value,
+            status_pembayaran: document.getElementById('filterStatusPembayaran').value
+        };
 
-        if (namaKos.value) {
-            queryParams.push(`nama_kos=${namaKos.value}`);
-        }
-        if (bulan.value) {
-            queryParams.push(`bulan=${bulan.value}`);
-        }
-        if (tahun.value) {
-            queryParams.push(`tahun=${tahun.value}`);
-        }
-        if (statusPembayaran.value) {
-            queryParams.push(`status_pembayaran=${statusPembayaran.value}`);
-        }
-
-        const url = "{{ route('transaksi.index') }";
-        window.location.href = url + (queryParams.length > 0 ? '?' + queryParams.join('&') : '');
+        fetch("{{ route('transaksi.filter') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('search-results').innerHTML = html;
+            $('#filterModal').modal('hide'); // Hide the modal after successful filtering
+        });
     });
 });
-</script>
+
+</script> --}}

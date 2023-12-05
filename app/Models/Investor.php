@@ -32,6 +32,11 @@ class Investor extends Model
             $model->id = Str::uuid(); // Automatically set UUID when creating a new record
         });
     }
+    public function scopeSearchByKos($query, $namaKos, $searchTerm)
+    {
+        return $query->where('nama_kos', $namaKos)
+                     ->where('nama', 'like', '%'.$searchTerm.'%');
+    }
     public function lokasiKos()
     {
         return $this->belongsTo(LokasiKos::class, 'lokasi_id');
