@@ -10,7 +10,7 @@
     </button>
     <h3 class="text-start"
         style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
-        Data Investor
+        Detail Data Laporan Investor
     </h3>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">

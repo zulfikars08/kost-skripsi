@@ -17,9 +17,9 @@
                         <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                     </div>
                     <div class="mb-3 custom-form-group">
-                        <label for="lokasi_id" class="form-label">Nama Kos</label>
+                        <label for="lokasi_id" class="form-label">Lokasi Kos</label>
                         <select class="form-select  @error('lokasi_id') is-invalid @enderror" id="lokasi_id" name="lokasi_id" value="{{ old('lokasi_id') }}" required>
-                            <option value="" selected disabled>Pilih Nama Kos</option>
+                            <option value="" selected disabled>Pilih Lokasi Kos</option>
                             @foreach($lokasiKos as $lokasi)
                             <option value="{{ $lokasi->id }}">{{ $lokasi->nama_kos }}</option>
                             @endforeach

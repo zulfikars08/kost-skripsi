@@ -19,6 +19,7 @@ class Investor extends Model
         'jumlah_pintu',
         'lokasi_id',
         'laporan_id',
+        'tanggal_investor_id',
         'bulan',
         'tahun',
         'pendapatan_bersih'

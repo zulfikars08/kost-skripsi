@@ -59,23 +59,5 @@ tooltip_elements.forEach((elem) => {
   elem.addEventListener("mouseover", showTooltip);
 });
 
-function showLoadingOverlay() {
-  loadingOverlay.style.display = 'flex';
-}
-
-function hideLoadingOverlay() {
-  loadingOverlay.style.display = 'none';
-}
-
-function changeLink() {
-  showLoadingOverlay(); // Show loading overlay when a menu item is clicked
-  
-  const index = parseInt(this.dataset.active);
-  setActiveMenuItem(index);
-  
-  setTimeout(() => {
-    hideLoadingOverlay(); // Hide loading overlay after a short delay (simulate loading)
-  }, 500); // Adjust the delay as needed
-}
 
 sidebar_links.forEach((link) => link.addEventListener("click", changeLink));

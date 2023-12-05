@@ -3,32 +3,23 @@
 @section('content')
 @include('komponen.pesan')
 <div class="container-fluid">
-    <h3 class="text-start" style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Data Pemasukan</h3>
+    <h3 class="text-start mb-4">Data Pemasukan</h3>
 
-    
     <div class="my-3 p-3 bg-body rounded shadow-sm">
-        {{-- <div class="d-flex justify-content-between align-items-center pb-3"> --}}
-            <!-- SEARCH FORM -->
-            {{-- <form class="d-flex" action="{{ route('lokasi_kos.index') }}" method="get" id="search-form">
-                <div class="input-group">
-                    <input class="form-control" type="search" name="katakunci" placeholder="Masukkan kata kunci"
-                        aria-label="Search" id="search-input">
-                    <div id="search-suggestions"></div>
-                    <button class="btn btn-secondary" type="submit">Cari</button>
-                </div>
-            </form> --}}
-            <div class="d-flex justify-content-end align-items-center mb-3">
-                <button class="btn btn-secondary" type="submit">Reset Filter</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal" style="margin-left: 10px">
-                    Filter
-                </button>
-                @include('pemasukan.filter')
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataPemasukanModal" style="margin-left: 10px">
-                <i class="fas fa-plus"></i> Tambah Data
+        <div class="d-flex justify-content-between align-items-center pb-3">
+            <!-- Tambah Data Button -->
+            <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-secondary" type="submit">Reset Filter</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal" style="margin-left: 10px">
+                Filter
             </button>
-            @include('pemasukan.create')
-            {{-- </div> --}}
-            <!-- Include the modal partial -->
+            @include('pemasukan.filter')
+            </div>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#tambahDataPemasukanModal" style="margin-left: 10px">
+            <i class="fas fa-plus"></i> Tambah Data
+         </button>
+             @include('pemasukan.create')
+            <!-- Include the modal partial -->  
         </div>
         <div class="table-responsive" >
         <table class="table table-striped">
@@ -36,7 +27,7 @@
                 <tr>
                     <th style="white-space: nowrap;">Kode Pemasukan</th>
                     <th style="white-space: nowrap;">No Kamar</th>
-                    <th style="white-space: nowrap;">Nama Kos</th>
+                    <th style="white-space: nowrap;">Lokasi Kos</th>
                     <th style="white-space: nowrap;">Tanggal</th>
                     <th style="white-space: nowrap;">Tipe Pembayaran</th>
                     <th style="white-space: nowrap;">Bukti Pembayaran</th>
@@ -66,7 +57,7 @@
                                 No Bukti Pembayaran
                             @endif
                         </td>
-                        <td>{{ $item->jumlah }}</td>
+                        <td>Rp {{ number_format($item->jumlah, 0, ',', '.') }}</td>
                         <td>{{ $item->keterangan }}</td>
                         <td>
                             <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px">
@@ -79,6 +70,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{ $pemasukan->links() }}
         </div>
     </div>
    

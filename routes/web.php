@@ -100,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tanggal-investor', [TanggalInvestorController::class, 'index'])->name('investor.index');
     Route::get('/tanggal-investor/create', [TanggalInvestorController::class, 'create'])->name('investor.create');
     Route::post('/tanggal-investor', [TanggalInvestorController::class, 'store'])->name('tanggal-investor.store');
+    Route::delete('/tanggal-investor/{id}', [TanggalInvestorController::class, 'destroy'])->name('tanggal-investor.destroy');
 
     Route::get('/pemasukan', [PemasukanController::class, 'index'])->name('pemasukan.index');
     Route::get('/pemasukan/create', [PemasukanController::class, 'create'])->name('pemasukan.create');
@@ -151,6 +152,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/laporan-keuangan/{id}', [LaporanKeuanganController::class, 'update'])->name('laporan-keuangan.update');
         Route::get('laporan-keuangan/detail/{lokasi_id}/{bulan}/{tahun}', [TanggalLaporanController::class, 'showDetail'])
             ->name('laporan-keuangan.detail.show');
+
         Route::get('/export-laporan-keuangan', [LaporanKeuanganController::class, 'export'])->name('laporan-keuangan.export');
         Route::get('/generate-report', [LaporanKeuanganController::class, 'showGenerateFinancialReportView'])->name('show-generate-financial-report-view');
         Route::post('/generate-report', [LaporanKeuanganController::class, 'generateFinancialReport'])->name('generate-financial-report');
@@ -159,5 +161,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tanggal-laporan', [TanggalLaporanController::class, 'index'])->name('laporan-keuangan.index');
         Route::get('/tanggal-laporan/create', [TanggalLaporanController::class, 'create'])->name('laporan-keuangan.create');
         Route::post('/tanggal-laporan', [TanggalLaporanController::class, 'store'])->name('tanggal-laporan.store');
+        Route::delete('/tanggal-laporan/{id}', [TanggalLaporanController::class,  'destroy'])->name('tanggal-laporan.destroy');
     });
 });

@@ -289,19 +289,39 @@ class InvestorController extends Controller
     }
 
     public function destroy($id)
-    {
-        // Find the investor by ID
+{
+    DB::beginTransaction();
+
+    try {
         $investor = Investor::find($id);
 
-        // Check if the investor exists
         if (!$investor) {
+            DB::rollback();
             return redirect()->back()->with('error', 'Investor tidak ditemukan');
+        }
+
+        $tanggalInvestor = TanggalInvestor::where('lokasi_id', $investor->lokasi_id)
+                                           ->where('bulan', $investor->bulan)
+                                           ->where('tahun', $investor->tahun)
+                                           ->first();
+
+        if (!$tanggalInvestor) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'TanggalInvestor tidak ditemukan');
         }
 
         // Delete the investor
         $investor->delete();
 
-        // Redirect to the index page with a success message
-        return redirect()->route('investor.detail.index')->with('success_delete', 'Investor berhasil di hapus');
+        // Decrement the jumlah_investor in TanggalInvestor by 1
+        $tanggalInvestor->decrement('jumlah_investor');
+
+        DB::commit();
+        return redirect()->route('investor.detail.index')->with('success_delete', 'Investor berhasil dihapus');
+    } catch (\Exception $e) {
+        DB::rollback();
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus investor');
     }
+}
+
 }

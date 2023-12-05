@@ -66,7 +66,7 @@ class PemasukanController extends Controller
                 ->orWhere('tahun', 'like', '%' . $keyword . '%');
         }
     
-        $pemasukan = $request->ajax() ? $query->get() : $query->paginate(10);
+        $pemasukan = $request->ajax() ? $query->get() : $query->paginate(5);
     
         return view('pemasukan.index', compact('pemasukan', 'lokasiKos', 'months', 'years', 'kamars'));
     }

@@ -9,6 +9,7 @@ use App\Models\LokasiKos;
 use App\Models\TanggalInvestor;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class TanggalInvestorController extends Controller
 {
@@ -48,7 +49,7 @@ class TanggalInvestorController extends Controller
             $investorsQuery->where('nama_kos', $namaKos);
         }
         
-        $investors = $investorsQuery->get();
+        $investors = $investorsQuery->paginate(5);
         
         return view('investor.index', compact('investors', 'lokasiKos', 'laporanKeuangan','months','years','tanggalInvestor'));
     }
@@ -141,6 +142,31 @@ class TanggalInvestorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Start a database transaction
+        DB::beginTransaction();
+    
+        try {
+            // Find the TanggalInvestor by ID
+            $tanggalInvestor = TanggalInvestor::find($id);
+    
+            // Check if the TanggalInvestor exists
+            if (!$tanggalInvestor) {
+                return redirect()->back()->with('error', 'TanggalInvestor tidak ditemukan');
+            }
+    
+            // Perform any necessary pre-deletion logic
+            // (e.g., updating related models, checking dependencies)
+    
+            // Delete the TanggalInvestor
+            $tanggalInvestor->delete();
+    
+            // Commit the transaction
+            DB::commit();
+            return redirect()->route('investor.index')->with('success_delete', 'TanggalInvestor berhasil dihapus');
+        } catch (\Exception $e) {
+            // Rollback the transaction in case of an error
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus TanggalInvestor');
+        }
     }
 }

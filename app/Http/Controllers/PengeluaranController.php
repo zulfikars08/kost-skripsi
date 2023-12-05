@@ -62,7 +62,7 @@ class PengeluaranController extends Controller
                 ->orWhere('tahun', 'like', '%' . $keyword . '%');
         }
     
-        $pengeluaran = $request->ajax() ? $query->get() : $query->paginate(10);
+        $pengeluaran = $request->ajax() ? $query->get() : $query->paginate(5);
     
         return view('pengeluaran.index', compact('pengeluaran', 'lokasiKos', 'months', 'years', 'kamars'));
 
@@ -291,7 +291,7 @@ class PengeluaranController extends Controller
             $pengeluaran->delete();
 
             // Optionally, you can send a success message back
-            return redirect()->route('pemasukan.index')->with('success_delete', 'Data pengeluaran berhasil dihapus.');
+            return redirect()->route('pengeluaran.index')->with('success_delete', 'Data pengeluaran berhasil dihapus.');
         } catch (\Exception $e) {
             // Handle any exceptions or errors that may occur during deletion
             // Log the error or return an error response

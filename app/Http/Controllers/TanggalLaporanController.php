@@ -8,6 +8,7 @@ use App\Models\Penyewa;
 use Illuminate\Http\Request;
 use App\Models\TanggalLaporan;
 use App\Models\Transaksi;
+use Illuminate\Support\Facades\DB;
 
 class TanggalLaporanController extends Controller
 {
@@ -37,7 +38,7 @@ class TanggalLaporanController extends Controller
                 ->orWhere('tahun', 'like', '%' . $search . '%');
         }
 
-        $tanggalLaporan = $query->get();
+        $tanggalLaporan = $query->paginate(5);
 
         return view('laporan-keuangan.index', compact('tanggalLaporan','lokasiKos','months','years'));
     }
@@ -120,7 +121,36 @@ class TanggalLaporanController extends Controller
         return view('laporan-keuangan.detail.index', compact('laporanKeuangan','lokasiKos', 'kamars', 'transaksis', 'penyewas','months','years'));
     }
 
+    public function destroy($id)
+{
+    // Start a database transaction
+    DB::beginTransaction();
 
+    try {
+        // Find the TanggalLaporan by ID
+        $tanggalLaporan = TanggalLaporan::find($id);
+
+        // Check if the TanggalLaporan exists
+        if (!$tanggalLaporan) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Tanggal Laporan tidak ditemukan');
+        }
+
+        // Perform any necessary pre-deletion logic
+        // (e.g., updating related models, checking dependencies)
+
+        // Delete the TanggalLaporan
+        $tanggalLaporan->delete();
+
+        // Commit the transaction
+        DB::commit();
+        return redirect()->route('laporan-keuangan.index')->with('success_delete', 'Tanggal Laporan berhasil dihapus');
+    } catch (\Exception $e) {
+        // Rollback the transaction in case of an error
+        DB::rollback();
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus Tanggal Laporan');
+    }
+}
     // public function show($id)
     // {
     //     // Retrieve and display details of a specific "tanggal_laporan" entry.

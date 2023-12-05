@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <h3 class="text-start"
         style="margin: 20px 0; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">
-        Tanggal investor
+        Data Laporan investor
     </h3>
     
     <div class="my-3 p-3 bg-body rounded shadow-sm">
@@ -21,9 +21,9 @@
                 <thead>
                     <tr>
                         <th style="white-space: nowrap;">No</th>
-                        <th style="white-space: nowrap;">Nama Kos</th>
-                        <th style="white-space: nowrap;">bulan</th>
-                        <th style="white-space: nowrap;">tahun</th>
+                        <th style="white-space: nowrap;">Lokasi Kos</th>
+                        <th style="white-space: nowrap;">Bulan</th>
+                        <th style="white-space: nowrap;">Tahun</th>
                         <th style="white-space: nowrap;">Jumlah Investor</th>
                         <th style="white-space: nowrap;">Aksi</th>
                         <!-- Add more columns as needed -->
@@ -45,8 +45,12 @@
                              ]) }}" class="btn btn-primary btn-sm">
                                   <i class="fas fa-info-circle" style="color: white"></i>
                              </a>
+                             <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
+                             data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px">
+                             <i class="fas fa-trash" style="color: white"></i>
+                         </button>
+                         @include('investor.delete')
                          </td>
-
                     </tr>
                     @empty
                     <tr>
@@ -55,6 +59,7 @@
                     @endforelse
                 </tbody>
             </table>
+            {{ $investors->links() }}
         </div>
     </div>
 

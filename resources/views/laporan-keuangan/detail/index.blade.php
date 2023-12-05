@@ -8,7 +8,7 @@
         onclick="window.location.href='{{ route('laporan-keuangan.index') }}'">
         <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
     </button>
-    <h3 class="text-start" style="margin: 20px 0;">Laporan Keuangan</h3>
+    <h3 class="text-start" style="margin: 20px 0;">Detail Data Laporan Keuangan</h3>
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <div class="d-flex justify-content-between align-items-center pb-3">
             {{-- <div class="d-flex flex-column">
@@ -52,7 +52,7 @@
                         <th style="white-space: nowrap;">Kode Pengeluaran</th>
                         <th style="white-space: nowrap;">Tanggal</th>
                         <th style="white-space: nowrap;">No Kamar</th>
-                        <th style="white-space: nowrap;">Nama Kos</th>
+                        <th style="white-space: nowrap;">Lokasi Kos</th>
                         <th style="white-space: nowrap;">Tipe Pembayaran</th>
                         <th style="white-space: nowrap;">Jenis</th>
                         <th style="white-space: nowrap;">Bukti Pembayaran</th>
@@ -148,6 +148,7 @@
 
                 </tfoot>
             </table>
+           
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     // Call the function to calculate totals when the page is loaded

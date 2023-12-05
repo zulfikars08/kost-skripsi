@@ -7,7 +7,7 @@
                 <th style="white-space: nowrap;">Bulan</th>
                 <th style="white-space: nowrap;">Tahun</th>
                 <th style="white-space: nowrap;">Jumlah Pintu</th>
-                <th style="white-space: nowrap;">Lokasi</th>
+                <th style="white-space: nowrap;">Lokasi Kos</th>
                 <th style="white-space: nowrap;">Total Kamar</th>
                 <th style="white-space: nowrap;">Pendapatan Bersih</th>
                 <th style="white-space: nowrap;">Total Pendapatan</th>
@@ -43,7 +43,7 @@
                     ->orderBy('id', 'desc')
                     ->value('pendapatan_bersih');
                     @endphp
-                    {{ $lastPendapatanBersih }}
+                    Rp {{ number_format($lastPendapatanBersih, 0, ',', '.') }}
                 </td>
 
                 <td>
@@ -58,7 +58,7 @@
                     $lokasiKos->jumlah_kamar)) * $laporanKeuangan->pendapatan_bersih : 0;
                     @endphp
 
-                    {{ $totalPendapatan }}
+                    Rp {{ number_format($totalPendapatan, 0, ',', '.') }}
                     
                 </td>
 

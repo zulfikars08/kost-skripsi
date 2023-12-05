@@ -20,6 +20,7 @@ class LaporanKeuangan extends Model
         'kategori_id',
         'pemasukan_id',
         'pengeluaran_id',
+        'tanggal_laporan_id',
         'tipe_pembayaran',
         'bukti_pembayaran',
         'tanggal_pembayaran_awal',
@@ -64,7 +65,10 @@ class LaporanKeuangan extends Model
         return $this->belongsTo(Pengeluaran::class, 'pengeluaran_id');
     }
 
-
+    public function tanggal()
+    {
+        return $this->belongsTo(TanggalLaporan::class, 'tanggal_laporan_id');
+    }
     protected static function boot()
     {
         parent::boot();
