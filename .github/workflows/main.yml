@@ -13,10 +13,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # Add any additional build/test steps here if needed
+    # Add additional steps for building/testing if necessary
 
     - name: Deploy to Hostinger
-      run: |
-        rsync -e "ssh -p PORT_NUMBER -i /home/runner/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-        -avzrv --delete /home/runner/work/***/***/./ USERNAME@REMOTE_HOST:/home/u410590140/kost-skripsi
-
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.KEY }}
+        REMOTE_HOST: ${{ secrets.IP }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        REMOTE_PORT: ${{ secrets.PORT }}
+        SOURCE: "./"
+        TARGET: "kost-skripsi" # Replace with your actual target path on Hostinger
+        ARGS: "-avzr --delete"
