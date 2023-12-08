@@ -23,6 +23,9 @@ class CreatePemasukanTable extends Migration
             $table->date('tanggal')->nullable();
             $table->string('kode_pemasukan')->nullable();
             $table->enum('tipe_pembayaran', ['tunai', 'non-tunai'])->nullable()->default(null);
+            $table->enum('status_pembayaran', ['lunas', 'belum_lunas', 'cicil'])->nullable()->default(null);
+            $table->date('tanggal_pembayaran_awal')->nullable()->default(null);
+            $table->date('tanggal_pembayaran_akhir')->nullable()->default(null);
             $table->binary('bukti_pembayaran')->nullable()->default(null);
             $table->string('kategori')->nullable();
             $table->string('nama_kos')->nullable();
