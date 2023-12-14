@@ -11,7 +11,7 @@
                 <div class="card bg-success text-white order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Lokasi Kos</h6>
-                        <h2 class="text-right"><i class="fas fa-map-marked-alt"></i><span class="ml-2">{{
+                        <h2 class="text-right"><i class="fas fa-map-marked-alt" style="margin-right: 10px;"></i><span class="ml-2">{{
                                 $totalLokasiKos }}</span></h2>
                         <p class="m-b-0">Lokasi Kos</p>
                     </div>
@@ -22,7 +22,7 @@
                 <div class="card bg-primary text-white order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Kamar Yang Tersedia</h6>
-                        <h2 class="text-right"><i class="fas fa-bed"></i><span class="ml-2">{{ $totalKamar }}</span>
+                        <h2 class="text-right"><i class="fas fa-bed" style="margin-right: 10px;"></i><span class="ml-2">{{ $totalKamar }}</span>
                         </h2>
                         <p class="m-b-0">Kamar Terisi</p>
                     </div>
@@ -45,7 +45,7 @@
                 <div class="card bg-primary order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Penyewa Aktif</h6>
-                        <h2 class="text-right"><i class="fas fa-users"></i><span class="ml-2">{{ $totalPenyewaAktif
+                        <h2 class="text-right"><i class="fas fa-users" style="margin-right: 10px;"></i><span class="ml-2">{{ $totalPenyewaAktif
                                 }}</span></h2>
                         <p class="m-b-0">Penyewa Aktif</p>
                     </div>
@@ -56,7 +56,7 @@
                 <div class="card bg-warning order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Transaksi</h6>
-                        <h2 class="text-right"><i class="fas fa-money-bill-wave"></i><span class="ml-2">{{
+                        <h2 class="text-right"><i class="fas fa-money-bill-wave" style="margin-right: 10px;"></i><span class="ml-2">{{
                                 $totalTransaksi }}</span></h2>
                         <p class="m-b-0">Transaksi</p>
                     </div>
@@ -68,7 +68,7 @@
                 <div class="card bg-info text-white order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Pemasukan</h6>
-                        <h2 class="text-right"><i class="fas fa-arrow-up"></i><span class="ml-2">{{ $totalPemasukan
+                        <h2 class="text-right"><i class="fas fa-arrow-up" style="margin-right: 10px;"></i><span class="ml-2">{{ $totalPemasukan
                                 }}</span></h2>
                         <p class="m-b-0">Pemasukan</p>
                     </div>
@@ -80,7 +80,7 @@
                 <div class="card bg-danger text-white order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Pengeluaran</h6>
-                        <h2 class="text-right"><i class="fas fa-arrow-down"></i><span class="ml-2">{{ $totalPengeluaran
+                        <h2 class="text-right"><i class="fas fa-arrow-down" style="margin-right: 10px;"></i><span class="ml-2">{{ $totalPengeluaran
                                 }}</span></h2>
                         <p class="m-b-0">Pengeluaran</p>
                     </div>
@@ -92,7 +92,7 @@
                 <div class="card bg-secondary order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Pendapatan Bersih</h6>
-                        <h2 class="text-right"><i class="fas fa-chart-line"></i><span class="ml-2">{{ $pendapatanBersih
+                        <h2 class="text-right"><i class="fas fa-chart-line" style="margin-right: 10px;"></i><span class="ml-2">{{ $pendapatanBersih
                                 }}</span></h2>
                         <p class="m-b-0">Pendapatan Bersih</p>
                     </div>
@@ -103,29 +103,13 @@
                 <div class="card bg-info order-card mb-4">
                     <div class="card-body">
                         <h6 class="m-b-20">Total Investor</h6>
-                        <h2 class="text-right"><i class="fas fa-users"></i><span class="ml-2">{{ $totalInvestor
+                        <h2 class="text-right"><i class="fas fa-users" style="margin-right: 10px;"></i><span class="ml-2">{{ $totalInvestor
                                 }}</span></h2>
                         <p class="m-b-0">Investor</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <canvas id="myChart" width="400" height="300"></canvas>
-            </div>
-        </div>
-        <script>
-            var chartData = {
-        days: @json($days),
-        pemasukanData: @json($dailyPemasukan),
-        pengeluaranData: @json($dailyPengeluaran),
-    };
-        </script>
-        <!-- Add more cards here if needed -->
-
-
+        @include('dashboard.chart')
     </div>
-    <!-- Graph Section -->
-
     @endsection

@@ -10,8 +10,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="filterNamaKos">Nama Kos</label>
+                    <div class="mb-3 custom-form-group">
+                        <label for="filterNamaKos">Lokasi Kos</label>
                         <select class="form-control" id="filterNamaKos" name="nama_kos">
                             <option value="">Pilih Lokasi Kos</option>
                             @foreach ($lokasiKosData as $lokasiKosOption)
@@ -19,7 +19,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 custom-form-group">
                         <label for="filterBulan">Bulan</label>
                         <select class="form-control" id="filterBulan" name="bulan">
                             <option value="">Pilih Bulan</option>
@@ -28,7 +28,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 custom-form-group">
                         <label for="filterTahun">Tahun</label>
                         <select class="form-control" id="filterTahun" name="tahun">
                             <option value="">Pilih Tahun</option>
@@ -38,7 +38,7 @@
                             <!-- Add options for years -->
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 custom-form-group">
                         <label for="filterStatusPembayaran">Status Pembayaran</label>
                         <select class="form-control" id="filterStatusPembayaran" name="status_pembayaran">
                             <option value="">Pilih Status Pembayaran</option>

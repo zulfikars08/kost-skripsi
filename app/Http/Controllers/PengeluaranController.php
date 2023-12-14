@@ -100,8 +100,11 @@ class PengeluaranController extends Controller
                 'tanggal' => 'required|date',
                 'tipe_pembayaran' => 'required|in:tunai,non-tunai',
                 'bukti_pembayaran' => 'required_if:tipe_pembayaran,non-tunai|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'jumlah' => 'required|numeric',
-                'keterangan' => 'required|string',
+                'jumlah' =>  ['required', 'regex:/^\d+(\,\d{1,3})*$/'],
+                'tanggal_pembayaran_awal' => 'nullable|date',
+                'tanggal_pembayaran_akhir' => 'nullable|date',
+                'status_pembayaran' => 'nullable|in:lunas,cicil,belum-lunas',
+                'keterangan' => 'nullable|string',
             ], [
                 'kamar_id.required' => 'Nomor kamar wajib di isi',
                 'kamar_id.exists' => 'Nomor kamar tidak valid',
@@ -117,8 +120,6 @@ class PengeluaranController extends Controller
                 'bukti_pembayaran.max' => 'Ukuran bukti pembayaran tidak boleh melebihi 2048 kilobita',
                 'jumlah.required' => 'Jumlah wajib di isi',
                 'jumlah.numeric' => 'Jumlah harus berupa angka',
-                'keterangan.required' => 'Keterangan wajib di isi',
-                'keterangan.string' => 'Keterangan harus berupa teks',
             ]);
     
             // Create a new Pengeluaran instance
@@ -128,7 +129,10 @@ class PengeluaranController extends Controller
                 'tanggal' => $request->input('tanggal'),
                 'tipe_pembayaran' => $request->input('tipe_pembayaran'),
                 'bukti_pembayaran' => $request->input('bukti_pembayaran'),
-                'jumlah' => $request->input('jumlah'),
+                'jumlah' => str_replace(',', '', $request->input('jumlah')),
+                'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
+                'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
+                'status_pembayaran' => $request->input('status_pembayaran'),
                 'keterangan' => $request->input('keterangan'),
             ]);
     
@@ -162,6 +166,9 @@ class PengeluaranController extends Controller
                 'nama_kos' => $nama_kos,
                 'tipe_pembayaran' => $pengeluaran->tipe_pembayaran,
                 'bukti_pembayaran' => $pengeluaran->bukti_pembayaran,
+                'tanggal_pembayaran_awal' => $pengeluaran->tanggal_pembayaran_awal,
+                'tanggal_pembayaran_akhir' => $pengeluaran->tanggal_pembayaran_akhir,
+                'status_pembayaran' => $pengeluaran->status_pembayaran,
                 'bulan' => $bulan,
                 'tahun' => $tahun,
                 'pengeluaran' => $pengeluaran->jumlah,
@@ -286,6 +293,8 @@ class PengeluaranController extends Controller
         try {
             // Find the Pemasukan item by ID
             $pengeluaran = Pengeluaran::findOrFail($id);
+
+            LaporanKeuangan::where('pengeluaran_id', $pengeluaran->id)->delete();
 
             // Implement your logic for deleting the item (e.g., database deletion)
             $pengeluaran->delete();

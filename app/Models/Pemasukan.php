@@ -20,7 +20,10 @@ class Pemasukan extends Model
         'transaksi_id',
         'keterangan',
         'tipe_pembayaran',
+        'tanggal_pembayaran_awal',
+        'tanggal_pembayaran_akhir',
         'bukti_pembayaran',
+        'status_pembayaran',
         'bulan',
         'tahun',
         'tanggal',
@@ -45,6 +48,11 @@ class Pemasukan extends Model
     {
         return $this->belongsTo(LokasiKos::class, 'lokasi_id', 'id');
     }
+
+    public function laporanKeuangan()
+{
+    return $this->hasOne(LaporanKeuangan::class, 'pemasukan_id');
+}
    
     // Automatically generate kode_pengeluaran before saving
     public static function boot()
@@ -60,6 +68,10 @@ class Pemasukan extends Model
             $latestPemasukan = self::latest()->first();
             $latestNumber = $latestPemasukan ? (int)substr($latestPemasukan->kode_pemasukan, 3) : 0;
             $pemasukan->kode_pemasukan = 'PMK' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
+        });
+
+        static::deleting(function ($pemasukan) {
+            $pemasukan->laporanKeuangan()->delete();
         });
     }
 }

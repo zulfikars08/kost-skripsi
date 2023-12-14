@@ -10,8 +10,7 @@
                 @method('PUT')
                 <div class="modal-body">
                     <!-- Display the current status_penyewa value -->
-                    <p>Current Status Penyewa: {{ $penyewa->status_penyewa }}</p>
-
+                    <p>Status Penyewa Sekarang: {{ $penyewa->status_penyewa }}</p>
                     <!-- Editable status_penyewa field -->
                     <div class="mb-3 custom-form-group">
                         <label for="status_penyewa">Edit Status Penyewa:</label>

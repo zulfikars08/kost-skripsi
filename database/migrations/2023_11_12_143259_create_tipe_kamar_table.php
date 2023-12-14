@@ -17,7 +17,7 @@ class CreateTipeKamarTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('lokasi_id')->nullable(); 
             $table->uuid('kamar_id')->nullable(); 
-            $table->enum('tipe_kamar', ['AC', 'Non AC'])->nullable()->default(null);
+            $table->string('tipe_kamar')->nullable()->default(null);
             $table->string('nama_kos')->nullable()->default(null);
             $table->string('no_kamar')->nullable()->default(null); 
             $table->timestamps();

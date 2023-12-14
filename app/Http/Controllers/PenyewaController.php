@@ -231,6 +231,30 @@ class PenyewaController extends Controller
     
             // Update the penyewa status
             $penyewa->update(['status_penyewa' => $request->status_penyewa]);
+
+            if($penyewa->status_penyewa == 'aktif'){
+                Transaksi::create([
+                    'nama' => $penyewa->nama,
+                    'kamar_id' => $penyewa->kamar_id,
+                    'lokasi_id' => $penyewa->lokasi_id,
+                    'penyewa_id' => $penyewa->id, // Assign the penyewa_id
+                    // Set the default value or adjust as needed
+                    'jumlah_tarif' => 0,
+                   // Set to '-' for string columns
+                    'tanggal' => null,
+                    'tipe_pembayaran' => null, // Set to 0 for integer columns
+                    'bukti_pembayaran' => null,
+                    'tanggal_pembayaran_awal' => null, // Set to the current date or adjust as needed
+                    'tanggal_pembayaran_akhir' => null, // Set to the current date or adjust as needed
+                    'status_pembayaran' => null, // Set the default value or adjust as needed
+                    'kebersihan' => 0, // Set to 0 for integer columns
+                    'pengeluaran' => 0, // Set to 0 for integer columns
+                    'keterangan' => '-', // Set to '-' for string columns
+                ]);
+            }
+            else{
+                Transaksi::where('penyewa_id', $penyewa->id)->delete();
+            }
     
             // Commit the database transaction
             DB::commit();

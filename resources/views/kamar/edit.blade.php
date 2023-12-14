@@ -15,52 +15,54 @@
                     <!-- Your form fields for editing -->
                     <div class="mb-3 custom-form-group">
                         <label for="modalHarga" class="form-label">Harga</label>
-                        <input type="text" class="form-control" name="harga" id="modalHarga" value="{{ number_format($item->harga, 0, ',', ',') }}" oninput="formatAndSetDecimalValue(this, 'modalHargaDecimal')" required>
+                        <input type="text" class="form-control" name="harga" id="modalHarga" value="{{ number_format($item->harga, 0, ',', '.') }}" oninput="formatAndSetDecimalValue(this, 'modalHargaDecimal')" required>
                         <input type="hidden" name="modalHargaDecimal" id="modalHargaDecimal" value="{{ $item->harga }}">
-                        <input type="hidden" name="modalHarga" id="modalHarga" value="{{ $item->harga }}">                        
                     </div>
-                    {{-- <div class="mb-3 custom-form-group">
-                        <input type="hidden" name="modalHargaDecimal" id="modalHargaDecimal">
-                    </div> --}}
                     <div class="mb-3 custom-form-group">
                         <label class="form-label">Fasilitas</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="fasilitas[]" id="ac" value="AC" {{ in_array('AC', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="ac">AC</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="fasilitas[]" id="lemari" value="Lemari" {{ in_array('Lemari', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="lemari">Lemari</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="fasilitas[]" id="kasur" value="Kasur" {{ in_array('Kasur', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="kasur">Kasur</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="fasilitas[]" id="tv" value="TV" {{ in_array('TV', explode(',', $item->fasilitas)) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="tv">TV</label>
-                        </div>
+                        @foreach ($fasilitasOptions as $fasilitasOption)
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="fasilitas[]"
+                                    id="{{ $fasilitasOption->slug }}" value="{{ $fasilitasOption->id }}"
+                                    {{ in_array($fasilitasOption->id, $item->fasilitas->pluck('id')->toArray()) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $fasilitasOption->slug }}">{{ $fasilitasOption->nama_fasilitas }}</label>
+                            </div>
+                        @endforeach
+                        @if (!$fasilitasOptions->count())
+                        <small class="text-danger">Fasilitas tidak tersedia. Harap tambahkan fasilitas terlebih dahulu.</small>
+                    @endif
                     </div>
-                    {{-- <div class="mb-3 custom-form-group">
+                    <div class="mb-3 custom-form-group">
+                        <label for="tipe_kamar_id" class="form-label">Tipe Kamar</label>
+                        <select class="form-control" name="tipe_kamar_id" id="tipe_kamar_id" required>
+                            <option value="">Pilih Tipe Kamar</option>
+                            @foreach ($tipeKamarOptions as $tipeKamarOption)
+                                <option value="{{ $tipeKamarOption->id }}" {{ $item->tipe_kamar_id === $tipeKamarOption->id ? 'selected' : '' }}>
+                                    {{ $tipeKamarOption->tipe_kamar }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @if (!$tipeKamarOptions->count())
+                            <small class="text-danger">Tipe Kamar tidak tersedia. Harap tambahkan tipe kamar terlebih dahulu.</small>
+                        @endif
+                    </div>
+                    <div class="mb-3 custom-form-group">
                         <label for="status" class="form-label">Status</label>
                         <select class="form-control" name="status" id="status" required>
-                            <option value="belum terisi" {{ $item->status === 'belum terisi' ? 'selected' : '' }}>Belum Terisi</option>
-                            <option value="sudah terisi" {{ $item->status === 'sudah terisi' ? 'selected' : '' }}>Sudah Terisi</option>
-                        </select>
-                    </div> --}}
-                    <div class="mb-3 custom-form-group">
-                        <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
-                        <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
-                            <option value="AC" {{ $item->tipe_kamar === 'AC' ? 'selected' : '' }}>AC</option>
-                            <option value="Non AC" {{ $item->tipe_kamar === 'Non AC' ? 'selected' : '' }}>Non AC</option>
+                            <option value="">Pilih Status Kamar</option>
+                            <option value="Belum Terisi" @if(old('status')==='Belum Terisi' ) selected @endif>
+                                Belum Terisi</option>
+                            <option value="Sudah Terisi" @if(old('status')==='Sudah Terisi' ) selected @endif>
+                                Sudah Terisi</option>
                         </select>
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="lokasi_id" class="form-label">Lokasi Kos</label>
                         <select class="form-control" name="lokasi_id" id="lokasi_id" required>
-                            {{-- <option value="">Pilih Lokasi Kos</option> --}}
                             @foreach ($lokasiKosOptions as $lokasiKosOption)
-                                <option value="{{ $lokasiKosOption->id }}">{{ $lokasiKosOption->nama_kos }}</option>
+                                <option value="{{ $lokasiKosOption->id }}" {{ $item->lokasi_id === $lokasiKosOption->id ? 'selected' : '' }}>
+                                    {{ $lokasiKosOption->nama_kos }}
+                                </option>
                             @endforeach
                         </select>
                         @if (!$lokasiKosOptions->count())

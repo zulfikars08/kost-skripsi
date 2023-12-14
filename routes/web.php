@@ -4,6 +4,7 @@ use App\Exports\TransaksiExport;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\LaporanKeuanganController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\TanggalController;
 use App\Http\Controllers\TanggalInvestorController;
 use App\Http\Controllers\TanggalLaporanController;
+use App\Http\Controllers\TipeKamarController;
 use App\Http\Controllers\TransaksiController;
 use App\Models\Kamar;
 use App\Models\Penghuni;
@@ -52,6 +54,22 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('dashboard');
     });
 
+    //Tipe Kamar Routes
+    Route::get('/tipe_kamar', [TipeKamarController::class, 'index'])->name('tipe_kamar.index');
+    Route::get('/tipe_kamar/create', [TipeKamarController::class, 'create'])->name('tipe_kamar.create');
+    Route::post('/tipe_kamar', [TipeKamarController::class, 'store'])->name('tipe_kamar.store');
+    // Route::get('/fasilitas', [FasilitasController::class, 'showData'])->name('fasilitas.showData');
+    Route::get('/tipe_kamar/{id}/edit', [TipeKamarController::class, 'edit'])->name('tipe_kamar.edit');
+    Route::put('/tipe_kamar/{id}', [TipeKamarController::class, 'update'])->name('tipe_kamar.update');
+    Route::delete('/tipe_kamar/{id}', [TipeKamarController::class, 'destroy'])->name('tipe_kamar.destroy');
+    // Fasilitas routes
+    Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+    Route::get('/fasilitas/create', [FasilitasController::class, 'create'])->name('fasilitas.create');
+    Route::post('/fasilitas', [FasilitasController::class, 'store'])->name('fasilitas.store');
+    // Route::get('/fasilitas', [FasilitasController::class, 'showData'])->name('fasilitas.showData');
+    Route::get('/fasilitas/{id}/edit', [FasilitasController::class, 'edit'])->name('fasilitas.edit');
+    Route::put('/fasilitas/{id}', [FasilitasController::class, 'update'])->name('fasilitas.update');
+    Route::delete('/fasilitas/{id}', [FasilitasController::class, 'destroy'])->name('fasilitas.destroy');
     // Kamar routes
     Route::get('/kamar', [KamarController::class, 'index'])->name('kamar.index');
     Route::get('/kamar/create', [KamarController::class, 'create'])->name('kamar.create');
@@ -122,6 +140,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/lokasi_kos', [LokasiKostController::class, 'index'])->name('lokasi_kos.index');
         Route::get('/lokasi_kos/create', [LokasiKostController::class, 'create'])->name('lokasi_kos.create');
         Route::post('/lokasi_kos', [LokasiKostController::class, 'store'])->name('lokasi_kos.store');
+        Route::get('/lokasi_kos/{id}/edit', [LokasiKostController::class, 'edit'])->name('lokasi_kos.edit');
+        Route::put('/lokasi_kos/{id}', [LokasiKostController::class, 'update'])->name('lokasi_kos.update');
         Route::get('/lokasi_kos/{id}/detail', [LokasiKostController::class, 'show'])->name('lokasi_kos.detail');
         Route::delete('/lokasi_kos/{id}', [LokasiKostController::class, 'destroy'])->name('lokasi_kos.destroy');
 
@@ -133,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/transaksi/{id}', [TransaksiController::class, 'update'])->name('transaksi.update');
         Route::post('/transaksi/filter', [TransaksiController::class, 'filter'])->name('transaksi.filter');
         Route::get('/transaksi/updateList', [TransaksiController::class, 'updateList'])->name('transaksi.updateList');
-
+        Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
         //manage user route
         Route::get('/manage-users', [ManageUserController::class, 'index'])->name('manage-users.index');
         Route::post('/manage-users/create', [ManageUserController::class, 'create'])->name('manage-users.create');

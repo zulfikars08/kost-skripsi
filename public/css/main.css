@@ -280,7 +280,7 @@ nav:hover .shrink-btn,
     left: 0;
     height: 90vh;
     background-color: #ffffff;
-    width: 390px;
+    width: 365px;
     height: auto;
     padding: 1.8rem 0.85rem;
     color: #209cc2;
@@ -433,7 +433,7 @@ body.shrink .tooltip {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 90%;
+    height: 92%;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;

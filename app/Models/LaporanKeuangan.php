@@ -12,6 +12,9 @@ class LaporanKeuangan extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
+
+    protected $dates = ['tanggal'];
+
     protected $fillable = [
         'lokasi_id',
         'kamar_id',
@@ -86,7 +89,11 @@ class LaporanKeuangan extends Model
         static::updated(function ($model) {
             $model->updatePendapatanBersih();
         });
-
+        
+        static::deleting(function ($laporanKeuangan) {
+            $laporanKeuangan->pemasukan()->delete();
+            $laporanKeuangan->pengeluaran()->delete();
+        });
         static::creating(function ($laporanKeuangan) {
             $latestLaporan = self::latest()->first();
             $latestNumber = $latestLaporan ? (int)substr($latestLaporan->kode_laporan, 3) : 0;

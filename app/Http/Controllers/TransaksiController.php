@@ -58,7 +58,7 @@ class TransaksiController extends Controller
     }
 
     // Execute the query and get the results
-    $transaksiData = $query->paginate(10);
+    $transaksiData = $query->paginate(5);
 
     // Check if the request is AJAX and return the appropriate view
     if ($request->ajax()) {
@@ -177,7 +177,7 @@ class TransaksiController extends Controller
                 'tipe_pembayaran' => 'required|in:tunai,non-tunai',
                 'tanggal_pembayaran_awal' => 'nullable|date',
                 'tanggal_pembayaran_akhir' => 'nullable|date',
-                'keterangan' => 'required|string',
+                'keterangan' => 'nullable|string',
                 'status_pembayaran' => 'required|in:lunas,belum_unas,cicil',
                 // Add validation rules for other fields as needed
             ]);
@@ -235,6 +235,9 @@ class TransaksiController extends Controller
                 'lokasi_id' => $transaksi->lokasi_id,
                 'transaksi_id' => $transaksi->id,
                 'jumlah' => $transaksi->jumlah_tarif,
+                'tanggal_pembayaran_awal' => $transaksi->tanggal_pembayaran_awal,
+                'tanggal_pembayaran_akhir' => $transaksi->tanggal_pembayaran_akhir,
+                'status_pembayaran' =>$transaksi->status_pembayaran,
                 'tanggal' => $transaksi->tanggal,
                 'tipe_pembayaran' => $transaksi->tipe_pembayaran,
                 'bukti_pembayaran' => $transaksi->bukti_pembayaran,
@@ -320,6 +323,35 @@ class TransaksiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+    
+            // Find the transaction by ID
+            $transaksi = Transaksi::findOrFail($id);
+    
+            // Update the status of the related Penyewa
+            $penyewa = $transaksi->penyewa; // Assuming a relationship is defined in the Transaksi model
+            if ($penyewa) {
+                $penyewa->status_penyewa = 'tidak_aktif';
+                $penyewa->save();
+            }
+    
+            // Delete associated Pemasukan if exists
+            $pemasukan = Pemasukan::where('transaksi_id', $id)->first(); // Assuming a relationship or reference exists
+            if ($pemasukan) {
+                $pemasukan->delete();
+            }
+    
+            // Delete the Transaksi
+            $transaksi->delete();
+    
+            DB::commit();
+            return redirect()->route('transaksi.index')->with('success_delete', 'Data transaksi berhasil dihapus');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // In case of an error, redirect back with an error message
+            return redirect()->route('transaksi.index')->with('error', 'Gagal menghapus data transaksi');
+        }
     }
+    
 }

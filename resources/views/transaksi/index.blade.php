@@ -55,29 +55,32 @@
     }
 </script>
 <script>
-    $(document).ready(function() {
-        function fetchData() {
-            var formData = $('#search-form').serialize() + '&' + $('#filter-form').serialize();
-            console.log('Fetching data with:', formData); // Debugging line
-            $.ajax({
-                url: "{{ route('transaksi.index') }}",
-                type: 'GET',
-                data: formData,
-                success: function(response) {
-                    // console.log('Data fetched successfully'); // Debugging line
-                    $('#search-results').html(response);
-                },
-                error: function(error) {
-                    console.error('An error occurred:', error);
-                }
-            });
-        }
-        $('#filter-form').on('submit', function(e) {
-            e.preventDefault();
-            fetchData();
+   $(document).ready(function() {
+    function fetchLokasiData() {
+        var formData = $('#search-form').serialize() + '&' + $('#filter-form').serialize();
+        console.log('Fetching data with:', formData); // Debugging line
+        $.ajax({
+            url: "{{ route('penyewa.index') }}",
+            type: 'GET',
+            data: formData,
+            success: function(response) {
+                // console.log('Data fetched successfully'); // Debugging line
+                $('#search-results').html(response);
+            },
+            error: function(error) {
+                console.error('An error occurred:', error);
+            }
         });
+    }
 
-        $('#search-input').on('input', fetchData);
+    // Separate event handlers for search and filter
+    $('#filter-form').on('submit', function(e) {
+        e.preventDefault();
+        fetchLokasiData();
     });
+
+    $('#search-input').on('input', fetchLokasiData);
+});
+
 </script>
 @endsection

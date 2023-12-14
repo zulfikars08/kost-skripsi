@@ -19,7 +19,6 @@ class CreateKamarTable extends Migration
             $table->string('nama_investor')->nullable();
             $table->string('no_kamar');
             $table->integer('harga');
-            $table->string('fasilitas');
             $table->string('tipe_kamar');
             $table->timestamps();
             

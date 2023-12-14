@@ -35,26 +35,23 @@
                                 @enderror
                             </div>
                             <div class="mb-3 custom-form-group">
-                                <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
-                                <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
+                                <label for="tipe_kamar_id" class="form-label">Tipe Kamar</label>
+                                <select class="form-control" name="tipe_kamar_id" id="tipe_kamar_id" required>
                                     <option value="">Pilih Tipe Kamar</option>
-                                    <option value="AC" @if(old('tipe_kamar')==='AC' ) selected @endif>AC</option>
-                                    <option value="Non AC" @if(old('tipe_kamar')==='Non AC' ) selected @endif>Non AC</option>
+                                    @foreach ($tipeKamarOptions as $tipeKamarOption)
+                                        <option value="{{ $tipeKamarOption->id }}">{{ $tipeKamarOption->tipe_kamar }}</option>
+                                    @endforeach
                                 </select>
+                                @if (!$tipeKamarOptions->count())
+                                    <small class="text-danger">Tipe Kamar tidak tersedia. Harap tambahkan tipe kamar terlebih dahulu.</small>
+                                @endif
+                                
                             </div>
-                            {{-- <div class="mb-3 custom-form-group">
-                                <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
-                                <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
-                                    <option value="AC" @if(old('tipe_kamar')==='AC' ) selected @endif>AC</option>
-                                    <option value="Non AC" @if(old('tipe_kamar')==='Non AC' ) selected @endif>Non AC
-                                    </option>
-                                </select>
-                            </div> --}}
                         </div>
 
                         <!-- Right column for "Fasilitas" and "Status" -->
                         <div class="col-md-6">
-                            <div class="mb-3 custom-form-group">
+                            {{-- <div class="mb-3 custom-form-group">
                                 <label class="form-label">Fasilitas</label>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="fasilitas[]" id="ac"
@@ -76,7 +73,24 @@
                                         value="TV">
                                     <label class="form-check-label" for="tv">TV</label>
                                 </div>
+                            </div> --}}
+                            <!-- Kamar Form -->
+                            <div class="mb-3 custom-form-group">
+                                <label class="form-label">Fasilitas</label>
+                                @foreach ($fasilitasOptions as $fasilitasOption)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="fasilitas[]"
+                                        id="{{ $fasilitasOption->slug }}" value="{{ $fasilitasOption->id }}">
+                                    <label class="form-check-label" for="{{ $fasilitasOption->slug }}">{{
+                                        $fasilitasOption->nama_fasilitas }}</label>
+                                </div>
+                                @endforeach
+                                @if (!$fasilitasOptions->count())
+                                <small class="text-danger">Fasilitas tidak tersedia. Harap tambahkan fasilitas
+                                    terlebih dahulu.</small>
+                                @endif
                             </div>
+
                             <div class="mb-3 custom-form-group">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-control" name="status" id="status" required>

@@ -1,7 +1,7 @@
 <!-- Edit Modal -->
 <div class="modal fade" id="editDataModal{{ $item->id }}" tabindex="-1"
     aria-labelledby="editDataModal{{ $item->id }}Label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog custom-modal-width">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModal{{ $item->id }}Label">Edit Data Laporan</h5>
@@ -16,7 +16,7 @@
                     <div class="row">
                         <!-- Kode Laporan -->
                         <div class="col-md-6">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="kode_laporan" class="form-label">Kode Laporan</label>
                                 <input type="text" class="form-control" id="kode_laporan" name="kode_laporan"
                                     value="{{ $item->kode_laporan }}" disabled>
@@ -24,7 +24,7 @@
                         </div>
                         <!-- Tanggal -->
                         <div class="col-md-6">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="tanggal" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control" id="tanggal" name="tanggal"
                                     value="{{ $item->tanggal }}" required>
@@ -40,7 +40,7 @@
                         </div> --}}
                         <!-- Tipe Pembayaran -->
                         <div class="col-md-6">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="tipe_pembayaran" class="form-label">Tipe Pembayaran</label>
                                 <select class="form-select" name="tipe_pembayaran" id="tipe_pembayaran_{{ $item->id }}"
                                     required onchange="toggleBuktiPembayaranField({{ $item->id }})">
@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="col-md-6" id="bukti_pembayaran_field_{{ $item->id }}" style="display: none;">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="bukti_pembayaran_{{ $item->id }}" class="form-label">Bukti Pembayaran</label>
                                 <input type="file" class="form-control" name="bukti_pembayaran"
                                     id="bukti_pembayaran_{{ $item->id }}">
@@ -58,7 +58,7 @@
                         </div>
                         <!-- Jenis -->
                         <div class="col-md-6">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="jenis" class="form-label">Jenis</label>
                                 <select class="form-select" id="jenis_{{ $item->id }}" name="jenis"
                                     onchange="toggleJenisFields({{ $item->id }})" required>
@@ -69,7 +69,7 @@
                         </div>
                         <!-- Jumlah Pemasukan -->
                         <div class="col-md-6" id="pemasukanField_{{ $item->id }}" style="display: none;">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group"">
                                 <label for="pemasukan" class="form-label">Jumlah Pemasukan</label>
                                 <input type="text" class="form-control" id="pemasukan_{{ $item->id }}" name="pemasukan"
                                     value="{{ number_format($item->jumlah, 0, ',', ',') }}" required 
@@ -78,7 +78,7 @@
                         </div>
                         <!-- Jumlah Pengeluaran -->
                         <div class="col-md-6" id="pengeluaranField_{{ $item->id }}" style="display: none;">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="pengeluaran" class="form-label">Jumlah Pengeluaran</label>
                                 <input type="text" class="form-control" id="pengeluaran_{{ $item->id }}" name="pengeluaran"
                                     value="{{ number_format($item->jumlah, 0, ',', ',') }}" required 
@@ -88,7 +88,7 @@
                         <!-- Bukti Pembayaran -->
                         <!-- Status Pembayaran -->
                         <div class="col-md-6">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="status_pembayaran_{{ $item->id }}" class="form-label">Status Pembayaran</label>
                                 <select class="form-select" name="status_pembayaran" id="status_pembayaran_{{ $item->id }}"
                                     required onchange="toggleTanggalPembayaranFields({{ $item->id }})">
@@ -116,15 +116,15 @@
                         </div>
                         <!-- Keterangan -->
                         <div class="col-12">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <label for="keterangan" class="form-label">Keterangan</label>
                                 <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                    value="{{ $item->keterangan }}" required>
+                                    value="{{ $item->keterangan }}" >
                             </div>
                         </div>
                         <!-- Button to submit the form -->
                         <div class="col-12">
-                            <div class="mb-3">
+                            <div class="mb-3 custom-form-group">
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                             </div>
                         </div>

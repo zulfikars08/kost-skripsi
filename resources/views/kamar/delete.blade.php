@@ -10,8 +10,7 @@
                 Apakah anda yakin menghapus baris ini?
             </div>
             <div class="modal-footer">
-                <form 
-                action="{{ route('kamar.destroy', $item->id) }}" method="post">
+                <form action="{{ route('kamar.destroy', ['id' => $item->id]) }}" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="submit" name="submit" class="btn btn-danger btn-sm"

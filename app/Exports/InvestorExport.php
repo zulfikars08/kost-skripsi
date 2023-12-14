@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border as StyleBorder;
 use App\Models\Investor; // Adjust the namespace based on your Investor model
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class InvestorExport implements FromCollection, WithHeadings, WithStyles
 {
@@ -18,9 +19,14 @@ class InvestorExport implements FromCollection, WithHeadings, WithStyles
     {
         $this->investors = $investors;
     }
-
+    protected $casts = [
+        'pemasukan' => 'float', // or 'integer', depending on your context
+        'pengeluaran' => 'float', // or 'integer'
+        // ... other casts ...
+    ];
     public function collection()
     {
+        
         // Transform your $this->investors into a collection
         $data = $this->investors->map(function ($investor, $key) {
             // Calculate Pendapatan Bersih and Total Pendapatan
@@ -47,8 +53,8 @@ class InvestorExport implements FromCollection, WithHeadings, WithStyles
                 'Jumlah Pintu' => $jumlahPintu,
                 'Lokasi' => $investor->lokasiKos->nama_kos,
                 'Total Kamar' => $totalKamar,
-                'Pendapatan Bersih' =>  $lastPendapatanBersih,
-                'Total Pendapatan' => $totalPendapatan,
+                'Rp' . number_format($lastPendapatanBersih, 0, ',', '.'),
+                'Rp' . number_format($totalPendapatan, 0, ',', '.'),
             ];
         });
 
@@ -64,17 +70,48 @@ class InvestorExport implements FromCollection, WithHeadings, WithStyles
 
     public function styles(Worksheet $sheet)
     {
-        // Set the entire worksheet to have a border and left alignment
-        $sheet->getStyle($sheet->calculateWorksheetDimension())->applyFromArray([
+        $sheet->getStyle('A1:I1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'color' => ['argb' => 'FFCCCCCC'],
+            ],
+        ]);
+
+        $highestRow = $sheet->getHighestRow();
+        $sheet->getStyle('A2:I' . $highestRow)->applyFromArray([
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_LEFT,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => StyleBorder::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
                 ],
             ],
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_LEFT,
-            ],
         ]);
+
+        // Apply currency format to the 'Pendapatan Bersih' and 'Total Pendapatan' columns
+        $currencyFormat = '"Rp"#,##0;-Rp#,##0';
+        $sheet->getStyle('H2:H' . $highestRow)->getNumberFormat()->setFormatCode($currencyFormat);
+        $sheet->getStyle('I2:I' . $highestRow)->getNumberFormat()->setFormatCode($currencyFormat);
+
+        // Set specific column widths
+        $sheet->getColumnDimension('A')->setWidth(5); // Example width, adjust as needed
+        $sheet->getColumnDimension('B')->setWidth(15); // Example width, adjust as needed
+        // Continue for other columns as necessary
+
+        // Optionally, set the row height for all rows
+        for ($i = 1; $i <= $highestRow; $i++) {
+            $sheet->getRowDimension($i)->setRowHeight(15); // Example height, adjust as needed
+        }
     }
 }
 

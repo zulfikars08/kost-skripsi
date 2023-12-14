@@ -20,16 +20,20 @@
                         </select>
                     </div>
                     <div class="mb-3 custom-form-group">
-                        <label for="tipe_kamar" class="form-label">Tipe Kamar</label>
-                        <select class="form-control" name="tipe_kamar" id="tipe_kamar" required>
+                        <label for="tipe_kamar_id" class="form-label">Tipe Kamar</label>
+                        <select class="form-control" name="tipe_kamar_id" id="tipe_kamar_id">
                             <option value="">Pilih Tipe Kamar</option>
-                            <option value="AC" @if(old('tipe_kamar')==='AC' ) selected @endif>AC</option>
-                            <option value="Non AC" @if(old('tipe_kamar')==='Non AC' ) selected @endif>Non AC</option>
+                            @foreach ($tipeKamarOptions as $tipeKamarOption)
+                                <option value="{{ $tipeKamarOption->id }}">{{ $tipeKamarOption->tipe_kamar }}</option>
+                            @endforeach
                         </select>
+                        @if (!$tipeKamarOptions->count())
+                            <small class="text-danger">Tipe Kamar tidak tersedia. Harap tambahkan tipe kamar terlebih dahulu.</small>
+                        @endif
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="status" class="form-label">Status</label>
-                        <select class="form-control" name="status" id="status" required>
+                        <select class="form-control" name="status" id="status" >
                             <option value="">Pilih Status Kamar</option>
                             <option value="Belum Terisi" @if(old('status')==='Belum Terisi' ) selected @endif>
                                 Belum Terisi</option>

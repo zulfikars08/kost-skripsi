@@ -7,6 +7,8 @@ use App\Models\Kamar;
 use App\Models\Kategori;
 use App\Models\LaporanKeuangan;
 use App\Models\LokasiKos;
+use App\Models\Pemasukan;
+use App\Models\Pengeluaran;
 use App\Models\Penyewa;
 use App\Models\TanggalLaporan;
 use App\Models\Transaksi;
@@ -362,6 +364,26 @@ class LaporanKeuanganController extends Controller
                     'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
                     'status_pembayaran' => $request->input('status_pembayaran'),
                 ]);
+
+                if ($laporan->jenis === 'pemasukan') {
+                    $pemasukanRecord = Pemasukan::where('kode_pemasukan', $laporan->kode_pemasukan)->first();
+                    if ($pemasukanRecord) {
+                        $pemasukanRecord->update([
+                            // Set new values based on updated laporan keuangan
+                            'jumlah' => $laporan->pemasukan,
+                            // ... any other relevant fields
+                        ]);
+                    }
+                } elseif ($laporan->jenis === 'pengeluaran') {
+                    $pengeluaranRecord = Pengeluaran::where('kode_pengeluaran', $laporan->kode_pengeluaran)->first();
+                    if ($pengeluaranRecord) {
+                        $pengeluaranRecord->update([
+                            // Set new values based on updated laporan keuangan
+                            'jumlah' => $laporan->pengeluaran,
+                            // ... any other relevant fields
+                        ]);
+                    }
+                }
     
                 // Update pendapatan bersih
                 $this->updatePendapatanBersih($laporan);

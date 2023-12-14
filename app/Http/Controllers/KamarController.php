@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fasilitas;
 use App\Models\Investor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -19,7 +20,7 @@ class KamarController extends Controller
     {
         // Retrieve input data from the request
         $namaKos = $request->input('nama_kos');
-        $tipe_kamar = $request->input('tipe_kamar');
+        $tipe_kamar = $request->input('tipe_kamar_id'); // Update the input name here
         $status = $request->input('status');
     
         // Query to filter Kamar data based on user inputs
@@ -38,9 +39,11 @@ class KamarController extends Controller
             ->paginate(5);
     
         $lokasiKosOptions = LokasiKos::all();
+        $tipeKamarOptions = TipeKamar::all();
+        $fasilitasOptions = Fasilitas::all();
         $kamars = Kamar::all();
     
-        return view('kamar.index', compact('filteredKamarData', 'lokasiKosOptions', 'kamars'));
+        return view('kamar.index', compact('filteredKamarData', 'lokasiKosOptions', 'kamars','fasilitasOptions','tipeKamarOptions'));
     }
     
 
@@ -63,7 +66,8 @@ class KamarController extends Controller
     public function create()
     {
         $lokasiKos = LokasiKos::all();
-        return view('kamar.create', compact('lokasiKos'));
+        $fasilitasOptions = Fasilitas::all();
+        return view('kamar.create', compact('lokasiKos','fasilitasOptions'));
     }
 
    
@@ -92,9 +96,9 @@ class KamarController extends Controller
                     }),
                 ],
                 'harga' => 'required',
-                'tipe_kamar' => 'required|in:AC,Non AC',
+                'tipe_kamar_id' => 'required|exists:tipe_kamar,id',
                 'fasilitas' => 'required|array',
-                'fasilitas.*' => 'in:AC,Lemari,Kasur,TV',
+                'fasilitas.*' => 'exists:fasilitas,id',
                 'status' => 'required|in:Belum Terisi,Sudah Terisi',
                 'lokasi_id' => 'required|exists:lokasi_kos,id',
             ], [
@@ -102,7 +106,8 @@ class KamarController extends Controller
                 'no_kamar.required' => 'Nomor kamar wajib di isi',
                 'no_kamar.unique' => 'Nomor kamar sudah digunakan untuk lokasi kos ini',
                 'harga.required' => 'Harga wajib di isi',
-                'tipe_kamar.required' => 'Tipe kamar wajib di isi',
+                'tipe_kamar_id.required' => 'Tipe kamar wajib di isi',
+                'tipe_kamar_id.exists' => 'Tipe kamar yang dipilih tidak valid',
                 'fasilitas.required' => 'Fasilitas wajib di isi',
                 'status.required' => 'Status wajib di isi',
                 'status.in' => 'Status harus salah satu dari "Belum Terisi" atau "Sudah Terisi"',
@@ -110,30 +115,21 @@ class KamarController extends Controller
                 'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
             ]);
     
-            // Convert array to string
-            $fasilitas = implode(',', $request->input('fasilitas'));
-    
             // Use the validated data
             $data = [
                 'no_kamar' => $request->no_kamar,
                 'harga' => $request->harga,
-                'tipe_kamar' => $request->tipe_kamar,
-                'fasilitas' => $fasilitas,
                 'status' => $request->status,
                 'lokasi_id' => $request->lokasi_id,
+                'tipe_kamar' => TipeKamar::find($request->tipe_kamar_id)->tipe_kamar,
+                'tipe_kamar_id' => $request->tipe_kamar_id,
             ];
     
             // Create a new Kamar record
             $kamar = Kamar::create($data);
     
-            // Create a new TipeKamar record
-            TipeKamar::create([
-                'kamar_id' => $kamar->id,
-                'no_kamar' => $kamar->no_kamar,
-                'nama_kos' => LokasiKos::findOrFail($request->input('lokasi_id'))->nama_kos, // Use the value from the data array
-                'lokasi_id' => $kamar->lokasi_id,
-                'tipe_kamar' => $data['tipe_kamar'],
-            ]);
+            // Attach selected fasilitas to the Kamar
+            $kamar->fasilitas()->attach($request->input('fasilitas'));
     
             // Commit the database transaction
             DB::commit();
@@ -148,9 +144,8 @@ class KamarController extends Controller
             // Handle the exception, you can log it or show an error message.
             return redirect()->back()->with('error', 'Data yang diberikan tidak valid' );
         }
-    }
     
-
+    }
     // Show the form for editing the specified resource
     public function edit($id)
     {
@@ -165,62 +160,56 @@ class KamarController extends Controller
         try {
             // Begin a database transaction
             DB::beginTransaction();
-
+    
             $request->validate([
                 'harga' => 'required',
-                'tipe_kamar' => 'required|in:AC,Non AC',
-                'fasilitas' => 'required',
-                'lokasi_id' => 'required',
+                'tipe_kamar_id' => 'required|exists:tipe_kamar,id',
+                'fasilitas' => 'required|array',
+                'fasilitas.*' => 'exists:fasilitas,id',
+                'status' => 'required|in:Belum Terisi,Sudah Terisi',
+                'lokasi_id' => 'required|exists:lokasi_kos,id',
             ], [
+                // Custom error messages...
                 'harga.required' => 'Harga wajib di isi',
-                'tipe_kamar.required' => 'Tipe kamar wajib di isi',
+                'tipe_kamar_id.required' => 'Tipe kamar wajib di isi',
+                'tipe_kamar_id.exists' => 'Tipe kamar yang dipilih tidak valid',
                 'fasilitas.required' => 'Fasilitas wajib di isi',
-                'lokasi_id.required' => 'Lokasi Kos wajib di isi',
+                'status.required' => 'Status wajib di isi',
+                'status.in' => 'Status harus salah satu dari "Belum Terisi" atau "Sudah Terisi"',
+                'lokasi_id.required' => 'Lokasi kos wajib dipilih',
+                'lokasi_id.exists' => 'Lokasi kos yang dipilih tidak valid',
             ]);
-
-            // Check if the status is "belum terisi"
-            if ($request->status === 'Belum Terisi') {
-                // Find the related Penyewa record with the same 'no_kamar' and 'lokasi_id'
-                $kamar = Kamar::findOrFail($id);
-                $lokasiId = $kamar->lokasi_id;
-                $noKamar = $kamar->no_kamar;
-
-                $penyewa = Penyewa::where('no_kamar', $noKamar)
-                    ->where('lokasi_id', $lokasiId)
-                    ->first();
-
-                if ($penyewa) {
-                    // Delete the related Penyewa record
-                    $penyewa->delete();
-                }
-            }
-
             // Check for updates on the harga field
-            $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : intval(str_replace(',', '', $request->harga));
-
+            $harga = $request->filled('harga') ? intval(str_replace(',', '', $request->harga)) : null;
+    
             $data = [
                 'harga' => $harga,
-                'tipe_kamar' => $request->tipe_kamar,
-                'fasilitas' => implode(',', $request->fasilitas), // Convert array to comma-separated string
+                'status' => $request->input('status'),
                 'lokasi_id' => $request->lokasi_id,
+                'tipe_kamar_id' => $request->tipe_kamar_id,
             ];
-
+    
             // Update the Kamar record
             Kamar::where('id', $id)->update($data);
-
+    
+            // Sync the fasilitas relationship
+            Kamar::find($id)->fasilitas()->sync($request->input('fasilitas'));
+    
             // Commit the database transaction
             DB::commit();
-
+    
             return redirect()->route('kamar.index')->with('success_update', 'Berhasil melakukan update data kamar');
-
         } catch (\Exception $e) {
             // Rollback the database transaction in case of an exception
             DB::rollBack();
-
+    
             // Handle the exception, you can log it or show an error message.
             return redirect()->back()->with('error', 'Data yang diberikan tidak valid');
         }
     }
+    
+    
+    
     
     // routes/web.php
 

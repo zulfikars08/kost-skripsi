@@ -6,6 +6,7 @@
                 <th style="white-space: nowrap;">No Kamar</th>
                 <th style="white-space: nowrap;">Nama</th>
                 <th style="white-space: nowrap;">Lokasi Kos</th>
+                <th style="white-space: nowrap;">Tarif Kamar</th>
                     <!-- Filter by Lokasi Kos dropdown here -->
                     {{-- <div class="dropdown">
                         <a class="filter-icon dropdown-toggle" href="#" role="button" id="lokasiDropdown"
@@ -97,6 +98,7 @@
                         {{ $item->lokasiKos->nama_kos }}
                     @endif
                 </td>
+                <td>Rp {{ number_format($item->kamar->harga, 0, ',', '.') }}</td>
                 <!-- Tanggal -->
                 <td>
                     {{ $item->tanggal ?? '-' }}
@@ -142,17 +144,16 @@
                 {{-- <td>{{ $item->pengeluaran }}</td> --}}
                 <td>
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}">
+                        <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}" style="background-color: #ffbe45;">
                             <i class="fas fa-edit" style="color: white"></i>
                         </button>
                 
                         @include('transaksi.edit')
 
-                        <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline" action="{{ route('transaksi.destroy', $item->id)}}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" name="submit" class="btn btn-danger btn-sm"style="margin-left: 5px"><i class="fas fa-trash" ></i></button>
-                        </form>
+                        <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left:5px" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                            <i class="fas fa-trash" style="color: white"></i>
+                        </button>
+                        @include('transaksi.delete') 
                     </div>
                 </td>
             </tr>

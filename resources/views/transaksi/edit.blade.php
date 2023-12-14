@@ -15,7 +15,7 @@
                     <!-- Jumlah Tarif -->
                     <div class="mb-3 custom-form-group">
                         <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" name="tanggal" id="tanggal">
+                        <input type="date" class="form-control" name="tanggal" id="tanggal_{{$item->id}}" value="{{ old('tanggal') }}" required>
                     </div>
                     <div class="mb-3 custom-form-group">
                         <label for="jumlah_tarif" class="form-label">Jumlah Tarif</label>
@@ -33,10 +33,12 @@
                     </div>
 
                     <!-- Bukti Pembayaran -->
-                    <div class="mb-3 custom-form-group" id="bukti_pembayaran_field_{{ $item->id }}" style="display: none;">
-                        <label for="bukti_pembayaran_{{ $item->id }}" class="form-label">Bukti Pembayaran</label>
-                        <input type="file" class="form-control" name="bukti_pembayaran"
-                            id="bukti_pembayaran_{{ $item->id }}">
+                    <div id="bukti_pembayaran_field_{{ $item->id }}" style="display: none;">
+                        <div class="mb-3 custom-form-group">
+                            <label for="bukti_pembayaran_{{ $item->id }}" class="form-label">Bukti Pembayaran</label>
+                            <input type="file" class="form-control" name="bukti_pembayaran"
+                                id="bukti_pembayaran_{{ $item->id }}">
+                        </div>
                     </div>
 
                     <!-- Status Pembayaran -->

@@ -13,11 +13,10 @@
                 <form action="{{ route('penghuni.update',  $item->id) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <div class="modal-body">
                         <!-- Select Penyewa -->
                         <div class="mb-3 custom-form-group">
-                            <label for="penyewa_id" class="form-label text-start">Penyewa ID</label>
-                            <input type="text" class="form-control" id="penyewa_id" value="{{ request()->route('id') }}" disabled>
+                            <label for="kode_penyewa" class="form-label text-start">Penyewa ID</label>
+                            <input type="text" class="form-control" name="kode_penyewa" id="kode_penyewa" value="{{ $item->penyewa->kode_penyewa }}" disabled>
                         </div>
                         <!-- Nama -->
                         <div class="mb-3 custom-form-group">
@@ -63,10 +62,11 @@
                             </select>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Update Penghuni</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                 </form>
-            </div>
         </div>
     </div>
 </div>

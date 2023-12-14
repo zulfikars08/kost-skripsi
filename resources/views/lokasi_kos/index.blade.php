@@ -26,43 +26,39 @@
             <!-- Include the modal partial -->
         </div>
         <div id="search-results">
-
+         @include('lokasi_kos.list')
         </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function() {
-        // Load initial data
+   $(document).ready(function() {
+    function fetchLokasiData() {
+        var formData = $('#search-form').serialize() + '&' + $('#filter-form').serialize();
+        console.log('Fetching data with:', formData); // Debugging line
+        $.ajax({
+            url: "{{ route('lokasi_kos.index') }}",
+            type: 'GET',
+            data: formData,
+            success: function(response) {
+                // console.log('Data fetched successfully'); // Debugging line
+                $('#search-results').html(response);
+            },
+            error: function(error) {
+                console.error('An error occurred:', error);
+            }
+        });
+    }
+
+    // Separate event handlers for search and filter
+    $('#filter-form').on('submit', function(e) {
+        e.preventDefault();
         fetchLokasiData();
-
-        // Fetch data as the user types in the search field
-        $('#search-input').on('input', function() {
-            var katakunci = $(this).val();
-            fetchLokasiData(katakunci);
-        });
-
-        // Prevent form submission and fetch data when search button is clicked
-        $('#search-button').click(function() {
-            var katakunci = $('#search-input').val();
-            fetchLokasiData(katakunci);
-        });
-
-        // AJAX function to fetch data
-        function fetchLokasiData(katakunci = '') {
-            $.ajax({
-                url: "{{ route('lokasi_kos.index') }}",
-                type: 'GET',
-                data: { katakunci: katakunci },
-                success: function(response) {
-                    $('#search-results').html(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching data:', error);
-                }
-            });
-        }
     });
+
+    $('#search-input').on('input', fetchLokasiData);
+});
+
 </script>
 
 @endsection

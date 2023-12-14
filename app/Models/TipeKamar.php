@@ -14,10 +14,6 @@ class TipeKamar extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'lokasi_id',
-        'kamar_id',
-        'no_kamar',
-        'nama_kos',
         'tipe_kamar',
     ];
     protected static function boot()
@@ -28,9 +24,9 @@ class TipeKamar extends Model
             $model->id = Str::uuid(); // Automatically set UUID when creating a new record
         });
     }
-    public function kamar()
+    public function kamars()
     {
-        return $this->belongsTo(Kamar::class);
+        return $this->hasMany(Kamar::class, 'tipe_kamar_id');
     }
 
     public function lokasiKos()

@@ -11,7 +11,7 @@
                 Apakah anda yakin menghapus baris ini?
             </div>
             <div class="modal-footer">
-                <form onsubmit="return confirm('Yakin akan menghapus data?')" class="d-inline"
+                <form
                     action="{{ route('lokasi_kos.destroy', $item->id)}}" method="post">
                     @csrf
                     @method('DELETE')

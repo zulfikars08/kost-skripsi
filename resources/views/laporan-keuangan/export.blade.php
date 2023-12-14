@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <form action="{{ route('generate-financial-report') }}" method="post">
                     @csrf
-                    <div class="form-group">
+                    <div class="mb-3 custom-form-group">
                         <label for="nama_kos">Lokasi Kos:</label>
                         <select name="nama_kos" id="nama_kos" class="form-control">
                             <option value="">Pilih Lokasi Kos</option>
@@ -17,7 +17,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 custom-form-group">
                         <label for="bulan">Bulan:</label>
                         <select name="bulan" id="bulan" class="form-control">
                             <option value="">Pilih Bulan</option>
@@ -26,7 +26,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3 custom-form-group">
                         <label for="tahun">Tahun:</label>
                         <select name="tahun" id="tahun" class="form-control">
                             <option value="">Pilih Tahub</option>

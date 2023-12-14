@@ -41,12 +41,11 @@
                                     <div class="dropdown-menu" aria-labelledby="tipeKamarDropdown">
                                         <form action="{{ route('kamar.index') }}" method="get">
                                             <div class="form-group px-2">
-                                                <select class="form-control" name="filter_by_tipe_kamar" id="filterByTipeKamar">
-                                                    <option value="">Semua Status</option>
-                                                    <option value="AC" {{ request('filter_by_tipe_kamar')==='AC' ? 'selected'
-                                                        : '' }}>AC</option>
-                                                    <option value="Non AC" {{ request('filter_by_tipe_kamar')==='Non AC'
-                                                        ? 'selected' : '' }}>Non AC</option>
+                                                <select class="form-control" name="tipe_kamar_id" id="tipe_kamar_id" required>
+                                                    <option value="">Pilih Tipe Kamar</option>
+                                                    @foreach ($tipeKamarOptions as $tipeKamarOption)
+                                                        <option value="{{ $tipeKamarOption->id }}">{{ $tipeKamarOption->tipe_kamar }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="modal-footer px-2">
@@ -116,8 +115,22 @@
                             </td>
                             <td>{{ $item->no_kamar }}</td>
                             <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                            <td>{{ $item->fasilitas }}</td>
-                            <td>{{ $item->tipe_kamar }}</td>
+                            <td>
+                                @php $first = true @endphp
+                                @foreach ($item->fasilitas as $fasilitas)
+                                    {{ !$first ? ', ' : '' }}
+                                    {{ $fasilitas->nama_fasilitas }}
+                                    @php $first = false @endphp
+                                @endforeach
+                            </td>
+                            
+                            <td>
+                                @if ($item->tipeKamar) <!-- Check if the relationship exists -->
+                                    {{ $item->tipeKamar->tipe_kamar }}
+                                @else
+                                    N/A <!-- Handle the case when the relationship is null -->
+                                @endif
+                            </td>
                             <td>{{ $item->lokasiKos->nama_kos }}</td>
                             <td>
                                 @if ($item->status === 'Belum Terisi' || $item->status == NULL)

@@ -24,7 +24,10 @@ class Pengeluaran extends Model
         'nama_kos',
         'tipe_pembayaran',
         'bukti_pembayaran',
+        'tanggal_pembayaran_awal',
+        'tanggal_pembayaran_akhir',
         'kode_pengeluaran',
+        'status_pembayaran',
         'kategori',
         'jumlah',
         'created_by',
@@ -42,7 +45,10 @@ class Pengeluaran extends Model
     {
         return $this->belongsTo(LokasiKos::class, 'lokasi_id', 'id');
     }
-   
+    public function laporanKeuangan()
+{
+    return $this->hasOne(LaporanKeuangan::class, 'pengeluaran_id');
+}
     // Automatically generate kode_pengeluaran before saving
     public static function boot()
     {
@@ -57,6 +63,10 @@ class Pengeluaran extends Model
             $latestPengeluaran = self::latest()->first();
             $latestNumber = $latestPengeluaran ? (int)substr($latestPengeluaran->kode_pengeluaran, 3) : 0;
             $pengeluaran->kode_pengeluaran = 'PLR' . str_pad($latestNumber + 1, 3, '0', STR_PAD_LEFT);
+        });
+
+        static::deleting(function ($pengeluaran) {
+            $pengeluaran->laporanKeuangan()->delete();
         });
     }
 }

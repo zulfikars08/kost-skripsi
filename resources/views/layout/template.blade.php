@@ -75,117 +75,150 @@
           </a>
         </li>
         {{-- @endif --}}
-
         <li class="tooltip-element" data-tooltip="2">
-          <a href="/kamar" data-active="2">
+          <a class="nav-link" href="#" data-active="2">
             <div class="icon">
-              <i class='bi bi-door-closed'></i>
-              <i class='bi bi-door-closed'></i>
+              <i class="fas fa-bed"></i>
+              <i class="fas fa-bed"></i>
             </div>
             <span class="link hide">Data Kamar</span>
           </a>
-        </li>
-
-        <li class="tooltip-element" data-tooltip="3">
-          <a href="/penyewa" data-active="3">
-            <div class="icon">
-              <i class='bi bi-person'></i>
-              <i class='bi bi-person'></i>
-            </div>
-            <span class="link hide" style="white-space: nowrap;">Data Penyewa</span>
-          </a>
-        </li>
-        @if (auth()->user()->hasRole('admin'))
-        <li class="tooltip-element" data-tooltip="4">
-          <a href="/transaksi" data-active="4">
-            <div class="icon">
-              <i class='bi bi-file-earmark-text'></i>
-              <i class='bi bi-file-earmark-text'></i>
-            </div>
-            <span class="link hide" style="white-space: nowrap;">Data Transaksi</span>
-          </a>
-        </li>
-        @endif
-        <!-- Updated HTML -->
-        @if (auth()->user()->hasRole('admin'))
-        <li class="tooltip-element" data-tooltip="5">
-          <a class="nav-link" href="#" data-active="5">
-            <div class="icon">
-              <i class='bi bi-cash'></i>
-              <i class='bi bi-cash'></i>
-            </div>
-            <span class="link hide">Data Keuangan</span>
-          </a>
           <ul class="submenu collapse">
             <li>
-              <a class="dropdown-item" href="/pemasukan">
+              <a class="dropdown-item" href="/fasilitas">
                 <div class="icon">
-                  <i class='bi bi-arrow-right'></i>
-                  <i class='bi bi-arrow-right'></i>
+                  <i class="fas fa-shower"></i>
+                  <i class="fas fa-shower"></i>
                 </div>
-                <span class="link hide">Data Pemasukan</span>
+                <span class="link hide">Fasilitas</span>
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="/pengeluaran">
+              <a class="dropdown-item" href="/tipe_kamar">
                 <div class="icon">
-                  <i class='bi bi-arrow-left'></i>
-                  <i class='bi bi-arrow-left'></i>
+                  <i class="fas fa-door-closed"></i>
+                  <i class="fas fa-door-closed"></i>
                 </div>
-                <span class="link hide">Data Pengeluaran</span>
+                <span class="link hide">Tipe Kamar</span>
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="/tanggal-laporan">
+              <a class="dropdown-item" href="/kamar">
                 <div class="icon">
-                  <i class='bi bi-file-text'></i>
-                  <i class='bi bi-file-text'></i>
+                  <i class="fas fa-bed"></i>
+                  <i class="fas fa-bed"></i>
                 </div>
-                <span class="link hide">Data Laporan Keuangan</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="/tanggal-investor">
-                <div class="icon">
-                  <i class='bi bi-file-text'></i>
-                  <i class='bi bi-file-text'></i>
-                </div>
-                <span class="link hide">Data Laporan Investor</span>
+                <span class="link hide">Kamar</span>
               </a>
             </li>
           </ul>
         </li>
-        
-        @endif
-        @if (auth()->user()->hasRole('admin'))
-        <li class="tooltip-element" data-tooltip="6">
-          <a href="/manage-users" data-active="6">
-            <div class="icon">
-              <i class='bi bi-person-plus'></i>
-              <i class='bi bi-person-plus'></i>
-            </div>
-            <span class="link hide">Manage Users</span>
-          </a>
-        </li>
-        @endif
-        <li class="tooltip-element" data-tooltip="7">
-          <a href="/logout" data-active="7">
-            <div class="icon">
-              <i class='bi bi-box-arrow-right'></i>
-              <i class='bi bi-box-arrow-right'></i>
-            </div>
-            <span class="link hide">Log Out</span>
-          </a>
-        </li>
+      <!-- Updated HTML -->
+<li class="tooltip-element" data-tooltip="3">
+  <a href="/penyewa" data-active="3">
+    <div class="icon">
+      <i class='bi bi-person'></i>
+      <i class='bi bi-person'></i>
+    </div>
+    <span class="link hide" style="white-space: nowrap;">Data Penyewa</span>
+  </a>
+</li>
+
+@if (auth()->user()->hasRole('admin'))
+<li class="tooltip-element" data-tooltip="4">
+  <a href="/transaksi" data-active="4">
+    <div class="icon">
+      <i class='bi bi-file-earmark-text'></i>
+      <i class='bi bi-file-earmark-text'></i>
+    </div>
+    <span class="link hide" style="white-space: nowrap;">Data Transaksi</span>
+  </a>
+</li>
+@endif
+
+<!-- Updated HTML -->
+@if (auth()->user()->hasRole('admin'))
+<li class="tooltip-element" data-tooltip="5">
+  <a class="nav-link" href="#" data-active="5">
+    <div class="icon">
+      <i class='bi bi-cash'></i>
+      <i class='bi bi-cash'></i>
+    </div>
+    <span class="link hide">Data Keuangan</span>
+  </a>
+  <ul class="submenu collapse">
+    <li>
+      <a class="dropdown-item" href="/pemasukan">
+        <div class="icon">
+          <i class='bi bi-arrow-right'></i>
+          <i class='bi bi-arrow-right'></i>
+        </div>
+        <span class="link hide">Pemasukan</span>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" href="/pengeluaran">
+        <div class="icon">
+          <i class='bi bi-arrow-left'></i>
+          <i class='bi bi-arrow-left'></i>
+        </div>
+        <span class="link hide">Pengeluaran</span>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" href="/tanggal-laporan">
+        <div class="icon">
+          <i class='bi bi-file-text'></i>
+          <i class='bi bi-file-text'></i>
+        </div>
+        <span class="link hide">Laporan Keuangan</span>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" href="/tanggal-investor">
+        <div class="icon">
+          <i class='bi bi-file-text'></i>
+          <i class='bi bi-file-text'></i>
+        </div>
+        <span class="link hide">Laporan Investor</span>
+      </a>
+    </li>
+  </ul>
+</li>
+@endif
+
+@if (auth()->user()->hasRole('admin'))
+<li class="tooltip-element" data-tooltip="6">
+  <a href="/manage-users" data-active="6">
+    <div class="icon">
+      <i class='bi bi-person-plus'></i>
+      <i class='bi bi-person-plus'></i>
+    </div>
+    <span class="link hide">Kelola Akun</span>
+  </a>
+</li>
+@endif
+
+<!-- Updated HTML -->
+<li class="tooltip-element" data-tooltip="7">
+  <a href="/logout" data-active="7">
+    <div class="icon">
+      <i class='bi bi-box-arrow-right'></i>
+      <i class='bi bi-box-arrow-right'></i>
+    </div>
+    <span class="link hide">Log Out</span>
+  </a>
+</li>
+
         <div class="tooltip">
           <span class="show">Dashboard</span>
-          <span>Data Kamar</span>
           <span>Data Lokasi</span>
+          <span>Data Kamar</span>
           <span>Data Penyewa</span>
           <span>Data Transaksi</span>
           <span>Data Keuangan</span>
           {{-- <span>Data Transaksi</span> --}}
-          <span>Manage Users</span>
+          <span>Kelola Akun</span>
           <span>Log Out</span>
         </div>
       </ul>

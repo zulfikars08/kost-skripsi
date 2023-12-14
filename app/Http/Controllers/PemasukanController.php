@@ -104,8 +104,11 @@ class PemasukanController extends Controller
                 'tanggal' => 'required|date',
                 'tipe_pembayaran' => 'required|in:tunai,non-tunai',
                 'bukti_pembayaran' => 'required_if:tipe_pembayaran,non-tunai|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'jumlah' => 'required|numeric',
-                'keterangan' => 'required|string',
+                'jumlah' =>  ['required', 'regex:/^\d+(\,\d{1,3})*$/'],
+                'tanggal_pembayaran_awal' => 'nullable|date',
+                'tanggal_pembayaran_akhir' => 'nullable|date',
+                'status_pembayaran' => 'nullable|in:lunas,cicil,belum-lunas',
+                'keterangan' => 'nullable|string',
             ], [
                 'kamar_id.required' => 'Nomor kamar wajib di isi',
                 'kamar_id.exists' => 'Nomor kamar tidak valid',
@@ -121,8 +124,6 @@ class PemasukanController extends Controller
                 'bukti_pembayaran.max' => 'Ukuran bukti pembayaran tidak boleh melebihi 2048 kilobita',
                 'jumlah.required' => 'Jumlah wajib di isi',
                 'jumlah.numeric' => 'Jumlah harus berupa angka',
-                'keterangan.required' => 'Keterangan wajib di isi',
-                'keterangan.string' => 'Keterangan harus berupa teks',
                 // Add other custom error messages as needed
             ]);
 
@@ -133,7 +134,10 @@ class PemasukanController extends Controller
                 'tanggal' => $request->input('tanggal'),
                 'tipe_pembayaran' => $request->input('tipe_pembayaran'),
                 'bukti_pembayaran' => $request->input('bukti_pembayaran'),
-                'jumlah' => $request->input('jumlah'),
+                'jumlah' => str_replace(',', '', $request->input('jumlah')),
+                'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
+                'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
+                'status_pembayaran' => $request->input('status_pembayaran'),
                 'keterangan' => $request->input('keterangan'),
             ]);
 
@@ -147,7 +151,16 @@ class PemasukanController extends Controller
             } elseif ($request->input('tipe_pembayaran') === 'tunai') {
                 $pemasukan->bukti_pembayaran = 'Cash Payment'; // Use -> instead of array notation
             }
+            $existingPemasukan = Pemasukan::where('kamar_id', $request->input('kamar_id'))
+            ->where('lokasi_id', $request->input('lokasi_id'))
+            ->where('tanggal', $request->input('tanggal'))
+            ->where('jumlah', $request->input('jumlah'))
+            ->first();
 
+        if ($existingPemasukan) {
+            // If a record already exists, return with an error message
+            return redirect()->back()->with('error', 'Data pemasukan sudah ada.');
+        }
             // Save the Pemasukan
             $pemasukan->save();
             event(new PemasukanCreated($pemasukan));
@@ -318,18 +331,24 @@ class PemasukanController extends Controller
     public function destroy($id)
     {
         try {
-            // Find the Pemasukan item by ID
-            $pemasukan = Pemasukan::findOrFail($id);
-
-            // Implement your logic for deleting the item (e.g., database deletion)
-            $pemasukan->delete();
-
+            DB::transaction(function () use ($id) {
+                // Find the Pemasukan item by ID
+                $pemasukan = Pemasukan::findOrFail($id);
+    
+                // Delete related Laporan Keuangan entries
+                LaporanKeuangan::where('pemasukan_id', $pemasukan->id)->delete();
+    
+                // Delete the Pemasukan item
+                $pemasukan->delete();
+            });
+    
             // Optionally, you can send a success message back
             return redirect()->route('pemasukan.index')->with('success_delete', 'Data pemasukan berhasil dihapus');
         } catch (\Exception $e) {
             // Handle any exceptions or errors that may occur during deletion
             // Log the error or return an error response
-            return response()->json(['error' => 'Data pemasukan gagal di hapus'], 500);
+            return response()->json(['error' => 'Data pemasukan gagal dihapus'], 500);
         }
     }
+    
 }

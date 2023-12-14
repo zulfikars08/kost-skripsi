@@ -1,6 +1,7 @@
 @extends('layout.template')
 
 @section('content')
+@include('komponen.pesan')
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -18,6 +19,10 @@
                 <div class="card-body p-4">
                     <!-- Added "p-4" class for padding -->
                     <table class="table table-bordered">
+                        <tr>
+                            <th class="bg-info text-white">Kode Penyewa</th>
+                            <td>{{ $penyewa->kode_penyewa }}</td>
+                        </tr>
                         <tr>
                             <th class="bg-info text-white">Nama Penyewa</th>
                             <td>{{ $penyewa->nama }}</td>

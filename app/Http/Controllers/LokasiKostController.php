@@ -16,26 +16,43 @@ class LokasiKostController extends Controller
      */
     public function index(Request $request)
     {
+        $sortOptions = [
+            'jumlah_kamar_asc' => 'jumlah_kamar',
+            'jumlah_kamar_desc' => 'jumlah_kamar DESC',
+        ];
+    
+        $sortBy = $request->input('sort_by', session('lokasi_kos_sort_by', 'created_at'));
         $query = LokasiKos::query();
-     
-         // Cek apakah ada kata kunci pencarian yang diberikan
-         if ($request->filled('katakunci')) {
-             $katakunci = $request->input('katakunci');
-             $query->where('nama_kos', 'like', '%' . $katakunci . '%');
-         }
-     
-         // Paginate hasil query
-         $data = $query->paginate(5);
-     
-         // Cek apakah request adalah AJAX request
-         if ($request->ajax()) {
-             // Jika iya, kembalikan partial view yang berisi tabel penyewa saja
-             return view('lokasi_kos.list', compact('data'))->render(); // Gunakan render() untuk mendapatkan HTML
-         }
-     
-
+    
+        // Cek apakah ada kata kunci pencarian yang diberikan
+        if ($request->filled('katakunci')) {
+            $katakunci = $request->input('katakunci');
+            $query->where('nama_kos', 'like', '%' . $katakunci . '%');
+        }
+    
+        // Sorting
+        if (array_key_exists($sortBy, $sortOptions)) {
+            $query->orderByRaw($sortOptions[$sortBy]);
+            // Store sorting preference in session
+            session(['lokasi_kos_sort_by' => $sortBy]);
+        } else {
+            // Default sorting by created_at in descending order
+            $query->orderBy('created_at', 'desc');
+        }
+    
+        // Paginate hasil query
+        $data = $query->with('kamars')->paginate(5);
+    
+        // Cek apakah request adalah AJAX request
+        if ($request->ajax()) {
+            // Jika iya, kembalikan partial view yang berisi tabel penyewa saja
+            return view('lokasi_kos.list', compact('data'))->render(); // Gunakan render() untuk mendapatkan HTML
+        }
+    
         return view('lokasi_kos.index', compact('data'));
     }
+    
+
 
    
 
@@ -129,8 +146,8 @@ public function store(Request $request)
     public function edit($id)
     {
         //
-        // $data = LokasiKos::where('id',$id)->first();
-        // return view('lokasi_kos.edit')->with('data',$data);
+        $data = LokasiKos::where('id',$id)->first();
+        return view('lokasi_kos.edit')->with('data',$data);
     }
 
     /**
@@ -142,23 +159,25 @@ public function store(Request $request)
      */
     public function update(Request $request, $id)
     {
-        //
-    //     $request->validate([
-    //         'jumlah_kamar' => 'required',
-    //         'alamat_kos' => 'required',
-    //     ],
-    //     [
-    //         'jumlah_kamar.required' => 'jumlah kamar wajib di isi',
-    //         'alamat_kos.required' => 'alamat wajib di isi',
-    //     ]     
-    // );
-    //     $data = [
-    //         'jumlah_kamar' => $request->jumlah_kamar,
-    //         'alamat_kos' => $request->alamat_kos,
+        
+        $request->validate([
+            'nama_kos' => 'required',
+            'jumlah_kamar' => 'required',
+            'alamat_kos' => 'required',
+        ],
+        [
+            'jumlah_kamar.required' => 'jumlah kamar wajib di isi',
+            'alamat_kos.required' => 'alamat wajib di isi',
+        ]     
+    );
+        $data = [
+            'nama_kos' => $request->nama_kos,
+            'jumlah_kamar' => $request->jumlah_kamar,
+            'alamat_kos' => $request->alamat_kos,
           
-    //     ];
-    //     LokasiKos::where('id',$id)->update($data);
-    //     return redirect()->to('lokasi_kos')->with('success_update', 'berhasil melakukan update data');
+        ];
+        LokasiKos::where('id',$id)->update($data);
+        return redirect()->to('lokasi_kos')->with('success_update', 'berhasil melakukan update data');
     }
 
     /**

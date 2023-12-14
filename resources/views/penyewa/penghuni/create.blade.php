@@ -10,8 +10,8 @@
                 <div class="modal-body">
                     <!-- Select Penyewa -->
                     <div class="mb-3 custom-form-group">
-                        <label for="penyewa_id" class="form-label text-start">Penyewa ID</label>
-                        <input type="text" class="form-control" id="penyewa_id" value="{{ request()->route('id') }}" disabled>
+                        <label for="kode_penyewa" class="form-label text-start">Penyewa ID</label>
+                        <input type="text" class="form-control" name ="kode_penyewa "id="kode_penyewa" value="{{$penyewa->kode_penyewa}}" disabled>
                     </div>
                     <!-- Nama -->
                     <div class="mb-3 custom-form-group">
@@ -21,7 +21,7 @@
                     <!-- Tanggal Lahir -->
                     <div class="mb-3 custom-form-group">
                         <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir">
+                        <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir" required>
                     </div>
                     <!-- Jenis Kelamin -->
                     <div class="mb-3 custom-form-group">
