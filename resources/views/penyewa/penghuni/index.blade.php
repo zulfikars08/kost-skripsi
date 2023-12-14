@@ -73,7 +73,7 @@
                             data-bs-target="#tambahDataModal">
                             <i class="fas fa-plus"></i> Tambah Data
                         </button>
-                        @else
+                        @elseif ($penyewa->status_penyewa === 'tidak_aktif')
                         <button type="button" class="btn btn-secondary" disabled>
                             <i class="fas fa-plus"></i> Tambah Data
                         </button>
@@ -118,18 +118,19 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                         <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#editPenghuniModal{{ $item->id }}">
+                                            data-bs-target="#editPenghuniModal{{ $item->id }}" {{ $penyewa->status_penyewa === 'tidak_aktif' ? 'disabled' : '' }}>
                                             <i class="fas fa-edit" style="color: white"></i>
                                         </button>
                                         @include('penyewa.penghuni.edit')
 
                                         <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left: 10px"
-                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" {{ $penyewa->status_penyewa === 'tidak_aktif' ? 'disabled' : '' }}>
                                             <i class="fas fa-trash" style="color: white"></i>
                                         </button>
                                         @include('penyewa.penghuni.delete')
                                         </div>
                                     </td>
+
                                 </tr>
                                 @endforeach
                                 @endif
