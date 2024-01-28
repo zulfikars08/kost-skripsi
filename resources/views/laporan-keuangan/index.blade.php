@@ -20,6 +20,11 @@
                 <i class="fas fa-plus"></i> Tambah Tanggal
             </button>            
             @include('laporan-keuangan.create') --}}
+              <button type="button" class="btn btn-success" data-bs-toggle="modal" style="margin-left:5px"
+                data-bs-target="#generateReportModal">
+                <i class="fas fa-file-excel"></i> Export to Excel
+            </button>
+            @include('laporan-keuangan.export')
         </div>
 
         <div class="table-responsive">
@@ -48,11 +53,11 @@
                                      'nama_kos' => $item->lokasi_id,
                                      'bulan' => $item->bulan,
                                     'tahun' => $item->tahun
-                                ]) }}" class="btn btn-primary btn-sm">
+                                ]) }}" class="btn btn-primary btn-sm" title="Detail">
                                      <i class="fas fa-info-circle" style="color: white"></i>
                                 </a>
                                 <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px">
+                                data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px" title="Delete">
                                 <i class="fas fa-trash" style="color: white"></i>
                             </button>
                             @include('laporan-keuangan.delete')

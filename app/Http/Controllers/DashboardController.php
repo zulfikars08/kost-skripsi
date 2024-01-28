@@ -48,7 +48,7 @@ class DashboardController extends Controller
         $pemasukanData = LaporanKeuangan::whereMonth('tanggal', $currentMonth)->whereYear('tanggal', $currentYear)->get();
         $pengeluaranData = LaporanKeuangan::whereMonth('tanggal', $currentMonth)->whereYear('tanggal', $currentYear)->get();
 
-        $pendapatanBersih = $totalPemasukan - $totalPengeluaran;
+       
 
         $query = LaporanKeuangan::query();
 
@@ -69,7 +69,15 @@ class DashboardController extends Controller
             $query->whereYear('tanggal', $selectedTahun);
         }
 
+        if ($selectedTahun == 'All') {
+            $totalPemasukan = LaporanKeuangan::sum('pemasukan');
+            $totalPengeluaran = LaporanKeuangan::sum('pengeluaran');
+        } else {
+            $totalPemasukan = LaporanKeuangan::whereYear('tanggal', $selectedTahun)->sum('pemasukan');
+            $totalPengeluaran = LaporanKeuangan::whereYear('tanggal', $selectedTahun)->sum('pengeluaran');
+        }
 
+        $pendapatanBersih = $totalPemasukan - $totalPengeluaran;
         // Get the filtered results
         $filteredData = $query->get();
 
@@ -98,50 +106,56 @@ class DashboardController extends Controller
             'pemasukanData' => $filteredData->pluck('pemasukan')->toArray(),
             'pengeluaranData' => $filteredData->pluck('pengeluaran')->toArray(),
         ];
-
-        $filteredData = LaporanKeuangan::with('lokasiKos')
-        ->when($selectedNamaKos != 'All', function ($query) use ($selectedNamaKos) {
-            $query->whereHas('lokasiKos', function ($q) use ($selectedNamaKos) {
-                $q->where('nama_kos', $selectedNamaKos);
-            });
-        })
-        ->when($selectedBulan != 'All', function ($query) use ($selectedBulan) {
-            $query->whereMonth('tanggal', $selectedBulan);
-        })
-        ->when($selectedTahun != 'All', function ($query) use ($selectedTahun) {
-            $query->whereYear('tanggal', $selectedTahun);
-        })
-        ->get();
-
-    // Calculate the net income for each location, month, and year
-    $netIncomeResults = [];
-    $showNetIncome = false; // Flag to determine if net income should be shown
-
-    // Check if any filters are applied
-    $filtersApplied = $request->has('nama_kos') || $request->has('bulan') || $request->has('tahun');
-
-    if ($filtersApplied) {
-        // Only calculate net income if filters are applied
-        foreach ($filteredData as $data) {
-            $location = $data->lokasiKos->nama_kos ?? 'Unknown Location';
-            $month = Carbon::parse($data->tanggal)->format('F'); // Format to full text representation of a month, such as January or March
-            $year = Carbon::parse($data->tanggal)->format('Y'); // Year in four digits
-            $key = "{$location}-{$month}-{$year}";
+        $chartData['days'] = array_map(function ($dateString) {
+            // Create a Carbon instance from the date string
+            $date = Carbon::createFromFormat('Y-m-d H:i:s', $dateString);
         
+            // Return the date in 'YYYY-MM-DD' format
+            return $date->format('Y-m-d');
+        }, $chartData['days']);
+        $filteredData = LaporanKeuangan::with('lokasiKos')
+            ->when($selectedNamaKos != 'All', function ($query) use ($selectedNamaKos) {
+                $query->whereHas('lokasiKos', function ($q) use ($selectedNamaKos) {
+                    $q->where('nama_kos', $selectedNamaKos);
+                });
+            })
+            ->when($selectedBulan != 'All', function ($query) use ($selectedBulan) {
+                $query->whereMonth('tanggal', $selectedBulan);
+            })
+            ->when($selectedTahun != 'All', function ($query) use ($selectedTahun) {
+                $query->whereYear('tanggal', $selectedTahun);
+            })
+            ->get();
 
-            if (!isset($netIncomeResults[$key])) {
-                $netIncomeResults[$key] = [
-                    'location' => $location,
-                    'month' => $month,
-                    'year' => $year,
-                    'net_income' => 0
-                ];
+        // Calculate the net income for each location, month, and year
+        $netIncomeResults = [];
+        $showNetIncome = false; // Flag to determine if net income should be shown
+
+        // Check if any filters are applied
+        $filtersApplied = $request->has('nama_kos') || $request->has('bulan') || $request->has('tahun');
+
+        if ($filtersApplied) {
+            // Only calculate net income if filters are applied
+            foreach ($filteredData as $data) {
+                $location = $data->lokasiKos->nama_kos ?? 'Unknown Location';
+                $month = Carbon::parse($data->tanggal)->format('F'); // Format to full text representation of a month, such as January or March
+                $year = Carbon::parse($data->tanggal)->format('Y'); // Year in four digits
+                $key = "{$location}-{$month}-{$year}";
+
+
+                if (!isset($netIncomeResults[$key])) {
+                    $netIncomeResults[$key] = [
+                        'location' => $location,
+                        'month' => $month,
+                        'year' => $year,
+                        'net_income' => 0
+                    ];
+                }
+
+                $netIncomeResults[$key]['net_income'] += $data->pemasukan - $data->pengeluaran;
             }
-
-            $netIncomeResults[$key]['net_income'] += $data->pemasukan - $data->pengeluaran;
+            $showNetIncome = true; // Set to true to show net income results
         }
-        $showNetIncome = true; // Set to true to show net income results
-    }
 
 
 

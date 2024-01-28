@@ -25,9 +25,14 @@ a:hover {
 }
 
 body {
-    overflow: hidden; /* Prevent scrolling */
+    overflow: visible;
+    font-size: 16px; /* Prevent scrolling */
 }
-
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+}
 /* Custom CSS for reducing font size in the modal */
 .modal-content {
     font-size: 14px; /* Adjust the value as needed */
@@ -92,11 +97,11 @@ select option {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background-color: white;
-    font-size: 16px;
-
-  
+    font-size: 16px'
 }
-
+.btn-hover:hover {
+    opacity: 1.0;
+}
 /* WebKit (Chrome, Safari) scrollbar styles */
 ::-webkit-scrollbar {
     width: 5px;

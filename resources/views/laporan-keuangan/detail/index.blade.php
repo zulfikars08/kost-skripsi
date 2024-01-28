@@ -28,20 +28,14 @@
                 </div>
             </form> --}}
             <div class="d-flex justify-content-between mb-3">
-                <button class="btn btn-secondary" type="submit" style="margin-left: 5px">Reset Filter</button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal"
                     style="margin-left: 5px">
                     Filter
                 </button>
                 @include('laporan-keuangan.detail.filter')
             </div>
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" style="margin-left:5px"
-                data-bs-target="#generateReportModal">
-                Excel
-            </button>
-            @include('laporan-keuangan.export')
+          
         </div>
-
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
             <table class="table table-striped" style="width: 100%;">
                 <thead>
@@ -110,14 +104,14 @@
                             <div class="d-flex justify-content-center">
 
                                 <button class="btn btn-sm" style="background-color: #ffbe45" data-bs-toggle="modal"
-                                    data-bs-target="#editDataModal{{ $item->id }}">
+                                    data-bs-target="#editDataModal{{ $item->id }}" title="Edit">
                                     <i class="fas fa-edit" style="color: white"></i>
                                 </button>
                                 @include('laporan-keuangan.detail.edit')
 
 
-                                <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left: 10px"
-                                    data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                                <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left: 5px"
+                                    data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" title="Delete">
                                     <i class="fas fa-trash" style="color: white"></i>
                                 </button>
                                 @include('laporan-keuangan.detail.delete')
@@ -148,41 +142,39 @@
 
                 </tfoot>
             </table>
-           
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    // Call the function to calculate totals when the page is loaded
                     calculateTotals();
-            
-                    // Function to calculate totals
-                    function calculateTotals() {
-                        let totalPemasukan = 0;
-                        let totalPengeluaran = 0;
-                        const rows = document.querySelectorAll("tbody tr");
-            
-                        rows.forEach(row => {
-                            const pemasukan = parseFloat(row.cells[13].textContent.replace('Rp', '').replace(',', '')); // Kolom pemasukan (indeks 13)
-                            const pengeluaran = parseFloat(row.cells[14].textContent.replace('Rp', '').replace(',', '')); // Kolom pengeluaran (indeks 14)
-            
-                            if (!isNaN(pemasukan)) {
-                                totalPemasukan += pemasukan;
-                            }
-            
-                            if (!isNaN(pengeluaran)) {
-                                totalPengeluaran += pengeluaran;
-                            }
-                        });
-            
-                        // Hitung total pendapatan bersih
-                        const pendapatanBersih = totalPemasukan - totalPengeluaran;
-            
-                        // Perbarui total pemasukan, pengeluaran, dan pendapatan bersih
-                        document.getElementById("totalPemasukan").textContent = `Rp ${totalPemasukan.toFixed(2)}`;
-                        document.getElementById("totalPengeluaran").textContent = `Rp ${totalPengeluaran.toFixed(2)}`;
-                        document.getElementById("pendapatanBersih").textContent = `Rp ${pendapatanBersih.toFixed(2)}`;
-                    }
                 });
-            </script>
+                
+                function calculateTotals() {
+                    let totalPemasukan = 0;
+                    let totalPengeluaran = 0;
+                    const rows = document.querySelectorAll("tbody tr");
+                
+                    rows.forEach(row => {
+                        const pemasukan = parseLocaleNumber(row.cells[13].textContent); // Adjust the index as per your table
+                        const pengeluaran = parseLocaleNumber(row.cells[14].textContent); // Adjust the index as per your table
+                
+                        totalPemasukan += pemasukan;
+                        totalPengeluaran += pengeluaran;
+                    });
+                
+                    const pendapatanBersih = totalPemasukan - totalPengeluaran;
+                
+                    document.getElementById("totalPemasukan").textContent = formatNumber(totalPemasukan);
+                    document.getElementById("totalPengeluaran").textContent = formatNumber(totalPengeluaran);
+                    document.getElementById("pendapatanBersih").textContent = formatNumber(pendapatanBersih);
+                }
+                
+                function parseLocaleNumber(stringNumber) {
+                    return parseFloat(stringNumber.replace(/Rp/g, '').replace(/,/g, ''));
+                }
+                
+                function formatNumber(number) {
+                    return `Rp ${number.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+                }
+                </script>
         </div>
     </div>
 </div>

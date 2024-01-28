@@ -42,19 +42,21 @@
                 <td>{{ $item->jumlah_kamar }}</td>
                 <td>{{ $item->alamat_kos }}</td>
                 <td>
-                    <button class="btn btn-sm" style="background-color: #ffbe45" data-bs-toggle="modal"
-                    data-bs-target="#editDataModal{{ $item->id }}">
-                    <i class="fas fa-edit" style="color: white"></i>
+                    <button class="btn btn-sm btn-hover" style="background-color: #ffbe45" data-bs-toggle="modal"
+                            data-bs-target="#editDataModal{{ $item->id }}" title="Edit">
+                        <i class="fas fa-edit" style="color: white"></i>
                     </button>
-                     @include('lokasi_kos.edit')
-                    <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
-                                data-bs-target="#deleteModal{{ $item->id }}">
-                                <i class="fas fa-trash" style="color: white"></i>
-                            </button>
+                    @include('lokasi_kos.edit')
+                
+                    <button class="btn btn-sm btn-hover" style="background-color: #eb6a6a;" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal{{ $item->id }}" title="Delete">
+                        <i class="fas fa-trash" style="color: white"></i>
+                    </button>
                     @include('lokasi_kos.delete')
-                    <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-primary btn-sm"> 
-                        <i class="fas fa-info-circle" style="color: white"></i></a>
-                </td>
+                
+                    <a href="{{ route('lokasi_kos.detail', $item->id) }}" class="btn btn-primary btn-sm btn-hover" title="Detail">
+                        <i class="fas fa-info-circle" style="color: white"></i>
+                    </a>
             </tr>
             @php
             $i++;

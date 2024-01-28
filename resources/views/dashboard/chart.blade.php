@@ -64,7 +64,7 @@
     @endif
     @endif
 </div>
-<canvas id="myChart" width="300" height="45"></canvas>
+<canvas id="myChart" width="300" height="35"></canvas>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('myChart').getContext('2d');

@@ -14,6 +14,11 @@
             <i class="fas fa-plus"></i> Tambah Data Lokasi
         </button>
         @include('investor.create') --}}
+        <button type="button" class="btn btn-success" style="margin-left: 3px" data-bs-toggle="modal"
+        data-bs-target="#generateReportModals">
+        <i class="fas fa-file-excel"></i> Export to Excel
+    </button>
+    @include('investor.export')
         </div>
         <!-- INVESTOR DETAIL TABLE (BASED ON nama_kos) -->
         <div class="table-responsive">
@@ -42,11 +47,11 @@
                                   'lokasi_id' => $investor->lokasi_id,
                                  'bulan' => $investor->bulan,
                                  'tahun' => $investor->tahun
-                             ]) }}" class="btn btn-primary btn-sm">
+                             ]) }}" class="btn btn-primary btn-sm" title="Detail">
                                   <i class="fas fa-info-circle" style="color: white"></i>
                              </a>
                              <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
-                             data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px">
+                             data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px" title="Delete">
                              <i class="fas fa-trash" style="color: white"></i>
                          </button>
                          @include('investor.delete')
@@ -59,7 +64,7 @@
                     @endforelse
                 </tbody>
             </table>
-            {{ $investors->links() }}
+            {{ $investors->links()}}
         </div>
     </div>
 

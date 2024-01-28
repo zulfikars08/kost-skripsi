@@ -9,7 +9,6 @@
         <div class="d-flex justify-content-between align-items-center pb-3">
             <!-- Tambah Data Button -->
             <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-secondary" type="submit">Reset Filter</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal" style="margin-left: 10px">
                 Filter
             </button>
@@ -60,7 +59,7 @@
                                 No Bukti Pembayaran
                             @endif
                         </td>
-                        <td style="white-space: nowrap;">Rp {{ number_format($item->jumlah, 0, ',', '.') }}</td>
+                        <td style="white-space: nowrap;">Rp {{ number_format($item->jumlah, 0, ',', ',') }}</td>
                         <td>{{ $item->tanggal_pembayaran_awal ? $item->tanggal_pembayaran_awal : '-' }}</td>
                         <td>{{ $item->tanggal_pembayaran_akhir ? $item->tanggal_pembayaran_akhir : '-' }}</td>
                         <td>
@@ -76,7 +75,7 @@
                         </td>
                         <td>{{ $item->keterangan }}</td>
                         <td>
-                            <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px">
+                            <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px" title="Delete">
                                 <i class="fas fa-trash" style="color: white"></i>
                             </button>
                             @include('pemasukan.delete') 

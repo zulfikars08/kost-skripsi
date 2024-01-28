@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf;
 use App\Exports\FilteredTransaksiExport;
+use App\Models\LaporanKeuangan;
 use App\Models\Pemasukan;
+use App\Models\TanggalInvestor;
+use App\Models\TanggalLaporan;
 use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
@@ -58,7 +61,7 @@ class TransaksiController extends Controller
     }
 
     // Execute the query and get the results
-    $transaksiData = $query->paginate(5);
+    $transaksiData = Transaksi::with('penyewa')->paginate(5);
 
     // Check if the request is AJAX and return the appropriate view
     if ($request->ajax()) {
@@ -107,31 +110,93 @@ class TransaksiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // Validate the form data
-        $validatedData = $request->validate([
-            'tanggal' => 'required|date',
-            'jumlah_tarif' => 'required|numeric',
+{
+    try {
+        DB::beginTransaction();
+
+        $request->validate([
+            'tanggal' => 'nullable|date',
+            'jumlah_tarif' => ['required', 'regex:/^\d+(\,\d{1,3})*$/'],
             'tipe_pembayaran' => 'required|in:tunai,non-tunai',
-            'kamar_id' => 'required|exists:kamar,id',
-            'lokasi_id' => 'required|exists:lokasi_kos,id',
+            'tanggal_pembayaran_awal' => 'nullable|date',
+            'tanggal_pembayaran_akhir' => 'nullable|date',
+            'keterangan' => 'nullable|string',
+            'status_pembayaran' => 'required|in:lunas,belum_unas,cicil',
+            'lokasi_id' => 'nullable|exists:lokasi_kos,id',
+            'kamar_id' => 'nullable|exists:kamar,id',
+            'penyewa_id' => 'nullable|exists:penyewa,id',
+            // Add validation rules for other fields as needed
         ]);
-        $jumlah_tarif = $request->filled('jumlah_tarif') ? intval(str_replace(',', '', $request->jumlah_tarif)) : intval(str_replace(',', '', $request->jumlah_tarif));
-        // Create a new transaction
-        $transaksi = new Transaksi;
-        $transaksi->tanggal = $validatedData['tanggal'];
-        $transaksi->jumlah_tarif = $jumlah_tarif;
-        $transaksi->tipe_pembayaran = $validatedData['tipe_pembayaran'];
-        $transaksi->kamar_id = $validatedData['kamar_id'];
-        $transaksi->lokasi_id = $validatedData['lokasi_id'];
-    
-        // Add other fields as needed
-    
+
+        $jumlah_tarif = $request->filled('jumlah_tarif') ? intval(str_replace(',', '', $request->jumlah_tarif)) : 0;
+      
+        $data = [
+            'tanggal' => $request->input('tanggal'),
+            'jumlah_tarif' => str_replace(',', '', $request->input('jumlah_tarif')),
+            'tipe_pembayaran' => $request->input('tipe_pembayaran'),
+            'bukti_pembayaran' => $request->input('bukti_pembayaran'),
+            'tanggal_pembayaran_awal' => $request->input('tanggal_pembayaran_awal'),
+            'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
+            'keterangan' => $request->input('keterangan'),
+            'status_pembayaran' => $request->input('status_pembayaran'),
+            'kamar_id' => $request->input('kamar_id'),
+            'lokasi_id' => $request->input('lokasi_id'),
+            'penyewa_id' => $request->input('penyewa_id'),
+            // 'bukti_pembayaran' will be handled below
+        ];
+
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $fileName = $file->getClientOriginalName();
+            $filePath = $file->storeAs('bukti_pembayaran', $fileName, 'public');
+            $data['bukti_pembayaran'] = $filePath;
+        } elseif ($request->input('tipe_pembayaran') === 'tunai') {
+            $data['bukti_pembayaran'] = 'Cash Payment';
+        }
+
+        // Create a new Transaksi object
+        $transaksi = new Transaksi($data);
         $transaksi->save();
-    
-        // You can add a success message or redirect to a different page
-        return redirect()->route('transaksi.index')->with('success_add', 'Data transaksi berhasil ditambahkan');
+
+        //Handle TanggalTransaksi association here, similar to the update method
+        $nama_kos = $transaksi->lokasiKos->nama_kos;
+        // Handle the creation of the Pemasukan record
+        $pemasukan = [
+            'nama_kos' => $nama_kos,
+            'kamar_id' => $transaksi->kamar_id,
+            'lokasi_id' => $transaksi->lokasi_id,
+            'transaksi_id' => $transaksi->id,
+            'jumlah' => $transaksi->jumlah_tarif,
+            'tanggal_pembayaran_awal' => $transaksi->tanggal_pembayaran_awal,
+            'tanggal_pembayaran_akhir' => $transaksi->tanggal_pembayaran_akhir,
+            'status_pembayaran' =>$transaksi->status_pembayaran,
+            'tanggal' => $transaksi->tanggal,
+            'tipe_pembayaran' => $transaksi->tipe_pembayaran,
+            'bukti_pembayaran' => $transaksi->bukti_pembayaran,
+            'keterangan' => $transaksi->keterangan,
+        ];
+
+        $pemasukanModel = Pemasukan::where('transaksi_id', $transaksi->id)->first();
+        if ($pemasukanModel) {
+            $pemasukanModel->update($pemasukan);
+        } else {
+            Pemasukan::create($pemasukan);
+        }
+
+        DB::commit();
+        $paginationSize = 5; // Change this to your actual pagination size
+        $totalRecords = Transaksi::count();
+        $lastPage = ceil($totalRecords / $paginationSize);
+
+        return redirect()->route('transaksi.index', ['page' => $lastPage])
+            ->with('success_add', 'Transaksi berhasil ditambahkan');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->route('transaksi.index')
+            ->with('error', 'Gagal menambahkan Transaksi');
     }
+}
+
     
 
     /**
@@ -179,6 +244,7 @@ class TransaksiController extends Controller
                 'tanggal_pembayaran_akhir' => 'nullable|date',
                 'keterangan' => 'nullable|string',
                 'status_pembayaran' => 'required|in:lunas,belum_unas,cicil',
+                'penyewa_id' => 'nullable|exists:penyewa,id',
                 // Add validation rules for other fields as needed
             ]);
             // dd($request->all());
@@ -194,6 +260,7 @@ class TransaksiController extends Controller
                 'tanggal_pembayaran_akhir' => $request->input('tanggal_pembayaran_akhir'),
                 'keterangan' => $request->input('keterangan'),
                 'status_pembayaran' => $request->input('status_pembayaran'),
+                'penyewa_id' => $request->input('penyewa_id'),
                 // Update other fields here
             ];
     
@@ -229,7 +296,7 @@ class TransaksiController extends Controller
     
             $nama_kos = $transaksi->lokasiKos->nama_kos;
     
-            $pemasukan = [
+            $pemasukanData = [
                 'nama_kos' => $nama_kos,
                 'kamar_id' => $transaksi->kamar_id,
                 'lokasi_id' => $transaksi->lokasi_id,
@@ -244,13 +311,46 @@ class TransaksiController extends Controller
                 'keterangan' => $transaksi->keterangan,
             ];
     
-            $pemasukanModel = Pemasukan::where('transaksi_id', $transaksi->id)->first();
-            if ($pemasukanModel) {
-                $pemasukanModel->update($pemasukan);
-            } else {
-                Pemasukan::create($pemasukan);
-            }
-    
+            $pemasukanModel = $transaksi->updatePemasukan($pemasukanData);
+            
+            $laporanKeuanganData = [
+                'tanggal' => $tanggal,
+                'kamar_id' => $pemasukanModel->kamar_id, // Assuming you have these fields in your Pemasukan model
+                'lokasi_id' => $pemasukanModel->lokasi_id,
+                'transaksi_id' => $transaksi->id, 
+                'pemasukan_id' => $pemasukanModel->id,
+                'jenis' => 'pemasukan',
+                'nama_kos' => $nama_kos,
+                'kode_pemasukan' => $pemasukanModel->kode_pemasukan, // Assuming this field exists
+                'tipe_pembayaran' => $pemasukanModel->tipe_pembayaran,
+                'bukti_pembayaran' => $pemasukanModel->bukti_pembayaran,
+                'status_pembayaran' => 'lunas',
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'pemasukan' => $pemasukanModel->jumlah,
+                'keterangan' => $pemasukanModel->keterangan
+            ];
+
+              $tanggalLaporanAttributes = [
+                'nama_kos' => $nama_kos,
+                'kamar_id' => $pemasukanModel->kamar_id,
+                'lokasi_id' => $pemasukanModel->lokasi_id,
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'tanggal' => $pemasukanModel->tanggal,
+            ];
+
+            $tanggalInvestorAttributes = [
+                'nama_kos' => $nama_kos,
+                'lokasi_id' => $pemasukanModel->lokasi_id, 
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'tanggal' => $pemasukanModel->tanggal,
+            ];
+            $transaksi->updateLaporanKeuangan($laporanKeuanganData);
+            $transaksi->updateTanggalLaporan($tanggalLaporanAttributes);
+            $transaksi->updateTanggalInvestor($tanggalInvestorAttributes);
+            // dd($transaksi);die();
             DB::commit();
             return redirect()->route('transaksi.index')->with('success_update', 'Data Transaksi berhasil diupdate');
         } catch (\Exception $e) {
@@ -260,7 +360,7 @@ class TransaksiController extends Controller
     }
     
 
-
+    
 
     public function showGenerateFinancialReportView()
     {
@@ -334,6 +434,12 @@ class TransaksiController extends Controller
             if ($penyewa) {
                 $penyewa->status_penyewa = 'tidak_aktif';
                 $penyewa->save();
+            }
+
+            $kamar = $transaksi->kamar; // Assuming a relationship is defined in the Transaksi model
+            if ($kamar) {
+                $kamar->status = 'Belum Terisi';
+                $kamar->save();
             }
     
             // Delete associated Pemasukan if exists

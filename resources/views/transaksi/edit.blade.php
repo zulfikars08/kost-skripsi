@@ -13,6 +13,8 @@
                     <!-- Your edit form fields go here -->
                     <!-- Example: -->
                     <!-- Jumlah Tarif -->
+                    <input type="hidden" name="penyewa_id" value="{{ $item->penyewa_id ?? '' }}">
+
                     <div class="mb-3 custom-form-group">
                         <label for="tanggal" class="form-label">Tanggal</label>
                         <input type="date" class="form-control" name="tanggal" id="tanggal_{{$item->id}}" value="{{ old('tanggal') }}" required>
@@ -20,7 +22,7 @@
                     <div class="mb-3 custom-form-group">
                         <label for="jumlah_tarif" class="form-label">Jumlah Tarif</label>
                         <input type="text" class="form-control" name="jumlah_tarif" id="jumlah_tarif" 
-                        placeholder="e.g., 1,000" value="{{ number_format($item->jumlah_tarif, 0, ',', ',') }}" required 
+                        value="{{ number_format($item->jumlah_tarif, 0, ',', ',') }}" required 
                         onkeyup="formatNumberWithComma(this)">                    
                     </div>
                     <!-- Tipe Pembayaran -->

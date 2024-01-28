@@ -15,7 +15,7 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->role }}</td>
             <td>
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}"><i class="fas fa-edit" style="color: white"></i></button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}"><i class="fas fa-edit" style="color: white" title="Edit"></i></button>
                 @include('manage-users.edit')
                 {{-- <form action="{{ route('manage-users.destroy', $user->id) }}" method="POST" style="display: inline;">
                     @csrf

@@ -36,9 +36,9 @@ class Pemasukan extends Model
         'deleted_by',
         'deleted_at',
     ];
-    protected $dispatchesEvents = [
-        'created' => PemasukanCreated::class,
-    ];
+    // protected $dispatchesEvents = [
+    //     'created' => PemasukanCreated::class,
+    // ];
     public function kamar()
     {
         return $this->belongsTo(Kamar::class, 'kamar_id');

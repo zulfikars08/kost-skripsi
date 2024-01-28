@@ -16,14 +16,13 @@
             </form>
 
             <div class="d-flex justify-content-between mb-3">
-                <button class="btn btn-secondary" type="submit" style="margin-right:5px">Reset Filter</button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                     Filter
                 </button>
                 @include('transaksi.filter') <!-- Include the filter modal -->
             
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#generateReportModal" style="margin-left: 5px;">
-                    Excel
+                    <i class="fas fa-file-excel"></i> Export to Excel
                 </button>
                 @include('transaksi.export')
             </div>
@@ -56,11 +55,11 @@
 </script>
 <script>
    $(document).ready(function() {
-    function fetchLokasiData() {
+    function fetchTransaksiData() {
         var formData = $('#search-form').serialize() + '&' + $('#filter-form').serialize();
         console.log('Fetching data with:', formData); // Debugging line
         $.ajax({
-            url: "{{ route('penyewa.index') }}",
+            url: "{{ route('transaksi.index') }}",
             type: 'GET',
             data: formData,
             success: function(response) {
@@ -76,11 +75,10 @@
     // Separate event handlers for search and filter
     $('#filter-form').on('submit', function(e) {
         e.preventDefault();
-        fetchLokasiData();
+        fetchTransaksiData();
     });
 
-    $('#search-input').on('input', fetchLokasiData);
+    $('#search-input').on('input', fetchTransaksiData);
 });
-
 </script>
 @endsection

@@ -40,22 +40,22 @@
 
         // Fetch data as the user types in the search field
         $('#search-input').on('input', function() {
-            var katakunci = $(this).val();
-            fetchPenyewaData(katakunci);
+            fetchPenyewaData($(this).val());
         });
 
-        // Prevent form submission and fetch data when search button is clicked
-        $('#search-button').click(function() {
-            var katakunci = $('#search-input').val();
-            fetchPenyewaData(katakunci);
+        // Bind AJAX load to pagination links
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            fetchPenyewaData($('#search-input').val(), page);
         });
 
         // AJAX function to fetch data
-        function fetchPenyewaData(katakunci = '') {
+        function fetchPenyewaData(katakunci = '', page = 1) {
             $.ajax({
                 url: "{{ route('penyewa.index') }}",
                 type: 'GET',
-                data: { katakunci: katakunci },
+                data: { katakunci: katakunci, page: page },
                 success: function(response) {
                     $('#search-results').html(response);
                 },
@@ -66,5 +66,4 @@
         }
     });
 </script>
-
 @endsection

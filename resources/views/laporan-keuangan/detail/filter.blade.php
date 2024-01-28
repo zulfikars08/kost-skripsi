@@ -6,11 +6,11 @@
             <form action="{{ route('laporan-keuangan.detail.index') }}" method="GET">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="filterModalLabel">Filter Transaksi</h5>
+                    <h5 class="modal-title" id="filterModalLabel">Filter Laporan Keuangan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3 custom-form-group">
+                    {{-- <div class="mb-3 custom-form-group">
                         <label for="filterNamaKos">Lokasi Kos</label>
                         <select class="form-control" id="filterNamaKos" name="nama_kos">
                             <option value="">Pilih Lokasi Kos</option>
@@ -37,7 +37,7 @@
                             @endforeach
                             <!-- Add options for years -->
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="mb-3 custom-form-group">
                         <label for="filterStatusPembayaran">Status Pembayaran</label>
                         <select class="form-control" id="filterStatusPembayaran" name="status_pembayaran">
@@ -50,6 +50,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between mb-3">
+                        <button type="reset" class="btn btn-secondary" style="margin-right: 5px">Reset Filter</button>
                         <button type="submit" class="btn btn-primary" id="filter-button">Filter</button>
                     </div>
                 </div>

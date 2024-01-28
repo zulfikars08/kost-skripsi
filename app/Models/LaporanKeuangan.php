@@ -20,7 +20,7 @@ class LaporanKeuangan extends Model
         'kamar_id',
         'transaksi_id',
         'penyewa_id',
-        'kategori_id',
+        // 'kategori_id',
         'pemasukan_id',
         'pengeluaran_id',
         'tanggal_laporan_id',

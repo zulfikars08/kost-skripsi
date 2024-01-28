@@ -17,13 +17,13 @@
                 <td>{{ $item->tipe_kamar }}</td>
                 <td>
                     <button class="btn btn-sm" style="background-color: #ffbe45" data-bs-toggle="modal"
-                        data-bs-target="#editDataModal{{ $item->id }}">
+                        data-bs-target="#editDataModal{{ $item->id }}" title="Edit">
                         <i class="fas fa-edit" style="color: white"></i>
                     </button>
                     @include('tipe_kamar.edit') <!-- Include the modal partial for editing data -->
 
                     <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal{{ $item->id }}">
+                        data-bs-target="#deleteModal{{ $item->id }}" title="Delete">
                         <i class="fas fa-trash" style="color: white"></i>
                     </button>
                     @include('tipe_kamar.delete') <!-- Include the modal partial for deleting data -->

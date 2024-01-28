@@ -65,11 +65,11 @@
                 <td>
                     <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
                         data-bs-target="#editModal{{ $investor->id }}">
-                        <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
+                        <i class="fas fa-edit" style="color: white" title="Edit"></i> <!-- Edit Icon -->
                     </button>
                     @include('investor.detail.edit')
                     <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px">
+                        data-bs-target="#deleteModal{{ $investor->id }}" style="margin-left: 10px" title="Delete">
                         <i class="fas fa-trash" style="color: white"></i>
                     </button>
                     @include('investor.detail.delete')

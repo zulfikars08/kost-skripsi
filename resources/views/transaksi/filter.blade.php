@@ -50,6 +50,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between mb-3">
+                        <button type="reset" class="btn btn-secondary" style="margin-right: 5px">Reset Filter</button>
                         <button type="submit" class="btn btn-primary" id="filter-button">Filter</button>
                     </div>
                 </div>
@@ -57,20 +58,31 @@
         </div>
     </div>
 </div>
-{{-- <script>
-   document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('filter-form');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('filter-form');
+        
+        // Handle the filter form submission
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting
+            applyFilter();
+        });
     
-    form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting
-
+        // Handle the reset filter button click
+        document.getElementById('reset-filter-button').addEventListener('click', function () {
+            resetFilter();
+        });
+    });
+    
+    // Function to apply the filter
+    function applyFilter() {
         const data = {
             nama_kos: document.getElementById('filterNamaKos').value,
             bulan: document.getElementById('filterBulan').value,
             tahun: document.getElementById('filterTahun').value,
             status_pembayaran: document.getElementById('filterStatusPembayaran').value
         };
-
+    
         fetch("{{ route('transaksi.filter') }}", {
             method: 'POST',
             headers: {
@@ -84,7 +96,23 @@
             document.getElementById('search-results').innerHTML = html;
             $('#filterModal').modal('hide'); // Hide the modal after successful filtering
         });
-    });
-});
-
-</script> --}}
+    }
+    
+    // Function to reset the filter
+    function resetFilter() {
+        document.getElementById('filterNamaKos').value = '';
+        document.getElementById('filterBulan').value = '';
+        document.getElementById('filterTahun').value = '';
+        document.getElementById('filterStatusPembayaran').value = '';
+    
+        // Optionally, refresh the data
+        fetchLokasiData(); // Call this function if you want to refresh the data after resetting the filter
+    }
+    
+    // Function to fetch location data
+    function fetchLokasiData() {
+        // Replace with your actual AJAX call to fetch and display the data
+        console.log('Fetching data with default/no filters');
+        // ...
+    }
+    </script>

@@ -108,7 +108,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-suggestions', [InvestorController::class, 'getSuggestions']);
     Route::get('investor/{lokasi_id}/{bulan}/{tahun}', [TanggalInvestorController::class, 'show'])
         ->name('investor.detail.show');
-    Route::get('/investors/search', [InvestorController::class, 'search'])->name('investor.search');
+    Route::get('/investors/search', [InvestorController::class, 'search'])->name('investor.detail.search');
 
     // Example: InvestorController routes
     Route::get('/generate-investor-report', [InvestorController::class, 'showGenerateFinancialReportView'])->name('show-generate-investor-report-view');

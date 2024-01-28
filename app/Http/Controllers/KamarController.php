@@ -25,18 +25,19 @@ class KamarController extends Controller
     
         // Query to filter Kamar data based on user inputs
         $filteredKamarData = Kamar::when($namaKos, function ($query) use ($namaKos) {
-                $query->whereHas('lokasiKos', function ($subQuery) use ($namaKos) {
-                    $subQuery->where('nama_kos', $namaKos);
-                });
-            })
-            ->when($tipe_kamar, function ($query) use ($tipe_kamar) {
-                $query->where('tipe_kamar', $tipe_kamar);
-            })
-            ->when($status, function ($query) use ($status) {
-                $query->where('status', $status);
-            })
-            ->with('lokasiKos')
-            ->paginate(5);
+            $query->whereHas('lokasiKos', function ($subQuery) use ($namaKos) {
+                $subQuery->where('nama_kos', $namaKos);
+            });
+        })
+        ->when($tipe_kamar, function ($query) use ($tipe_kamar) {
+            $query->where('tipe_kamar', $tipe_kamar);
+        })
+        ->when($status, function ($query) use ($status) {
+            $query->where('status', $status);
+        })
+        ->with('lokasiKos')
+        ->orderBy('no_kamar', 'asc') // Add this line to sort by 'no_kamar'
+        ->paginate(5);
     
         $lokasiKosOptions = LokasiKos::all();
         $tipeKamarOptions = TipeKamar::all();
@@ -95,17 +96,18 @@ class KamarController extends Controller
                             ->where('lokasi_id', $request->lokasi_id);
                     }),
                 ],
-                'harga' => 'required',
+                'harga' => ['required', 'regex:/^\d+(\,\d{1,2})?$/'],
                 'tipe_kamar_id' => 'required|exists:tipe_kamar,id',
                 'fasilitas' => 'required|array',
                 'fasilitas.*' => 'exists:fasilitas,id',
-                'status' => 'required|in:Belum Terisi,Sudah Terisi',
+                'status' => 'nullable|in:Belum Terisi,Sudah Terisi',
                 'lokasi_id' => 'required|exists:lokasi_kos,id',
             ], [
                 // Custom error messages...
                 'no_kamar.required' => 'Nomor kamar wajib di isi',
                 'no_kamar.unique' => 'Nomor kamar sudah digunakan untuk lokasi kos ini',
                 'harga.required' => 'Harga wajib di isi',
+                'harga.regex' => 'Harga harus berupa angka dengan format yang benar',
                 'tipe_kamar_id.required' => 'Tipe kamar wajib di isi',
                 'tipe_kamar_id.exists' => 'Tipe kamar yang dipilih tidak valid',
                 'fasilitas.required' => 'Fasilitas wajib di isi',
@@ -134,16 +136,17 @@ class KamarController extends Controller
             // Commit the database transaction
             DB::commit();
     
-            $page = $request->input('page', 1);
-            return redirect()->route('kamar.index', ['page' => $page])->with('success_add', 'Berhasil menambahkan data kamar');
-    
-        } catch (\Exception $e) {
-            // If an exception occurs, roll back the database transaction
-            DB::rollBack();
-    
-            // Handle the exception, you can log it or show an error message.
-            return redirect()->back()->with('error', 'Data yang diberikan tidak valid' );
-        }
+            $paginationSize = 5; // Change this to your actual pagination size
+        $totalRecords = Kamar::count();
+        $lastPage = ceil($totalRecords / $paginationSize);
+
+        return redirect()->route('kamar.index', ['page' => $lastPage])
+            ->with('success_add', 'Transaksi berhasil ditambahkan');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->route('kamar.index')
+            ->with('error', 'Gagal menambahkan Transaksi');
+    }
     
     }
     // Show the form for editing the specified resource
@@ -162,7 +165,7 @@ class KamarController extends Controller
             DB::beginTransaction();
     
             $request->validate([
-                'harga' => 'required',
+                'harga' => 'required|numeric',
                 'tipe_kamar_id' => 'required|exists:tipe_kamar,id',
                 'fasilitas' => 'required|array',
                 'fasilitas.*' => 'exists:fasilitas,id',

@@ -125,7 +125,6 @@ class PenyewaController extends Controller
     
             // Automatically create a record in the 'transaksi' table
             Transaksi::create([
-                'nama' => $penyewa->nama,
                 'kamar_id' => $penyewa->kamar_id,
                 'lokasi_id' => $penyewa->lokasi_id,
                 'penyewa_id' => $penyewa->id, // Assign the penyewa_id
@@ -278,28 +277,28 @@ class PenyewaController extends Controller
      */
    
     
-    //  public function destroy($id)
-    //  {
-    //      // Find the Penyewa record by ID
-    //      $penyewa = Penyewa::findOrFail($id);
+     public function destroy($id)
+     {
+         // Find the Penyewa record by ID
+         $penyewa = Penyewa::findOrFail($id);
      
-    //      // Get the related Kamar record
-    //      $kamar = $penyewa->kamar;
+         // Get the related Kamar record
+         $kamar = $penyewa->kamar;
      
-    //      // Delete the Penyewa record
-    //      $penyewa->delete();
+         // Delete the Penyewa record
+         $penyewa->delete();
      
-    //      // Check if the Kamar record exists
-    //      if ($kamar) {
-    //          // Update the Kamar status to "belum terisi" if it's not already "sudah terisi"
-    //          if ($kamar->status !== 'sudah terisi') {
-    //              $kamar->update(['status' => 'belum terisi']);
-    //          }
-    //      }
+         // Check if the Kamar record exists
+         if ($kamar) {
+             // Update the Kamar status to "belum terisi" if it's not already "sudah terisi"
+             if ($kamar->status !== 'sudah terisi') {
+                 $kamar->update(['status' => 'belum terisi']);
+             }
+         }
      
-    //      // Redirect to the index page or wherever you want
-    //      return redirect()->route('penyewa.index')->with('success_delete', 'Data penyewa berhasil dihapus.');
-    //  }
+         // Redirect to the index page or wherever you want
+         return redirect()->route('penyewa.index')->with('success_delete', 'Data penyewa berhasil dihapus.');
+     }
 
      
      

@@ -49,6 +49,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between mb-3">
+                        <button type="reset" class="btn btn-secondary" style="margin-right: 5px">Reset Filter</button>
                         <button type="submit" class="btn btn-primary" id="filter-button">Filter</button>
                     </div>
                 </div>

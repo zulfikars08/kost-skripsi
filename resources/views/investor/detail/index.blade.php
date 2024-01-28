@@ -30,11 +30,7 @@
                     <i class="fas fa-plus"></i> Tambah Data Investor
                 </button>
                 @include('investor.detail.create')
-                <button type="button" class="btn btn-success" style="margin-left: 3px" data-bs-toggle="modal"
-                    data-bs-target="#generateReportModals">
-                    Excel
-                </button>
-                @include('investor.export')
+               
             </div>
             <!-- Include the modal partial -->
         </div>
@@ -43,17 +39,45 @@
         <!-- INVESTOR LIST TABLE -->
         <div id="investor-table-body">
             <!-- Data will be dynamically loaded here -->
+            @include('investor.detail.list')
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function() {
+        // Define variables to store filter values
+        var initialQuery = '';
+        var initialLokasiId = '';
+        var initialBulan = '';
+        var initialTahun = '';
+
+        // Function to fetch data based on URL parameters
+        function fetchDataFromUrl() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var query = urlParams.get('nama') || '';
+            var lokasi_id = urlParams.get('lokasi_id') || '';
+            var bulan = urlParams.get('bulan') || '';
+            var tahun = urlParams.get('tahun') || '';
+
+            $('#search-input').val(query);
+            $('#lokasi_id').val(lokasi_id);
+            $('#bulan').val(bulan);
+            $('#tahun').val(tahun);
+
+            fetchData(query, lokasi_id, bulan, tahun);
+        }
+
         // Define the fetchData function
-        function fetchData(query = '') {
+        function fetchData(query = '', lokasi_id = '', bulan = '', tahun = '') {
             $.ajax({
                 url: "{{ route('investor.detail.index') }}",
                 type: "GET",
-                data: {'nama': query},
+                data: {
+                    'nama': query,
+                    'lokasi_id': lokasi_id,
+                    'bulan': bulan,
+                    'tahun': tahun
+                },
                 success: function(data) {
                     $('#investor-table-body').html(data);
                 },
@@ -62,11 +86,36 @@
                 }
             });
         }
-        fetchData();
+
+        // Initial fetchData call with URL parameters
+        fetchDataFromUrl();
+
+        // Search input
         $('#search-input').on('keyup', function() {
             var query = $(this).val();
-            fetchData(query);
+            var lokasi_id = $('#lokasi_id').val();
+            var bulan = $('#bulan').val();
+            var tahun = $('#tahun').val();
+            fetchData(query, lokasi_id, bulan, tahun);
         });
+
+        // Reset button
+        $('#reset-button').on('click', function() {
+            resetSearch();
+        });
+
+        // Function to reset the search
+        function resetSearch() {
+            $('#search-input').val(initialQuery);
+            $('#lokasi_id').val(initialLokasiId);
+            $('#bulan').val(initialBulan);
+            $('#tahun').val(initialTahun);
+            fetchData(initialQuery, initialLokasiId, initialBulan, initialTahun);
+        }
     });
 </script>
+
+
+
+
 @endsection

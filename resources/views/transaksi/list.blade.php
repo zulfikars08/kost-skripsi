@@ -77,7 +77,7 @@
         <tbody>
             @forelse ($transaksiData as $item)
             <tr>
-                <td>{{ $loop->index + 1 }}</td>
+                <td>{{ $loop->index + 1 + $transaksiData->perPage() * ($transaksiData->currentPage() - 1) }}</td>
                 <!-- No Kamar -->
                 <td>
                     @if ($item->kamar)
@@ -98,13 +98,20 @@
                         {{ $item->lokasiKos->nama_kos }}
                     @endif
                 </td>
-                <td>Rp {{ number_format($item->kamar->harga, 0, ',', '.') }}</td>
+                <td>
+                    @if($item->kamar)
+                        Rp {{ number_format($item->kamar->harga, 0, ',', ',') }}
+                    @else
+                        Rp -
+                    @endif
+                </td>
+                
                 <!-- Tanggal -->
                 <td>
                     {{ $item->tanggal ?? '-' }}
                 </td>
                 <!-- Jumlah Tarif -->
-                <td>Rp {{ number_format($item->jumlah_tarif, 0, ',', '.') }}</td>
+                <td>Rp {{ number_format($item->jumlah_tarif, 0, ',', ',') }}</td>
                 <!-- Tipe Pembayaran -->
                 <td>{{ $item->tipe_pembayaran ? $item->tipe_pembayaran : '-' }}</td>
                 <td>
@@ -119,7 +126,6 @@
                         No Bukti Pembayaran
                     @endif
                 </td>
-                
                 <td>
                     @if ($item->status_pembayaran === 'lunas')
                         <b><span style="color: green;"> Lunas </span></b>
@@ -144,13 +150,25 @@
                 {{-- <td>{{ $item->pengeluaran }}</td> --}}
                 <td>
                     <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}" style="background-color: #ffbe45;">
+                        <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}" style="background-color: #ffbe45;" title="Edit">
                             <i class="fas fa-edit" style="color: white"></i>
                         </button>
                 
                         @include('transaksi.edit')
-
-                        <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left:5px" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                        <button type="button" class="btn btn-primary btn-sm" 
+                        @if($item->kamar && $item->lokasiKos && $item->penyewa)
+                            data-bs-toggle="modal" 
+                            data-bs-target="#addTransactionModal{{ $item->kamar->id }}-{{ $item->lokasiKos->id }}-{{$item->penyewa->id}}"
+                        @endif
+                        style="margin-left: 5px">
+                        <i class="fas fa-plus" style="color: white"></i>
+                    </button>
+                    
+                    @if($item->kamar && $item->lokasiKos && $item->penyewa)
+                    @include('transaksi.create', ['roomId' => $item->kamar->id, 'lokasiId' => $item->lokasiKos->id , 'penyewaId' => $item->penyewa->id])
+                @else
+                @endif
+                        <button class="btn btn-sm" style="background-color: #eb6a6a;margin-left:5px" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}" title="Delete">
                             <i class="fas fa-trash" style="color: white"></i>
                         </button>
                         @include('transaksi.delete') 

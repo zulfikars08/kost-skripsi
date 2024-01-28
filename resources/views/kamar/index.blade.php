@@ -114,7 +114,7 @@
                             <td>{{ ($filteredKamarData->currentPage() - 1) * $filteredKamarData->perPage() + $loop->iteration }}
                             </td>
                             <td>{{ $item->no_kamar }}</td>
-                            <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
+                            <td>Rp {{ number_format($item->harga, 0, ',', ',') }}</td>
                             <td>
                                 @php $first = true @endphp
                                 @foreach ($item->fasilitas as $fasilitas)
@@ -141,13 +141,13 @@
                             </td>
                             <td>
                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModal{{$item->id}}">
+                                    data-bs-target="#editModal{{$item->id}}" title="Edit">
                                     <i class="fas fa-edit" style="color: white"></i> <!-- Edit Icon -->
                                 </button>
                                 @include('kamar.edit', ['item' => $item])
                                 <button class="btn btn-sm" style="background-color: #eb6a6a;" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal{{ $item->id }}" style="margin-left: 10px">
-                                    <i class="fas fa-trash" style="color: white"></i>
+                                    <i class="fas fa-trash" style="color: white" title="Delete"></i>
                                 </button>
                                 @include('kamar.delete')
                             </td>
